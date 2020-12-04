@@ -1,7 +1,5 @@
 package circuits;
 
-import java.util.List;
-
 public class Wire {
 	private String name;
 	private Character value;

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import aoc.Year;
+import aoc.utilities.MD5;
 import aoc.utilities.ReadInputFile;
 
 public class TwentySixteen extends Year {
@@ -601,12 +602,53 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
+				day5NiceGameOfChessMD5SixthCharacter();
 				break;
 			case "B":
+				day5NiceGameOfChessMD5SixthPositionSeventhCharacter();
 				break;
 			default:
+				day5NiceGameOfChessMD5SixthCharacter();
+				day5NiceGameOfChessMD5SixthPositionSeventhCharacter();
 				break;
 		}
+	}
+	
+	/**
+	 * The eight-character password for the door is generated one character at a time by finding the MD5 hash of some Door ID and an increasing integer index (starting with 0).
+	 * A hash indicates the next character in the password if its hexadecimal representation starts with five zeroes.
+	 * If it does, the sixth character in the hash is the next character of the password.
+	 * Given the actual Door ID, what is the password?
+	 */
+	public void day5NiceGameOfChessMD5SixthCharacter() {
+		String line = input.get(0);
+		
+		List<String> hashList = MD5.findMD5HashesOfIncreasingIntegersWithNumZeros(line, 5, 8, true, false);
+		
+		String pass = "";
+		for(String s : hashList) {
+			pass += s.substring(5,6);
+		}
+		
+		System.out.println(CUR_YEAR + " Day 5 Part A: " + pass);
+	}
+	
+	/**
+	 * Instead of simply filling in the password from left to right, the hash now also indicates the position within the password to fill.
+	 * You still look for hashes that begin with five zeroes; however, now, the sixth character represents the position (0-7), and the seventh character is the character to put in that position.
+	 * Given the actual Door ID and this new method, what is the password?
+	 */
+	public void day5NiceGameOfChessMD5SixthPositionSeventhCharacter() {
+		String line = input.get(0);
+		
+		List<String> hashList = MD5.findMD5HashesOfIncreasingIntegersWithNumZeros(line, 5, 8, false, true);
+		
+		String pass = "";
+		for(String s : hashList) {
+			pass += s;
+		}
+		
+		System.out.println(CUR_YEAR + " Day 5 Part B: " + pass);
 	}
 	
 	/**
@@ -617,12 +659,102 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
+				day6day6SignalsNoiseVerticalPasswordMost();
 				break;
 			case "B":
+				day6day6SignalsNoiseVerticalPasswordLeast();
 				break;
 			default:
+				day6day6SignalsNoiseVerticalPasswordMost();
+				day6day6SignalsNoiseVerticalPasswordLeast();
 				break;
 		}
+	}
+	
+	public String day6SignalsNoiseVerticalPassword(boolean useMostFoundChar) {
+		int xSize = input.get(0).length();
+		int ySize = input.size();
+		String[][] grid = new String[xSize][ySize];
+		
+		// fill in the grid
+		int curX = 0;
+		int curY = 0;
+		for(String line : input) {
+			for (int i = 0; i < xSize; i++) {
+				grid[i][curY] = line.substring(i,i+1);
+			}
+			curY++;
+		}
+		
+		curY = 0;
+		curX = 0;
+		String pw = "";
+		while(curX < xSize) {
+			HashMap<String, Integer> map = new HashMap<String, Integer>();
+			for(int y = 0; y < ySize; y++) {
+				String cur = grid[curX][y];
+				
+				if(map.containsKey(cur)) {
+					Integer curVal = map.get(cur);
+					map.put(cur, curVal+1);
+				}
+				else {
+					map.put(cur, 1);
+				}
+				
+				curY++;
+			}
+			
+			if(useMostFoundChar) {
+				String highest = "";
+				for(String s : map.keySet()) {
+					if(highest.equals("")) {
+						highest = s;
+					}
+					else if(map.get(s) > map.get(highest)){
+						highest = s;
+					}
+				}
+				pw += highest;
+				curX++;
+			}
+			else {
+				String lowest = "";
+				for(String s : map.keySet()) {
+					if(lowest.equals("")) {
+						lowest = s;
+					}
+					else if(map.get(s) < map.get(lowest)){
+						lowest = s;
+					}
+				}
+				pw += lowest;
+				curX++;
+			}
+		}
+		
+		return pw;
+	}
+	
+	/**
+	 * In this model, the same message is sent repeatedly. You've recorded the repeating message signal (your puzzle input), but the data seems quite corrupted - almost too badly to recover. Almost.
+	 * All you need to do is figure out which character is most frequent for each position (vertically).
+	 * Given the recording in your puzzle input, what is the error-corrected version of the message being sent?
+	 */
+	public void day6day6SignalsNoiseVerticalPasswordMost() {
+		String pw = day6SignalsNoiseVerticalPassword(true);
+		
+		System.out.println(CUR_YEAR + " Day 6 Part A: " + pw);
+	}
+	
+	/**
+	 * You can look at the letter distributions in each column and choose the least common letter to reconstruct the original message.
+	 * Given the recording in your puzzle input and this new decoding methodology, what is the original message that Santa is trying to send?
+	 */
+	public void day6day6SignalsNoiseVerticalPasswordLeast() {
+		String pw = day6SignalsNoiseVerticalPassword(false);
+		
+		System.out.println(CUR_YEAR + " Day 6 Part B: " + pw);
 	}
 	
 	/**

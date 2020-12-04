@@ -1,13 +1,9 @@
 package aoc.twentyfifteen;
 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 import aoc.Year;
+import aoc.utilities.MD5;
 import aoc.utilities.ReadInputFile;
 import circuits.Circuit;
 import circuits.Wire;
@@ -350,32 +346,10 @@ public class TwentyFifteen extends Year {
 	 */
 	public void day4IdealStockingStufferAdventCoins(int numZeros) {
 		String line = input.get(0);
-		String compareStr = "";
 		
-		for(int i = 0; i < numZeros; i++) {
-			compareStr += "0";
-		}
-
-		int cur = 0;
-		boolean found = false;
-	        
-		while(!found) {
-			cur++;
-			try {
-				MessageDigest md5 = MessageDigest.getInstance("MD5");
-				md5.update(StandardCharsets.UTF_8.encode(line + Integer.toString(cur)));
-				String r = String.format("%032x", new BigInteger(1, md5.digest()));
-		        
-				if(r.startsWith(compareStr)) {
-					found = true;
-				}
-			}
-			catch(NoSuchAlgorithmException nsae) {
-				System.out.println("error");
-			}
-		}
+		List<String> hashList = MD5.findMD5HashesOfIncreasingIntegersWithNumZeros(line, numZeros, 1, false, false);
 		
-		System.out.println(CUR_YEAR + " Day 4 " + numZeros + " zeros: " + cur);
+		System.out.println(CUR_YEAR + " Day 4 " + numZeros + " zeros: " + hashList.get(0));
 	}
 	
 	/**
