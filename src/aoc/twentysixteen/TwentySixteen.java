@@ -765,12 +765,155 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
+				day7IPv7AbbaTLS();
 				break;
 			case "B":
+				day7IPv7AbaBabSSL();
 				break;
 			default:
+				day7IPv7AbbaTLS();
+				day7IPv7AbaBabSSL();
 				break;
 		}
+	}
+	
+	/**
+	 * An IP supports TLS if it has an Autonomous Bridge Bypass Annotation, or ABBA. 
+	 * An ABBA is any four-character sequence which consists of a pair of two different characters followed by the reverse of that pair, such as xyyx or abba.
+	 * However, the IP also must not have an ABBA within any hypernet sequences, which are contained by square brackets.
+	 * How many IPs in your puzzle input support TLS?
+	 */
+	public void day7IPv7AbbaTLS() {
+		int abbaCount = 0;
+		for(String line : input) {
+			boolean insideBrackets = false;
+			boolean abbaFound = false;
+			
+			for(int i = 0; i < line.length(); i++) {
+				String cur1 = line.substring(i,i+1);				
+				
+				if(cur1.equals("[")) {
+					insideBrackets = true;
+				}
+				else if(cur1.equals("]")) {
+					insideBrackets = false;
+				}
+				else {
+					try {
+						String cur2 = line.substring(i+1,i+2);
+						
+						if(cur2.matches("^[a-z]+$") && !cur1.equals(cur2)) {
+							String curCombo = cur1 + cur2;
+							
+							String cur3 = line.substring(i+2,i+3);
+							String cur4 = line.substring(i+3,i+4);
+							String compareCombo = cur4 + cur3;
+							
+							if(curCombo.equals(compareCombo)) {
+								if(!insideBrackets) {
+									abbaFound = true;
+								}
+								else {
+									abbaFound = false;
+									break;
+								}
+							}
+						}
+					}
+					catch(IndexOutOfBoundsException ioobe) {
+						break;
+					}
+				}
+			}
+			
+			if(abbaFound) {
+				abbaCount++;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 7 Part A: " + abbaCount);
+	}
+	
+	/**
+	 * An IP supports SSL if it has an ABA, anywhere in the supernet sequences (outside any square bracketed sections), 
+	 * and a corresponding BAB, anywhere in the hypernet sequences.
+	 * An ABA is any three-character sequence which consists of the same character twice with a different character between them.
+	 * A corresponding BAB is the same characters but in reversed positions.
+	 * The interior character must be different.
+	 * How many IPs in your puzzle input support SSL?
+	 */
+	public void day7IPv7AbaBabSSL() {
+		int abaBabCount = 0;
+		for(String line : input) {
+			boolean insideBrackets = false;
+			boolean babFound = false;
+			
+			List<String> possibleAbas = new ArrayList<String>();			
+			for(int i = 0; i < line.length(); i++) {
+				String cur1 = line.substring(i,i+1);				
+				
+				if(cur1.equals("[")) {
+					insideBrackets = true;
+				}
+				else if(cur1.equals("]")) {
+					insideBrackets = false;
+				}
+				else {
+					try {
+						String cur2 = line.substring(i+1,i+2);
+						String cur3 = line.substring(i+2,i+3);
+						
+						if(cur2.matches("^[a-z]+$") && 
+						   cur3.matches("^[a-z]+$") &&
+						   !cur1.equals(cur2) &&
+						   cur1.equals(cur3)) {							
+							if(!insideBrackets) {
+								possibleAbas.add(cur1 + cur2 + cur3);
+							}
+						}
+					}
+					catch(IndexOutOfBoundsException ioobe) {
+						break;
+					}
+				}
+			}
+			
+			for(String aba : possibleAbas) {
+				String bab = aba.substring(1,2) + aba.substring(0,1) + aba.substring(1,2);
+				
+				for(int i = 0; i < line.length(); i++) {
+					String cur1 = line.substring(i,i+1);				
+					
+					if(cur1.equals("[")) {
+						insideBrackets = true;
+					}
+					else if(cur1.equals("]")) {
+						insideBrackets = false;
+					}
+					else {
+						try {
+							String cur2 = line.substring(i+1,i+2);
+							String cur3 = line.substring(i+2,i+3);
+							
+							if((cur1+cur2+cur3).equals(bab)) {
+								if(insideBrackets) {
+									babFound = true;
+								}
+							}
+						}
+						catch(IndexOutOfBoundsException ioobe) {
+							break;
+						}
+					}
+				}
+			}
+			
+			if(babFound) {
+				abaBabCount++;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 7 Part B: " + abaBabCount);
 	}
 	
 	/**
@@ -781,12 +924,112 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
+				day82FARotatingGrid();
 				break;
 			case "B":
 				break;
 			default:
+				day82FARotatingGrid();
 				break;
 		}
+	}
+	
+	public void printGrid(boolean[][] grid) {
+		int NUM_COLUMNS = 50;
+		int NUM_ROWS = 6;
+		for(int y = 0; y < NUM_ROWS; y++) {
+			for(int x = 0; x < NUM_COLUMNS; x++) {			
+				if(grid[y][x]) {
+					System.out.print("##");
+				}
+				else {
+					System.out.print("  ");
+				}
+			}
+			System.out.println();
+		}
+		System.out.println();
+		System.out.println();
+	}
+	
+	/**
+	 * The screen is 50 pixels wide and 6 pixels tall, all of which start off, and is capable of three somewhat peculiar operations:
+	 *    - rect AxB turns on all of the pixels in a rectangle at the top-left of the screen which is A wide and B tall.
+	 *    - rotate row y=A by B shifts all of the pixels in row A (0 is the top row) right by B pixels. Pixels that would fall off the right end appear at the left end of the row.
+	 *    - rotate column x=A by B shifts all of the pixels in column A (0 is the left column) down by B pixels. Pixels that would fall off the bottom appear at the top of the column.
+	 * How many pixels should be lit?
+	 */
+	public void day82FARotatingGrid() {
+		int NUM_COLUMNS = 50;
+		int NUM_ROWS = 6;
+		boolean[][] grid = new boolean[NUM_ROWS][NUM_COLUMNS];
+		int lightCount = 0;
+		
+		for(String line : input) {
+			String parts[] = line.split(" ");
+			
+			if(parts.length == 2) {
+				String[] size = parts[1].split("x");
+				int numColumns = Integer.parseInt(size[0]);
+				int numRows = Integer.parseInt(size[1]);
+				
+				for(int x = 0; x < numColumns; x++) {
+					for(int y = 0; y < numRows; y++) {
+						grid[y][x] = true;
+					}
+				}
+			}
+			else {
+				String[] loc = parts[2].split("=");
+				int pos = Integer.parseInt(loc[1]);
+				int amount = Integer.parseInt(parts[4]);
+				
+				switch(parts[1]) {
+					case "row":
+						boolean[] row = new boolean[NUM_COLUMNS];
+						for(int x = 0; x < NUM_COLUMNS; x++) {
+							row[x] = grid[pos][x];
+						}
+						
+						for(int x = 0; x < NUM_COLUMNS; x++) {
+							if(x + amount < NUM_COLUMNS){
+								grid[pos][x+amount] = row[x];
+							}
+							else {
+								grid[pos][x+amount-NUM_COLUMNS] = row[x];
+							}
+						}
+						break;
+					case "column":
+						boolean[] column = new boolean[NUM_ROWS];
+						for(int y = 0; y < NUM_ROWS; y++) {
+							column[y] = grid[y][pos];
+						}
+						
+						for(int y = 0; y < NUM_ROWS; y++) {
+							if(y + amount < NUM_ROWS){
+								grid[y+amount][pos] = column[y];
+							}
+							else {
+								grid[y+amount-NUM_ROWS][pos] = column[y];
+							}
+						}
+						break;
+				}
+			}
+		}
+		
+		for(int y = 0; y < NUM_ROWS; y++) {
+			for(int x = 0; x < NUM_COLUMNS; x++) {			
+				if(grid[y][x]) {
+					lightCount++;
+				}
+			}
+		}
+		
+		printGrid(grid);
+		
+		System.out.println(CUR_YEAR + " Day 8: " + lightCount);
 	}
 	
 	/**
