@@ -1,5 +1,8 @@
 package aoc.twentytwenty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import aoc.Year;
 import aoc.utilities.Passport;
 import aoc.utilities.ReadInputFile;
@@ -344,7 +347,7 @@ public class TwentyTwenty extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 4 Part a: " + validCount);
+		System.out.println(CUR_YEAR + " Day 4: " + validCount);
 	}
 	
 	/**
@@ -375,11 +378,118 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
+				day5BinaryBoardingWhichSeatIdIsHighest();
 				break;
 			case "B":
+				day5BinaryBoardingWhichSeatIsMine();
 				break;
 			default:
+				day5BinaryBoardingWhichSeatIdIsHighest();
+				day5BinaryBoardingWhichSeatIsMine();
 				break;
+		}
+	}
+	
+	/**
+	 * Perform a recursive binary search on a given string.
+	 * @param min lowest number allowed in search
+	 * @param max highest number allowed in search
+	 * @param searchString the string to use for the search
+	 * @param curPos the current position in the string to search for
+	 * @param maxPos the last position of the string to use
+	 * @return an int representing the number between min/max that represents the search string
+	 */
+	public int binarySearch(int min, int max, String searchString, int curPos, int maxPos) {
+		String curString = searchString.substring(curPos,curPos+1);
+		if(curPos < maxPos) {
+			if(curString.equals("F") || curString.equals("L")) {
+				return binarySearch(min,min+((max-(min-1))/2)-1,searchString,curPos+1,maxPos);
+			}
+			else if(curString.equals("B") || curString.equals("R")) {
+				return binarySearch(((max-(max-(min-1))/2)+1),max,searchString,curPos+1,maxPos);
+			}
+		}
+		else if(curPos == maxPos) {
+			if(curString.equals("F") || curString.equals("L")) {
+				return min-1;
+			}
+			else if(curString.equals("B") || curString.equals("R")) {
+				return max-1;
+			}
+		}
+		
+		return 0;
+	}
+	
+	/**
+	 * Instead of zones or groups, this airline uses binary space partitioning to seat people.
+	 * A seat might be specified like FBFBBFFRLR, where F means "front", B means "back", L means "left", and R means "right".
+	 * The first 7 characters will either be F or B; these specify exactly one of the 128 rows on the plane (numbered 0 through 127).
+	 * Each letter tells you which half of a region the given seat is in.
+	 * Start with the whole list of rows; the first letter indicates whether the seat is in the front (0 through 63) or the back (64 through 127).
+	 * The next letter indicates which half of that region the seat is in, and so on until you're left with exactly one row.
+	 * The last three characters will be either L or R; these specify exactly one of the 8 columns of seats on the plane (numbered 0 through 7).
+	 * The same process as above proceeds again, this time with only three steps. L means to keep the lower half, while R means to keep the upper half.
+	 * Every seat also has a unique seat ID: multiply the row by 8, then add the column.
+	 * What is the highest seat ID on a boarding pass?
+	 */
+	public void day5BinaryBoardingWhichSeatIdIsHighest() {
+		int highestSeatId = 0;
+		
+		for(String line : input) {			
+			int row = binarySearch(1,128,line,0,6);
+			int column = binarySearch(1,8,line,7,9);
+			
+			int seatId = (row*8) + column;
+			
+			if(seatId > highestSeatId) {
+				highestSeatId = seatId;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 5 Part A: " + highestSeatId);
+	}
+	
+	/**
+	 * It's a completely full flight, so your seat should be the only missing boarding pass in your list. 
+	 * However, there's a catch: some of the seats at the very front and back of the plane don't exist on this aircraft, so they'll be missing from your list as well.
+	 * Your seat wasn't at the very front or back, though; the seats with IDs +1 and -1 from yours will be in your list.
+	 * What is the ID of your seat?
+	 */
+	public void day5BinaryBoardingWhichSeatIsMine() {
+		int ROWS = 128;
+		int COLUMNS = 8;
+		
+		Integer[][] seats = new Integer[ROWS][COLUMNS];
+		
+		for(String line : input) {			
+			int row = binarySearch(1,128,line,0,6);
+			int column = binarySearch(1,8,line,7,9);
+			
+			int seatId = (row*8) + column;
+			seats[row][column] = new Integer(seatId);
+		}
+		
+		List<Integer> seatIds = new ArrayList<Integer>();
+		List<Integer> nullSeatIds = new ArrayList<Integer>();
+		for(int y = 1; y < ROWS-1; y++) {
+			for(int x = 0; x < COLUMNS; x++) {
+				if(seats[y][x] == null) {
+					int myRow = y;
+					int myColumn = x;
+					int mySeatId = (myRow*8) + myColumn;
+					nullSeatIds.add(mySeatId);
+				}
+				else {
+					seatIds.add(seats[y][x]);
+				}
+			}
+		}
+		
+		for(Integer s : nullSeatIds) {
+			if(seatIds.contains(s-1) && seatIds.contains(s+1)) {
+				System.out.println(CUR_YEAR + " Day 5 Part B: " + s);
+			}
 		}
 	}
 	
