@@ -1,4 +1,4 @@
-package aoc.utilities;
+package aoc.twentytwenty;
 
 public class Passport {
 	private int birthYear = 0;

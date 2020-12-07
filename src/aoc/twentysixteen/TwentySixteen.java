@@ -1040,12 +1040,124 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
+				day9ExplosivesCyperspace();
 				break;
 			case "B":
+				day9ExplosivesCyperspaceAllDecompress();
 				break;
 			default:
+				day9ExplosivesCyperspace();
+				day9ExplosivesCyperspaceAllDecompress();
 				break;
 		}
+	}
+	
+	public long day9RecursiveDecompression(long curLength, String text, int curPos) {		
+		String tmpLine = "";
+		
+		for(int i = curPos; i < text.length(); i++) {
+			String cur = text.substring(i,i+1);
+			
+			while(!cur.equals("(") && i < text.length()) {
+				tmpLine += cur;
+				i++;
+				if(i < text.length()) {
+					cur = text.substring(i,i+1);
+				}
+			}
+			
+			if(cur.equals("(")) {
+				String marker = text.substring(i+1,text.indexOf(")",i+1));
+				String[] parts = marker.split("x");
+				int numChars = Integer.parseInt(parts[0]);
+				int numRepeats = Integer.parseInt(parts[1]);
+				
+				int tmpI = i+(marker.length()+2);
+
+				for(int x = 0; x < numRepeats; x++) {
+					try {
+						tmpLine += text.substring(tmpI, tmpI + numChars);
+					}
+					catch(StringIndexOutOfBoundsException sioobe) {
+						tmpLine += text.substring(tmpI);
+					}
+				}
+				
+				i = (i+(marker.length()+2) + (numChars-1));
+			}
+		}			
+		
+		curLength += tmpLine.length();
+		
+		return -1;
+	}
+	
+	/**
+	 * The format compresses a sequence of characters.
+	 * Whitespace is ignored. To indicate that some sequence should be repeated, a marker is added to the file, like (10x2).
+	 * To decompress this marker, take the subsequent 10 characters and repeat them 2 times.
+	 * Then, continue reading the file after the repeated data. The marker itself is not included in the decompressed output.
+	 * If parentheses or other characters appear within the data referenced by a marker, that's okay - 
+	 *    treat it like normal data, not a marker, and then resume looking for markers after the decompressed section.
+	 * What is the decompressed length of the file (your puzzle input)? Don't count whitespace.
+	 */
+	public void day9ExplosivesCyperspace() {
+		int totalLength = 0;
+		
+		for(String line : input) {
+			String tmpLine = "";
+			
+			for(int i = 0; i < line.length(); i++) {
+				String cur = line.substring(i,i+1);
+				
+				while(!cur.equals("(") && i < line.length()) {
+					tmpLine += cur;
+					i++;
+					if(i < line.length()) {
+						cur = line.substring(i,i+1);
+					}
+				}
+				
+				if(cur.equals("(")) {
+					String marker = line.substring(i+1,line.indexOf(")",i+1));
+					String[] parts = marker.split("x");
+					int numChars = Integer.parseInt(parts[0]);
+					int numRepeats = Integer.parseInt(parts[1]);
+					
+					int tmpI = i+(marker.length()+2);
+
+					for(int x = 0; x < numRepeats; x++) {
+						try {
+							tmpLine += line.substring(tmpI, tmpI + numChars);
+						}
+						catch(StringIndexOutOfBoundsException sioobe) {
+							tmpLine += line.substring(tmpI);
+						}
+					}
+					
+					i = (i+(marker.length()+2) + (numChars-1));
+				}
+			}			
+			totalLength += tmpLine.length();
+		}
+		
+		System.out.println(CUR_YEAR + " Day 9 Part A: " + totalLength);
+	}
+	
+	/**
+	 * Apparently, the file actually uses version two of the format.
+	 * In version two, the only difference is that markers within decompressed data are decompressed.
+	 * Unfortunately, the computer you brought probably doesn't have enough memory to actually decompress the file; you'll have to come up with another way to get its decompressed length.
+	 * What is the decompressed length of the file using this improved format?
+	 */
+	public void day9ExplosivesCyperspaceAllDecompress() {
+		long totalLength = 0;
+		
+		for(String line : input) {
+			totalLength += day9RecursiveDecompression(0, line, 0);
+		}
+		
+		System.out.println(CUR_YEAR + " Day 9 Part B: " + totalLength);
 	}
 	
 	/**

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import aoc.Year;
-import aoc.utilities.Passport;
 import aoc.utilities.ReadInputFile;
 
 public class TwentyTwenty extends Year {
@@ -399,14 +398,14 @@ public class TwentyTwenty extends Year {
 	 * @param maxPos the last position of the string to use
 	 * @return an int representing the number between min/max that represents the search string
 	 */
-	public int binarySearch(int min, int max, String searchString, int curPos, int maxPos) {
+	public int day5BinarySearch(int min, int max, String searchString, int curPos, int maxPos) {
 		String curString = searchString.substring(curPos,curPos+1);
 		if(curPos < maxPos) {
 			if(curString.equals("F") || curString.equals("L")) {
-				return binarySearch(min,min+((max-(min-1))/2)-1,searchString,curPos+1,maxPos);
+				return day5BinarySearch(min,min+((max-(min-1))/2)-1,searchString,curPos+1,maxPos);
 			}
 			else if(curString.equals("B") || curString.equals("R")) {
-				return binarySearch(((max-(max-(min-1))/2)+1),max,searchString,curPos+1,maxPos);
+				return day5BinarySearch(((max-(max-(min-1))/2)+1),max,searchString,curPos+1,maxPos);
 			}
 		}
 		else if(curPos == maxPos) {
@@ -437,8 +436,8 @@ public class TwentyTwenty extends Year {
 		int highestSeatId = 0;
 		
 		for(String line : input) {			
-			int row = binarySearch(1,128,line,0,6);
-			int column = binarySearch(1,8,line,7,9);
+			int row = day5BinarySearch(1,128,line,0,6);
+			int column = day5BinarySearch(1,8,line,7,9);
 			
 			int seatId = (row*8) + column;
 			
@@ -463,8 +462,8 @@ public class TwentyTwenty extends Year {
 		Integer[][] seats = new Integer[ROWS][COLUMNS];
 		
 		for(String line : input) {			
-			int row = binarySearch(1,128,line,0,6);
-			int column = binarySearch(1,8,line,7,9);
+			int row = day5BinarySearch(1,128,line,0,6);
+			int column = day5BinarySearch(1,8,line,7,9);
 			
 			int seatId = (row*8) + column;
 			seats[row][column] = new Integer(seatId);
@@ -501,12 +500,90 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
+				day6CustomCustomsSumOfAllYeses();
 				break;
 			case "B":
+				day6CustomCustomsSumOfOnlyYeses();
 				break;
 			default:
+				day6CustomCustomsSumOfAllYeses();
+				day6CustomCustomsSumOfOnlyYeses();
 				break;
 		}
+	}
+	
+	/**
+	 * As your flight approaches the regional airport where you'll switch to a much larger plane, customs declaration forms are distributed to the passengers.
+	 * The form asks a series of 26 yes-or-no questions marked a through z. All you need to do is identify the questions for which anyone in your group answers "yes".
+	 * For each of the people in their group, you write down the questions for which they answer "yes", one per line.
+	 * Eventually you've collected answers from every group on the plane (your puzzle input).
+	 * Each group's answers are separated by a blank line, and within each group, each person's answers are on a single line.
+	 * For each group, count the number of questions to which anyone answered "yes". What is the sum of those counts?
+	 */
+	public void day6CustomCustomsSumOfAllYeses() {
+		int sum = 0;
+		List<String> yes = new ArrayList<String>();
+		int count = 0;
+		for(String line : input) {
+			count++;
+			for(int i = 0; i < line.length(); i++) {
+				String cur = line.substring(i,i+1);
+				
+				if(!yes.contains(cur)) {
+					yes.add(cur);
+				}
+			}
+			
+			if(line.trim().isEmpty() || input.size() == count) {
+				sum += yes.size();
+				for(int i = 0; i < yes.size(); i++) {
+				}
+				yes.clear();
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 6 Part A: " + sum);
+	}
+	
+	/**
+	 * You don't need to identify the questions to which anyone answered "yes"; you need to identify the questions to which everyone answered "yes"!
+	 * For each group, count the number of questions to which everyone answered "yes".
+	 * What is the sum of those counts?
+	 */
+	public void day6CustomCustomsSumOfOnlyYeses() {
+		int sum = 0;
+		List<List<String>> yeses = new ArrayList<List<String>>();
+		int count = 0;
+		for(String line : input) {
+			count++;
+			if(!line.trim().isEmpty()) {
+				List<String> curYes = new ArrayList<String>();
+								
+				for(int i = 0; i < line.length(); i++) {
+					String cur = line.substring(i,i+1);				
+					curYes.add(cur);
+				}
+				yeses.add(curYes);
+			}
+			
+			if(line.trim().isEmpty() || input.size() == count) {
+				List<String> finalCount = new ArrayList<String>();
+				int c = 0;
+				for(List<String> yes : yeses) {
+					if(c == 0) {
+						finalCount.addAll(yes);
+					}
+					else {
+						finalCount.retainAll(yes);
+					}
+					c++;
+				}
+				sum += finalCount.size();
+				yeses.clear();
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 6 Part B: " + sum);
 	}
 	
 	/**
@@ -517,12 +594,56 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
+				day7HandyHaversacksHowManyBags();
 				break;
 			case "B":
+				day7HandyHaversacksHowManyBagsInside();
 				break;
 			default:
+				day7HandyHaversacksHowManyBags();
+				day7HandyHaversacksHowManyBagsInside();
 				break;
 		}
+	}
+	
+	/**
+	 * All flights are currently delayed due to issues in luggage processing.
+	 * Due to recent aviation regulations, many rules (your puzzle input) are being enforced about bags and their contents;
+	 *    bags must be color-coded and must contain specific quantities of other color-coded bags.
+	 * You have a shiny gold bag. If you wanted to carry it in at least one other bag, how many different bag colors would be valid for the outermost bag?
+	 * (In other words: how many colors can, eventually, contain at least one shiny gold bag?)
+	 * How many bag colors can eventually contain at least one shiny gold bag?
+	 */
+	public void day7HandyHaversacksHowManyBags() {
+		Carousel carousel = new Carousel();
+		int numBags = 0;
+		
+		for(String line : input) {
+			carousel.addBag(line);
+		}
+		
+		for(Bag b : carousel.getBags()) {
+			if(b.hasBag("shiny gold")) {
+				numBags++;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 7 Part A: " + numBags);
+	}
+	
+	/**
+	 * How many individual bags are required inside your single shiny gold bag?
+	 */
+	public void day7HandyHaversacksHowManyBagsInside() {
+		Carousel carousel = new Carousel();
+		
+		for(String line : input) {
+			carousel.addBag(line);
+		}
+		
+		Bag b = carousel.getBag("shiny gold");
+		
+		System.out.println(CUR_YEAR + " Day 7 Part B: " + b.howManyBagsInside());
 	}
 	
 	/**
