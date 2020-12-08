@@ -3,6 +3,12 @@ package circuits;
 import java.util.ArrayList;
 import java.util.List;
 
+import circuits.gates.AndGate;
+import circuits.gates.LShiftGate;
+import circuits.gates.NotGate;
+import circuits.gates.OrGate;
+import circuits.gates.RShiftGate;
+
 public class Circuit {
 	private List<Wire> knownWires = new ArrayList<Wire>();
 	private List<Gate> knownGates = new ArrayList<Gate>();
@@ -41,6 +47,10 @@ public class Circuit {
 		return null;
 	}
 	
+	public List<Wire> getWires(){
+		return knownWires;
+	}
+	
 	public void addGate(Gate g) {
 		knownGates.add(g);
 	}
@@ -50,8 +60,47 @@ public class Circuit {
 	}
 	
 	public void runCircuit() {
-		for(Gate g : knownGates) {
-			
+		int wireCount = knownWires.size();
+		int num = 0;
+		while(num < wireCount) {
+			for(Gate gate : knownGates) {
+				Wire out = null;
+				if(gate instanceof AndGate) {
+					AndGate g = (AndGate) gate;
+					if((out = g.run()) != null) {
+						addOrUpdateWire(out);
+						num++;
+					}
+				}
+				else if(gate instanceof OrGate) {
+					OrGate g = (OrGate) gate;
+					if((out = g.run()) != null) {
+						addOrUpdateWire(out);
+						num++;
+					}
+				}
+				else if(gate instanceof NotGate) {
+					NotGate g = (NotGate) gate;
+					if((out = g.run()) != null) {
+						addOrUpdateWire(out);
+						num++;
+					}
+				}
+				else if(gate instanceof LShiftGate) {
+					LShiftGate g = (LShiftGate) gate;
+					if((out = g.run()) != null) {
+						addOrUpdateWire(out);
+						num++;
+					}
+				}
+				else if(gate instanceof RShiftGate) {
+					RShiftGate g = (RShiftGate) gate;
+					if((out = g.run()) != null) {
+						addOrUpdateWire(out);
+						num++;
+					}
+				}
+			}
 		}
 	}
 }

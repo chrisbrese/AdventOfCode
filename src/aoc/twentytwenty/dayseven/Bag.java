@@ -1,4 +1,4 @@
-package aoc.twentytwenty;
+package aoc.twentytwenty.dayseven;
 
 import java.util.HashMap;
 

@@ -6,14 +6,14 @@ import circuits.Wire;
 /*
     |			|
     |			|
-   Left        Right
+   Left         #
     |			|
     |			|
     \			/
      \		   /
    ----------------
    |			  |
-   |	 AND	  |
+   |	LSHIFT	  |
    |			  |
    ----------------
 		  |
@@ -23,17 +23,17 @@ import circuits.Wire;
 	 	  |
 */
 
-public class AndGate extends Gate{
+public class LShiftGate extends Gate{
 	private Wire leftInputWire;
-	private Integer leftInputValue;
+	private Integer leftInputValue = null;
+	private Integer rightInputValue = null;
 	private Wire rightInputWire;
-	private Integer rightInputValue;
 	
-	public AndGate(Wire output) {
+	public LShiftGate(Wire output) {
 		super(output);
 	}
 	
-	public AndGate(Wire leftInput, Wire rightInput, Wire output) {
+	public LShiftGate(Wire leftInput, Wire rightInput, Wire output) {
 		super(output);
 		
 		setLeftInputWire(leftInput);
@@ -73,7 +73,7 @@ public class AndGate extends Gate{
 				right = rightInputValue;
 			}
 			
-			getOutput().setValue(left & right);
+			getOutput().setValue(left << right);
 			successfullyRan();
 			return getOutput();
 		}
@@ -88,7 +88,7 @@ public class AndGate extends Gate{
 	
 	public String toString() {
 		return (leftInputWire == null ? leftInputValue : leftInputWire.getName() + "(" + leftInputWire.getValue() + ")") + 
-				" AND " + (rightInputWire == null ? rightInputValue : rightInputWire.getName() + "(" + rightInputWire.getValue() + ")") 
+				" LSHIFT " + (rightInputWire == null ? rightInputValue : rightInputWire.getName() + "(" + rightInputWire.getValue() + ")") 
 				+ " -> " + getOutput().getName() + "(" + getOutput().getValue() + ")";
 	}
 }

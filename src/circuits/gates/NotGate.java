@@ -22,20 +22,29 @@ import circuits.Wire;
 */
 
 public class NotGate extends Gate{
-	private Wire input;
+	private Wire inputWire;
 	
 	public NotGate(Wire input, Wire output) {
 		super(output);
 		
-		this.input = input;
+		this.inputWire = input;
 	}
 	
-	public Character run() {
-		if(input != null) {
-			getOutput().setValue((char) (~input.getValue().charValue()));
-			return getOutput().getValue();
+	public Wire run() {
+		if(!hasRun() && canRun()) {
+			getOutput().setValue((~inputWire.getValue()));
+			successfullyRan();
+			return getOutput();
 		}
 		
 		return null;
+	}
+	
+	public boolean canRun() {
+		return (inputWire.getValue() != null);
+	}
+	
+	public String toString() {
+		return "NOT " + inputWire.getName() + "(" + inputWire.getValue() + ") -> " + getOutput().getName() + "(" + getOutput().getValue() + ")";
 	}
 }

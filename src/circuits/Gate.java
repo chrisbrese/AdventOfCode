@@ -2,7 +2,7 @@ package circuits;
 
 public class Gate {
 	private Wire output;
-	private Character outValue;
+	private boolean hasRun;
 	
 	public Gate(Wire output) {
 		this.output = output;
@@ -10,5 +10,13 @@ public class Gate {
 	
 	public Wire getOutput() {
 		return output;
+	}
+	
+	protected void successfullyRan() {
+		this.hasRun = true;
+	}
+	
+	public boolean hasRun() {
+		return hasRun;
 	}
 }

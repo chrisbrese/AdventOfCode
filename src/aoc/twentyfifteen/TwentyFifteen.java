@@ -8,8 +8,10 @@ import aoc.utilities.ReadInputFile;
 import circuits.Circuit;
 import circuits.Wire;
 import circuits.gates.AndGate;
+import circuits.gates.LShiftGate;
 import circuits.gates.NotGate;
 import circuits.gates.OrGate;
+import circuits.gates.RShiftGate;
 
 public class TwentyFifteen extends Year {
 	
@@ -662,7 +664,7 @@ public class TwentyFifteen extends Year {
 		for(String line : input) {
 			String[] lineParts = line.split(" ");
 			
-			// send signal to wire
+			// send signal value to wire
 			if(lineParts.length == 3) {
 				Wire w;
 				if((w = circuit.getWire(lineParts[2])) == null) {
@@ -681,70 +683,164 @@ public class TwentyFifteen extends Year {
 						}
 					}
 				}
+				
+				circuit.addOrUpdateWire(w);
 			}
 			// NOT gates only
 			else if(lineParts.length == 4) {
 				Wire input;
 				if((input = circuit.getWire(lineParts[1])) == null) {
 					input = new Wire(lineParts[1]);
+					circuit.addOrUpdateWire(input);
 				}
 				
 				Wire output;
 				if((output = circuit.getWire(lineParts[3])) == null) {
 					output = new Wire(lineParts[3]);
+					circuit.addOrUpdateWire(output);
 				}
-				// store the wires?
 				
 				NotGate ng = new NotGate(input, output);
-				// what to do with the gate?
+				Wire out = null;
+				if((out = ng.run()) != null) {
+					circuit.addOrUpdateWire(out);
+				}
+				circuit.addGate(ng);
 			}
 			// all other actions
-			else if(lineParts.length == 5) {
-				Wire leftInput;
-				if((leftInput = circuit.getWire(lineParts[0])) == null) {
-					leftInput = new Wire(lineParts[0]);
+			else{
+				Wire leftInputWire = null;
+				int leftInputValue = -1;
+				if(lineParts[0].matches("^[a-z]+$")) {
+					if((leftInputWire = circuit.getWire(lineParts[0])) == null) {
+						leftInputWire = new Wire(lineParts[0]);
+						circuit.addOrUpdateWire(leftInputWire);
+					}
+				}
+				else if(lineParts[0].matches("^[0-9]+$")) {
+					leftInputValue = Integer.parseInt(lineParts[0]);
 				}
 				
-				Wire rightInput;
-				if((rightInput = circuit.getWire(lineParts[2])) == null) {
-					rightInput = new Wire(lineParts[2]);
+				Wire rightInputWire = null;
+				int rightInputValue = -1;
+				if(lineParts[2].matches("^[a-z]+$")) {
+					if((rightInputWire = circuit.getWire(lineParts[2])) == null) {
+						rightInputWire = new Wire(lineParts[2]);
+						circuit.addOrUpdateWire(rightInputWire);
+					}
+				}
+				else if(lineParts[2].matches("^[0-9]+$")) {
+					rightInputValue = Integer.parseInt(lineParts[2]);
 				}
 				
 				Wire output;
 				if((output = circuit.getWire(lineParts[4])) == null) {
 					output = new Wire(lineParts[4]);
+					circuit.addOrUpdateWire(output);
 				}
-				// store the wires?
 				
+				Wire out = null;
 				switch(lineParts[1]) {
 					case "AND":
-						AndGate ag = new AndGate(leftInput, rightInput, output);
-						// what to do with the gate?
+						AndGate ag = new AndGate(output);
+						
+						if(leftInputWire != null) {
+							ag.setLeftInputWire(leftInputWire);
+						}
+						else {
+							ag.setLeftInputValue(leftInputValue);
+						}
+						
+						if(rightInputWire != null) {
+							ag.setRightInputWire(rightInputWire);
+						}
+						else {
+							ag.setRightInputValue(rightInputValue);
+						}
+												
+						if((out = ag.run()) != null) {
+							circuit.addOrUpdateWire(out);
+						}
+						circuit.addGate(ag);						
 						break;
 					case "OR":
-						OrGate og = new OrGate(leftInput, rightInput, output);
-						// what to do with the gate?
+						OrGate og = new OrGate(output);
+						if(leftInputWire != null) {
+							og.setLeftInputWire(leftInputWire);
+						}
+						else {
+							og.setLeftInputValue(leftInputValue);
+						}
+						
+						if(rightInputWire != null) {
+							og.setRightInputWire(rightInputWire);
+						}
+						else {
+							og.setRightInputValue(rightInputValue);
+						}
+						
+						if((out = og.run()) != null) {
+							circuit.addOrUpdateWire(out);
+						}
+						circuit.addGate(og);
 						break;
 					case "RSHIFT":
+						RShiftGate rg = new RShiftGate(output);
+						if(leftInputWire != null) {
+							rg.setLeftInputWire(leftInputWire);
+						}
+						else {
+							rg.setLeftInputValue(leftInputValue);
+						}
+						
+						if(rightInputWire != null) {
+							rg.setRightInputWire(rightInputWire);
+						}
+						else {
+							rg.setRightInputValue(rightInputValue);
+						}
+						
+						if((out = rg.run()) != null) {
+							circuit.addOrUpdateWire(out);
+						}
+						circuit.addGate(rg);						
 						break;
 					case "LSHIFT":
-						break;
-					default:
+						LShiftGate lg = new LShiftGate(output);
+						if(leftInputWire != null) {
+							lg.setLeftInputWire(leftInputWire);
+						}
+						else {
+							lg.setLeftInputValue(leftInputValue);
+						}
+						
+						if(rightInputWire != null) {
+							lg.setRightInputWire(rightInputWire);
+						}
+						else {
+							lg.setRightInputValue(rightInputValue);
+						}
+						
+						if((out = lg.run()) != null) {
+							circuit.addOrUpdateWire(out);
+						}
+						circuit.addGate(lg);
 						break;
 				}
 			}
-			
-//			String name = lineParts[lineParts.length-1];
-//			
-//			Wire w;
-//			if((w = circuit.getWire(name)) == null) {
-//				w = new Wire(name);
-//			}
-//			
-//			// set inputs & outputs
-//			
-//			circuit.addOrUpdateWire(w);
 		}
+		
+//		for(Wire w : circuit.getWires()) {
+//			System.out.println(w.toString());
+//		}
+//		
+//		for(Gate g : circuit.getGates()) {
+//			System.out.println(g.toString());
+//		}
+		
+		circuit.runCircuit();
+		
+		System.out.println(CUR_YEAR + " Day 7 Part A: " + circuit.getWire("a").getValue());
 	}
 	
 	/**

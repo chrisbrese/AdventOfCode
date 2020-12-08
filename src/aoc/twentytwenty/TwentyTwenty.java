@@ -1,9 +1,12 @@
 package aoc.twentytwenty;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import aoc.Year;
+import aoc.twentytwenty.dayseven.Bag;
+import aoc.twentytwenty.dayseven.Carousel;
 import aoc.utilities.ReadInputFile;
 
 public class TwentyTwenty extends Year {
@@ -654,12 +657,73 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
+				day8HandheldHaltingInfiniteLoop();
 				break;
 			case "B":
+				day8HandheldHaltingInfiniteLoopFix();
 				break;
 			default:
+				day8HandheldHaltingInfiniteLoop();
+				day8HandheldHaltingInfiniteLoopFix();
 				break;
 		}
+	}
+	
+	/**
+	 * Their handheld game console won't turn on! They ask if you can take a look.
+	 * You narrow the problem down to a strange infinite loop in the boot code (your puzzle input) of the device.
+	 * You should be able to fix it, but first you need to be able to run the code in isolation.
+	 * The boot code is represented as a text file with one instruction per line of text. Each instruction consists of an operation (acc, jmp, or nop) and an argument (a signed number like +4 or -20).
+	 *    acc increases or decreases a single global value called the accumulator by the value given in the argument. The accumulator starts at 0. After an acc instruction, the instruction immediately below it is executed next.
+	 *    jmp jumps to a new instruction relative to itself. The next instruction to execute is found using the argument as an offset from the jmp instruction
+	 *    nop stands for No OPeration - it does nothing. The instruction immediately below it is executed next.
+	 * Run your copy of the boot code. Immediately before any instruction is executed a second time, what value is in the accumulator?
+	 */
+	public void day8HandheldHaltingInfiniteLoop() {
+		int accumulator = 0;
+		HashMap<Integer, Boolean> instructionRun = new HashMap<Integer, Boolean>(input.size());
+		
+		for(int i = 0; i < input.size(); i++) {
+			if(instructionRun.get(i) == null || !instructionRun.get(i)) {
+				String line = input.get(i);
+				String[] parts = line.split(" ");
+				
+				int num = Integer.parseInt(parts[1]);
+				
+				switch(parts[0]) {
+					case "jmp":
+						i += num - 1;
+						break;
+					case "acc":
+						accumulator += num;
+						break;
+					case "nop":
+						break;
+				}
+				
+				instructionRun.put(i, true);
+			}
+			else {
+				break;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 8 Part A: " + accumulator);
+	}
+	
+	/**
+	 * You believe that exactly one instruction is corrupted.
+	 * Somewhere in the program, either a jmp is supposed to be a nop, or a nop is supposed to be a jmp. (No acc instructions were harmed in the corruption of this boot code.)
+	 * The program is supposed to terminate by attempting to execute an instruction immediately after the last instruction in the file.
+	 * By changing exactly one jmp or nop, you can repair the boot code and make it terminate correctly.
+	 * Fix the program so that it terminates normally by changing exactly one jmp (to nop) or nop (to jmp).
+	 * What is the value of the accumulator after the program terminates?
+	 */
+	public void day8HandheldHaltingInfiniteLoopFix() {
+		int accumulator = 0;
+		
+		
+		System.out.println(CUR_YEAR + " Day 8 Part A: " + accumulator);
 	}
 	
 	/**

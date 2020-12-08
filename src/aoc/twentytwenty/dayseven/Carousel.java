@@ -1,4 +1,4 @@
-package aoc.twentytwenty;
+package aoc.twentytwenty.dayseven;
 
 import java.util.ArrayList;
 import java.util.List;
