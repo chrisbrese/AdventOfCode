@@ -784,12 +784,106 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
+				day9EncodingErrorNumberWithNoSum();
 				break;
 			case "B":
+				day9EncodingErrorForceSum();
 				break;
 			default:
+				day9EncodingErrorNumberWithNoSum();
+				day9EncodingErrorForceSum();
 				break;
 		}
+	}
+	
+	/**
+	 * XMAS starts by transmitting a preamble of 25 numbers.
+	 * After that, each number you receive should be the sum of any two of the 25 immediately previous numbers.
+	 * The two numbers will have different values, and there might be more than one such pair.
+	 * The first step of attacking the weakness in the XMAS data is to find the first number in the list (after the preamble)
+	 *    which is not the sum of two of the 25 numbers before it.
+	 * What is the first number that does not have this property?
+	 */
+	public void day9EncodingErrorNumberWithNoSum() {
+		List<Long> longs = new ArrayList<Long>(input.size());
+		for(String line : input) {
+			long l = Long.parseLong(line);
+			longs.add(l);
+		}
+		
+		long badLong = 0;
+		for(int i = 25; i < longs.size(); i++) {
+			boolean found = false;
+			long cur = longs.get(i);
+			for(int j = (i-25); j < i; j++) {
+				long cur1 = longs.get(j);
+				for(int h = (i-25); (h != j) && h < i; h++) {
+					long cur2 = longs.get(h);
+					
+					if(cur1 + cur2 == cur) {
+						found = true;
+						break;
+					}
+				}
+				if(found) {
+					break;
+				}
+			}
+			
+			if(!found) {
+				badLong = longs.get(i);
+				break;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 9 Part A: " + badLong);
+	}
+	
+	public void day9EncodingErrorForceSum() {
+		List<Long> longs = new ArrayList<Long>(input.size());
+		for(String line : input) {
+			long l = Long.parseLong(line);
+			longs.add(l);
+		}
+		
+		long badLong = 31161678;
+		
+		List<Long> sumList = null;
+		long tmpSum = 0;
+		boolean done = false;
+		
+		int curIndex = 0;
+		while(!done || curIndex == longs.size()) {
+			sumList = new ArrayList<Long>();
+			tmpSum = 0;
+			for(int i = curIndex; i < longs.size(); i++) {
+				tmpSum += longs.get(i);
+				sumList.add(longs.get(i));
+				if(tmpSum == badLong) {
+					done = true;
+					break;
+				}
+				else if(tmpSum > badLong) {
+					break;
+				}
+			}
+			curIndex++;
+		}
+		
+		Long smallest = null;
+		Long biggest = null;
+		if(done) {
+			for(Long l : sumList) {
+				if((smallest == null) || l < smallest) {
+					smallest = l;
+				}
+				if((biggest == null) || l > biggest) {
+					biggest = l;
+				}
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 9 Part B: " + (smallest + biggest));
 	}
 	
 	/**
