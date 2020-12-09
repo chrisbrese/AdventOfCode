@@ -637,11 +637,168 @@ public class TwentyFifteen extends Year {
 				day7AssemblyRequiredWireInputs();
 				break;
 			case "B":
+				day7AssemblyRequiredWireOverride();
 				break;
 			default:
 				day7AssemblyRequiredWireInputs();
+				day7AssemblyRequiredWireOverride();
 				break;
 		}
+	}
+	
+	public Circuit day7BuildCircuit() {
+		Circuit circuit = new Circuit();
+		
+		for(String line : input) {
+			String[] lineParts = line.split(" ");
+			
+			// send signal value to wire
+			if(lineParts.length == 3) {
+				Wire output;
+				if((output = circuit.getWire(lineParts[2])) == null) {
+					output = new Wire(lineParts[2]);
+				}
+				
+				Wire input;
+				if(lineParts[0].matches("^[a-z]+$")) {
+					if((input = circuit.getWire(lineParts[0])) == null) {
+						input = new Wire(lineParts[0]);
+						circuit.addOrUpdateWire(input);
+					}
+				}
+				output.setValue(lineParts[0]);			
+				
+				circuit.addOrUpdateWire(output);
+			}
+			// NOT gates only
+			else if(lineParts.length == 4) {
+				Wire input;
+				if((input = circuit.getWire(lineParts[1])) == null) {
+					input = new Wire(lineParts[1]);
+					circuit.addOrUpdateWire(input);
+				}
+				
+				Wire output;
+				if((output = circuit.getWire(lineParts[3])) == null) {
+					output = new Wire(lineParts[3]);
+					circuit.addOrUpdateWire(output);
+				}
+				
+				NotGate ng = new NotGate(input.getName(), output.getName());
+				circuit.addGate(ng);
+			}
+			// all other actions
+			else{
+				Wire leftInputWire = null;
+				Integer leftInputValue = null;
+
+				if(lineParts[0].matches("^[a-z]+$")) {
+					if((leftInputWire = circuit.getWire(lineParts[0])) == null) {
+						leftInputWire = new Wire(lineParts[0]);
+						circuit.addOrUpdateWire(leftInputWire);
+					}
+				}
+				else if(lineParts[0].matches("^[0-9]+$")) {
+					leftInputValue = Integer.parseInt(lineParts[0]);
+				}
+				
+				Wire rightInputWire = null;
+				Integer rightInputValue = null;
+				if(lineParts[2].matches("^[a-z]+$")) {
+					if((rightInputWire = circuit.getWire(lineParts[2])) == null) {
+						rightInputWire = new Wire(lineParts[2]);
+						circuit.addOrUpdateWire(rightInputWire);
+					}
+				}
+				else if(lineParts[2].matches("^[0-9]+$")) {
+					rightInputValue = Integer.parseInt(lineParts[2]);
+				}
+				
+				Wire output;
+				if((output = circuit.getWire(lineParts[4])) == null) {
+					output = new Wire(lineParts[4]);
+					circuit.addOrUpdateWire(output);
+				}
+				
+				switch(lineParts[1]) {
+					case "AND":
+						AndGate ag = new AndGate(output.getName());
+						
+						if(leftInputWire != null) {
+							ag.setLeftInputWireNameOrValue(leftInputWire.getName());
+						}
+						else {
+							ag.setLeftInputWireNameOrValue(leftInputValue.toString());
+						}
+						
+						if(rightInputWire != null) {
+							ag.setRightInputWireNameOrValue(rightInputWire.getName());
+						}
+						else {
+							ag.setRightInputWireNameOrValue(rightInputValue.toString());
+						}
+
+						circuit.addGate(ag);						
+						break;
+					case "OR":
+						OrGate og = new OrGate(output.getName());
+						if(leftInputWire != null) {
+							og.setLeftInputWireNameOrValue(leftInputWire.getName());
+						}
+						else {
+							og.setLeftInputWireNameOrValue(leftInputValue.toString());
+						}
+						
+						if(rightInputWire != null) {
+							og.setRightInputWireNameOrValue(rightInputWire.getName());
+						}
+						else {
+							og.setRightInputWireNameOrValue(rightInputValue.toString());
+						}
+						
+						circuit.addGate(og);
+						break;
+					case "RSHIFT":
+						RShiftGate rg = new RShiftGate(output.getName());
+						if(leftInputWire != null) {
+							rg.setLeftInputWireNameOrValue(leftInputWire.getName());
+						}
+						else {
+							rg.setLeftInputWireNameOrValue(leftInputValue.toString());
+						}
+						
+						if(rightInputWire != null) {
+							rg.setRightInputWireNameOrValue(rightInputWire.getName());
+						}
+						else {
+							rg.setRightInputWireNameOrValue(rightInputValue.toString());
+						}
+						
+						circuit.addGate(rg);						
+						break;
+					case "LSHIFT":
+						LShiftGate lg = new LShiftGate(output.getName());
+						if(leftInputWire != null) {
+							lg.setLeftInputWireNameOrValue(leftInputWire.getName());
+						}
+						else {
+							lg.setLeftInputWireNameOrValue(leftInputValue.toString());
+						}
+						
+						if(rightInputWire != null) {
+							lg.setRightInputWireNameOrValue(rightInputWire.getName());
+						}
+						else {
+							lg.setRightInputWireNameOrValue(rightInputValue.toString());
+						}
+						
+						circuit.addGate(lg);
+						break;
+				}
+			}
+		}
+		
+		return circuit;
 	}
 	
 	/**
@@ -659,188 +816,27 @@ public class TwentyFifteen extends Year {
 	 * What signal is ultimately provided to wire a?
 	 */
 	public void day7AssemblyRequiredWireInputs() {
-		Circuit circuit = new Circuit();
-		
-		for(String line : input) {
-			String[] lineParts = line.split(" ");
-			
-			// send signal value to wire
-			if(lineParts.length == 3) {
-				Wire w;
-				if((w = circuit.getWire(lineParts[2])) == null) {
-					w = new Wire(lineParts[2]);
-					
-					try {
-						w.setValue((char) Integer.parseInt(lineParts[0]));
-					}
-					catch(NumberFormatException nfe) {
-						Wire t;
-						if((t = circuit.getWire(lineParts[0])) == null) {
-							t = new Wire(lineParts[0]);
-						}
-						else {
-							w.setValue(t.getValue());
-						}
-					}
-				}
-				
-				circuit.addOrUpdateWire(w);
-			}
-			// NOT gates only
-			else if(lineParts.length == 4) {
-				Wire input;
-				if((input = circuit.getWire(lineParts[1])) == null) {
-					input = new Wire(lineParts[1]);
-					circuit.addOrUpdateWire(input);
-				}
-				
-				Wire output;
-				if((output = circuit.getWire(lineParts[3])) == null) {
-					output = new Wire(lineParts[3]);
-					circuit.addOrUpdateWire(output);
-				}
-				
-				NotGate ng = new NotGate(input, output);
-				Wire out = null;
-				if((out = ng.run()) != null) {
-					circuit.addOrUpdateWire(out);
-				}
-				circuit.addGate(ng);
-			}
-			// all other actions
-			else{
-				Wire leftInputWire = null;
-				int leftInputValue = -1;
-				if(lineParts[0].matches("^[a-z]+$")) {
-					if((leftInputWire = circuit.getWire(lineParts[0])) == null) {
-						leftInputWire = new Wire(lineParts[0]);
-						circuit.addOrUpdateWire(leftInputWire);
-					}
-				}
-				else if(lineParts[0].matches("^[0-9]+$")) {
-					leftInputValue = Integer.parseInt(lineParts[0]);
-				}
-				
-				Wire rightInputWire = null;
-				int rightInputValue = -1;
-				if(lineParts[2].matches("^[a-z]+$")) {
-					if((rightInputWire = circuit.getWire(lineParts[2])) == null) {
-						rightInputWire = new Wire(lineParts[2]);
-						circuit.addOrUpdateWire(rightInputWire);
-					}
-				}
-				else if(lineParts[2].matches("^[0-9]+$")) {
-					rightInputValue = Integer.parseInt(lineParts[2]);
-				}
-				
-				Wire output;
-				if((output = circuit.getWire(lineParts[4])) == null) {
-					output = new Wire(lineParts[4]);
-					circuit.addOrUpdateWire(output);
-				}
-				
-				Wire out = null;
-				switch(lineParts[1]) {
-					case "AND":
-						AndGate ag = new AndGate(output);
-						
-						if(leftInputWire != null) {
-							ag.setLeftInputWire(leftInputWire);
-						}
-						else {
-							ag.setLeftInputValue(leftInputValue);
-						}
-						
-						if(rightInputWire != null) {
-							ag.setRightInputWire(rightInputWire);
-						}
-						else {
-							ag.setRightInputValue(rightInputValue);
-						}
-												
-						if((out = ag.run()) != null) {
-							circuit.addOrUpdateWire(out);
-						}
-						circuit.addGate(ag);						
-						break;
-					case "OR":
-						OrGate og = new OrGate(output);
-						if(leftInputWire != null) {
-							og.setLeftInputWire(leftInputWire);
-						}
-						else {
-							og.setLeftInputValue(leftInputValue);
-						}
-						
-						if(rightInputWire != null) {
-							og.setRightInputWire(rightInputWire);
-						}
-						else {
-							og.setRightInputValue(rightInputValue);
-						}
-						
-						if((out = og.run()) != null) {
-							circuit.addOrUpdateWire(out);
-						}
-						circuit.addGate(og);
-						break;
-					case "RSHIFT":
-						RShiftGate rg = new RShiftGate(output);
-						if(leftInputWire != null) {
-							rg.setLeftInputWire(leftInputWire);
-						}
-						else {
-							rg.setLeftInputValue(leftInputValue);
-						}
-						
-						if(rightInputWire != null) {
-							rg.setRightInputWire(rightInputWire);
-						}
-						else {
-							rg.setRightInputValue(rightInputValue);
-						}
-						
-						if((out = rg.run()) != null) {
-							circuit.addOrUpdateWire(out);
-						}
-						circuit.addGate(rg);						
-						break;
-					case "LSHIFT":
-						LShiftGate lg = new LShiftGate(output);
-						if(leftInputWire != null) {
-							lg.setLeftInputWire(leftInputWire);
-						}
-						else {
-							lg.setLeftInputValue(leftInputValue);
-						}
-						
-						if(rightInputWire != null) {
-							lg.setRightInputWire(rightInputWire);
-						}
-						else {
-							lg.setRightInputValue(rightInputValue);
-						}
-						
-						if((out = lg.run()) != null) {
-							circuit.addOrUpdateWire(out);
-						}
-						circuit.addGate(lg);
-						break;
-				}
-			}
-		}
-		
-//		for(Wire w : circuit.getWires()) {
-//			System.out.println(w.toString());
-//		}
-//		
-//		for(Gate g : circuit.getGates()) {
-//			System.out.println(g.toString());
-//		}
+		Circuit circuit = day7BuildCircuit();
 		
 		circuit.runCircuit();
 		
-		System.out.println(CUR_YEAR + " Day 7 Part A: " + circuit.getWire("a").getValue());
+		System.out.println(CUR_YEAR + " Day 7 Part A: " + circuit.getWireValue("a"));
+	}
+	
+	/**
+	 * Now, take the signal you got on wire a, override wire b to that signal, and reset the other wires (including wire a). 
+	 * What new signal is ultimately provided to wire a?
+	 */
+	public void day7AssemblyRequiredWireOverride() {
+		Circuit circuit = day7BuildCircuit();
+		
+		Wire bWire = circuit.getWire("b");
+		bWire.setValue((new Integer(16076)).toString());
+		circuit.addOrUpdateWire(bWire);
+		
+		circuit.runCircuit();
+		
+		System.out.println(CUR_YEAR + " Day 7 Part B: " + circuit.getWireValue("a"));
 	}
 	
 	/**
