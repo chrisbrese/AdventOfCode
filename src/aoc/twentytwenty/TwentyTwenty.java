@@ -669,21 +669,14 @@ public class TwentyTwenty extends Year {
 		}
 	}
 	
-	/**
-	 * Their handheld game console won't turn on! They ask if you can take a look.
-	 * You narrow the problem down to a strange infinite loop in the boot code (your puzzle input) of the device.
-	 * You should be able to fix it, but first you need to be able to run the code in isolation.
-	 * The boot code is represented as a text file with one instruction per line of text. Each instruction consists of an operation (acc, jmp, or nop) and an argument (a signed number like +4 or -20).
-	 *    acc increases or decreases a single global value called the accumulator by the value given in the argument. The accumulator starts at 0. After an acc instruction, the instruction immediately below it is executed next.
-	 *    jmp jumps to a new instruction relative to itself. The next instruction to execute is found using the argument as an offset from the jmp instruction
-	 *    nop stands for No OPeration - it does nothing. The instruction immediately below it is executed next.
-	 * Run your copy of the boot code. Immediately before any instruction is executed a second time, what value is in the accumulator?
-	 */
-	public void day8HandheldHaltingInfiniteLoop() {
+	public List<Integer> day8RunBootCode(List<String> input) {
 		int accumulator = 0;
+		List<Integer> returnList = new ArrayList<Integer>(2);
+		
 		HashMap<Integer, Boolean> instructionRun = new HashMap<Integer, Boolean>(input.size());
 		
 		for(int i = 0; i < input.size(); i++) {
+			// if the map contains this instruction, then we've already ran it, and we are in an infinite loop
 			if(instructionRun.get(i) == null || !instructionRun.get(i)) {
 				String line = input.get(i);
 				String[] parts = line.split(" ");
@@ -703,10 +696,35 @@ public class TwentyTwenty extends Year {
 				
 				instructionRun.put(i, true);
 			}
+			// in the infinite loop - cut it off and announce
 			else {
+				returnList.add(accumulator);
+				returnList.add(i);
 				break;
 			}
 		}
+		
+		// this means we reached the end!
+		if(returnList.size() == 0) {
+			returnList.add(accumulator);
+			returnList.add(input.size());
+		}
+		
+		return returnList;
+	}
+	
+	/**
+	 * Their handheld game console won't turn on! They ask if you can take a look.
+	 * You narrow the problem down to a strange infinite loop in the boot code (your puzzle input) of the device.
+	 * You should be able to fix it, but first you need to be able to run the code in isolation.
+	 * The boot code is represented as a text file with one instruction per line of text. Each instruction consists of an operation (acc, jmp, or nop) and an argument (a signed number like +4 or -20).
+	 *    acc increases or decreases a single global value called the accumulator by the value given in the argument. The accumulator starts at 0. After an acc instruction, the instruction immediately below it is executed next.
+	 *    jmp jumps to a new instruction relative to itself. The next instruction to execute is found using the argument as an offset from the jmp instruction
+	 *    nop stands for No OPeration - it does nothing. The instruction immediately below it is executed next.
+	 * Run your copy of the boot code. Immediately before any instruction is executed a second time, what value is in the accumulator?
+	 */
+	public void day8HandheldHaltingInfiniteLoop() {
+		int accumulator = day8RunBootCode(input).get(0);
 		
 		System.out.println(CUR_YEAR + " Day 8 Part A: " + accumulator);
 	}
@@ -722,8 +740,40 @@ public class TwentyTwenty extends Year {
 	public void day8HandheldHaltingInfiniteLoopFix() {
 		int accumulator = 0;
 		
+		List<String> newInput;
+		List<Integer> modifiedIndexAttempts = new ArrayList<Integer>(input.size());
 		
-		System.out.println(CUR_YEAR + " Day 8 Part A: " + accumulator);
+		int count = 0;
+		for(String line : input) {
+			newInput = new ArrayList<String>();
+			newInput.addAll(input);
+			String[] parts = line.split(" ");
+			
+			switch(parts[0]) {
+				case "jmp":
+					if(!modifiedIndexAttempts.contains(count)) {
+						newInput.remove(count);
+						newInput.add(count, "nop " + parts[1]);
+						modifiedIndexAttempts.add(count);
+					}
+					break;
+				case "nop":
+					if(!modifiedIndexAttempts.contains(count)) {
+						newInput.remove(count);
+						newInput.add(count, "jmp " + parts[1]);
+						modifiedIndexAttempts.add(count);
+					}
+					break;
+			}
+			List<Integer> resultList = day8RunBootCode(newInput);
+			if(resultList.size() > 0 && resultList.get(1).equals(input.size())) {
+				accumulator = resultList.get(0);
+				break;
+			}
+			count++;
+		}
+		
+		System.out.println(CUR_YEAR + " Day 8 Part B: " + accumulator);
 	}
 	
 	/**
