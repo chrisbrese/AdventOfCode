@@ -847,12 +847,80 @@ public class TwentyFifteen extends Year {
 		
 		switch(part) {
 			case "A":
+				day8MatchsticksDecodeStringLiterals();
 				break;
 			case "B":
+				day8MatchsticksEncodeStringLiterals();
 				break;
 			default:
+				day8MatchsticksDecodeStringLiterals();
+				day8MatchsticksEncodeStringLiterals();
 				break;
 		}
+	}
+	
+	/**
+	 * It is common in many programming languages to provide a way to escape special characters in strings.
+	 * However, it is important to realize the difference between the number of characters in the 
+	 * code representation of the string literal and the number of characters in the in-memory string itself.
+	 * Santa's list is a file that contains many double-quoted string literals, one on each line.
+	 * The only escape sequences used are:
+	 *    \\ (which represents a single backslash),
+	 *    \" (which represents a lone double-quote character), and 
+	 *    \x plus two hexadecimal characters (which represents a single character with that ASCII code).
+	 * Disregarding the whitespace in the file, what is the number of characters of code for string literals, 
+	 * minus the number of characters in memory for the values of the strings in total for the entire file?
+	 */
+	public void day8MatchsticksDecodeStringLiterals() {
+		int actualChars = 0;
+		int inMemoryChars = 0;
+		
+		for(String l : input) {
+			actualChars += l.length();
+			String line = l.substring(1, l.length()-1);
+			
+			for(int i = 0; i < line.length(); i++) {
+				String cur = line.substring(i,i+1);
+				
+				if(cur.equals("\\")){
+					String cur1 = line.substring(i+1,i+2);
+					
+					if(cur1.equals("\\") || cur1.equals("\"")) {
+						i ++;
+					}
+					else {
+						i+=3;
+					}
+				}
+				
+				inMemoryChars++;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 8 Part A: " + (actualChars - inMemoryChars));
+	}
+	
+	public void day8MatchsticksEncodeStringLiterals() {
+		int actualChars = 0;
+		int afterEncodedChars = 0;
+		
+		for(String line : input) {
+			actualChars += line.length();
+
+			for(int i = 0; i < line.length(); i++) {
+				String cur = line.substring(i,i+1);
+				
+				if(cur.equals("\"") || cur.equals("\\")) {
+					line = line.substring(0,i) + "\\" + line.substring(i);
+					i ++;
+				}
+			}
+
+			line = "\"" + line + "\"";
+			afterEncodedChars += line.length();
+		}
+		
+		System.out.println(CUR_YEAR + " Day 8 Part B: " + (afterEncodedChars - actualChars));
 	}
 	
 	/**
