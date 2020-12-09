@@ -1,15 +1,15 @@
 package circuits;
 
 public class Gate {
-	private Wire output;
+	private String outputWireNameOrValue;
 	private boolean hasRun;
 	
-	public Gate(Wire output) {
-		this.output = output;
+	public Gate(String output) {
+		this.outputWireNameOrValue = output;
 	}
 	
-	public Wire getOutput() {
-		return output;
+	public String getOutput() {
+		return outputWireNameOrValue;
 	}
 	
 	protected void successfullyRan() {

@@ -1,7 +1,6 @@
 package circuits.gates;
 
 import circuits.Gate;
-import circuits.Wire;
 
 /*
      	  |
@@ -22,29 +21,23 @@ import circuits.Wire;
 */
 
 public class NotGate extends Gate{
-	private Wire inputWire;
+	private String inputWireNameOrValue;
 	
-	public NotGate(Wire input, Wire output) {
-		super(output);
+	public NotGate(String inputWireNameOrValue, String outputNameOrValue) {
+		super(outputNameOrValue);
 		
-		this.inputWire = input;
+		setInputWireNameOrValue(inputWireNameOrValue);
 	}
 	
-	public Wire run() {
-		if(!hasRun() && canRun()) {
-			getOutput().setValue((~inputWire.getValue()));
-			successfullyRan();
-			return getOutput();
-		}
-		
-		return null;
+	public void setInputWireNameOrValue(String value) {
+		inputWireNameOrValue = value;
 	}
 	
-	public boolean canRun() {
-		return (inputWire.getValue() != null);
+	public String getInputWireNameOrValue() {
+		return inputWireNameOrValue;
 	}
 	
-	public String toString() {
-		return "NOT " + inputWire.getName() + "(" + inputWire.getValue() + ") -> " + getOutput().getName() + "(" + getOutput().getValue() + ")";
+	public Integer run(int input) {
+		return ~input;
 	}
 }

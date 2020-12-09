@@ -2,7 +2,7 @@ package circuits;
 
 public class Wire {
 	private String name;
-	private Integer value = null;
+	private String value;
 	
 	public Wire(String name) {
 		this.name = name;
@@ -12,11 +12,11 @@ public class Wire {
 		return name;
 	}
 	
-	public void setValue(int value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 	
-	public Integer getValue() {
+	public String getValue() {
 		return value;
 	}
 	

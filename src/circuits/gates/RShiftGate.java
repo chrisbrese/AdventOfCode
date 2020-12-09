@@ -1,7 +1,6 @@
 package circuits.gates;
 
 import circuits.Gate;
-import circuits.Wire;
 
 /*
     |			|
@@ -24,78 +23,37 @@ import circuits.Wire;
 */
 
 public class RShiftGate extends Gate{
-	private Wire leftInputWire;
-	private Integer leftInputValue = null;
-	private Wire rightInputWire;
-	private Integer rightInputValue = null;	
+	private String leftInputWireNameOrValue;
+	private String rightInputWireNameOrValue;
 	
-	public RShiftGate(Wire leftInput, int number, Wire output) {
-		super(output);
+	public RShiftGate(String outputNameOrValue) {
+		super(outputNameOrValue);
+	}
+	
+	public RShiftGate(String leftInput, String rightInput, String outputNameOrValue) {
+		super(outputNameOrValue);
 		
-		this.leftInputWire = leftInput;
-		this.rightInputValue = number;
+		setLeftInputWireNameOrValue(leftInput);
+		setRightInputWireNameOrValue(rightInput);
 	}
 	
-	public RShiftGate(Wire output) {
-		super(output);
+	public void setLeftInputWireNameOrValue(String value) {
+		leftInputWireNameOrValue = value;
 	}
 	
-	public RShiftGate(Wire leftInput, Wire rightInput, Wire output) {
-		super(output);
-		
-		setLeftInputWire(leftInput);
-		setRightInputWire(rightInput);
+	public String getLeftInputWireNameOrValue() {
+		return leftInputWireNameOrValue;
 	}
 	
-	public void setLeftInputWire(Wire wire) {
-		leftInputWire = wire;
+	public void setRightInputWireNameOrValue(String value) {
+		rightInputWireNameOrValue = value;
 	}
 	
-	public void setLeftInputValue(int value) {
-		leftInputValue = value;
+	public String getRightInputWireNameOrValue() {
+		return rightInputWireNameOrValue;
 	}
 	
-	public void setRightInputWire(Wire wire) {
-		rightInputWire = wire;
-	}
-	
-	public void setRightInputValue(int value) {
-		rightInputValue = value;
-	}
-	
-	public Wire run() {
-		if(!hasRun() && canRun()) {			
-			Integer left, right;
-			if(leftInputWire != null) {
-				left = leftInputWire.getValue();
-			}
-			else {
-				left = leftInputValue;
-			}
-			
-			if(rightInputWire != null) {
-				right = rightInputWire.getValue();
-			}
-			else {
-				right = rightInputValue;
-			}
-			
-			getOutput().setValue(left >> right);
-			successfullyRan();
-			return getOutput();
-		}
-		
-		return null;
-	}
-	
-	public boolean canRun() {
-		return (((leftInputWire != null && leftInputWire.getValue() != null) || leftInputValue != null) && 
-				((rightInputWire != null && rightInputWire.getValue() != null) || rightInputValue != null));
-	}
-	
-	public String toString() {
-		return (leftInputWire == null ? leftInputValue : leftInputWire.getName() + "(" + leftInputWire.getValue() + ")") + 
-				" RSHIFT " + (rightInputWire == null ? rightInputValue : rightInputWire.getName() + "(" + rightInputWire.getValue() + ")") 
-				+ " -> " + getOutput().getName() + "(" + getOutput().getValue() + ")";
+	public Integer run(int leftValue, int rightValue) {
+		return leftValue >> rightValue;
 	}
 }

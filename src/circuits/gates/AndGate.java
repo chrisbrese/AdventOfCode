@@ -1,7 +1,6 @@
 package circuits.gates;
 
 import circuits.Gate;
-import circuits.Wire;
 
 /*
     |			|
@@ -24,71 +23,37 @@ import circuits.Wire;
 */
 
 public class AndGate extends Gate{
-	private Wire leftInputWire;
-	private Integer leftInputValue;
-	private Wire rightInputWire;
-	private Integer rightInputValue;
+	private String leftInputWireNameOrValue;
+	private String rightInputWireNameOrValue;
 	
-	public AndGate(Wire output) {
-		super(output);
+	public AndGate(String outputNameOrValue) {
+		super(outputNameOrValue);
 	}
 	
-	public AndGate(Wire leftInput, Wire rightInput, Wire output) {
-		super(output);
+	public AndGate(String leftInput, String rightInput, String outputNameOrValue) {
+		super(outputNameOrValue);
 		
-		setLeftInputWire(leftInput);
-		setRightInputWire(rightInput);
+		setLeftInputWireNameOrValue(leftInput);
+		setRightInputWireNameOrValue(rightInput);
 	}
 	
-	public void setLeftInputWire(Wire wire) {
-		leftInputWire = wire;
+	public void setLeftInputWireNameOrValue(String value) {
+		leftInputWireNameOrValue = value;
 	}
 	
-	public void setLeftInputValue(int value) {
-		leftInputValue = value;
+	public String getLeftInputWireNameOrValue() {
+		return leftInputWireNameOrValue;
 	}
 	
-	public void setRightInputWire(Wire wire) {
-		rightInputWire = wire;
+	public void setRightInputWireNameOrValue(String value) {
+		rightInputWireNameOrValue = value;
 	}
 	
-	public void setRightInputValue(int value) {
-		rightInputValue = value;
+	public String getRightInputWireNameOrValue() {
+		return rightInputWireNameOrValue;
 	}
 	
-	public Wire run() {
-		if(!hasRun() && canRun()) {			
-			Integer left, right;
-			if(leftInputWire != null) {
-				left = leftInputWire.getValue();
-			}
-			else {
-				left = leftInputValue;
-			}
-			
-			if(rightInputWire != null) {
-				right = rightInputWire.getValue();
-			}
-			else {
-				right = rightInputValue;
-			}
-			
-			getOutput().setValue(left & right);
-			successfullyRan();
-			return getOutput();
-		}
-		
-		return null;
-	}
-	
-	public boolean canRun() {
-		return (((leftInputWire != null && leftInputWire.getValue() != null) || leftInputValue != null) && 
-				((rightInputWire != null && rightInputWire.getValue() != null) || rightInputValue != null));
-	}
-	
-	public String toString() {
-		return (leftInputWire == null ? leftInputValue : leftInputWire.getName() + "(" + leftInputWire.getValue() + ")") + 
-				" AND " + (rightInputWire == null ? rightInputValue : rightInputWire.getName() + "(" + rightInputWire.getValue() + ")") 
-				+ " -> " + getOutput().getName() + "(" + getOutput().getValue() + ")";
+	public Integer run(int leftValue, int rightValue) {
+		return leftValue & rightValue;
 	}
 }
