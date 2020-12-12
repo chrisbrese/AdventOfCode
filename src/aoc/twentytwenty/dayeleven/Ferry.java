@@ -71,92 +71,108 @@ public class Ferry {
 					else {
 						String[] row = lastSeating[curRow];
 						
-						tld: // top left diagonal
-						for(int newRow = curRow - 1; newRow >= 0; newRow --) {
-							for(int newCol = curCol - 1; newCol >= 0; newCol --) {
-								if(lastSeating[newRow][newCol].equals("#") || lastSeating[newRow][newCol].equals("L")) {
-									if(lastSeating[newRow][newCol].equals("#")) {
-										adjacentSeats++;
-									}
-									break tld;
+						int newRow = curRow - 1;
+						int newCol = curCol -1;
+						// top left diagonal
+						while(newRow >=0 && newCol >=0 ) {						
+							if(lastSeating[newRow][newCol].equals("#") || lastSeating[newRow][newCol].equals("L")) {
+								if(lastSeating[newRow][newCol].equals("#")) {
+									adjacentSeats++;
 								}
+								break;
 							}
+							newRow--;
+							newCol--;
 						}
 						
-						u: // up
-						for(int newRow = curRow-1; newRow >= 0; newRow--) {
+						// up
+						newRow = curRow - 1;
+						while(newRow >= 0) {						
 							if(lastSeating[newRow][curCol].equals("#") || lastSeating[newRow][curCol].equals("L")) {
 								if(lastSeating[newRow][curCol].equals("#")) {
 									adjacentSeats++;
 								}
-								break u;
+								break;
 							}
+							newRow--;
 						}
 					
-						trd: // top right diagonal
-						for(int newRow = curRow - 1; newRow >= 0; newRow --) {
-							for(int newCol = curCol + 1; newCol < row.length; newCol ++) {
-								if(lastSeating[newRow][newCol].equals("#") || lastSeating[newRow][newCol].equals("L")) {
-									if(lastSeating[newRow][newCol].equals("#")) {
-										adjacentSeats++;
-									}
-									break trd;
+						// top right diagonal
+						newRow = curRow - 1;
+						newCol = curCol + 1;
+						while(newRow >=0 && newCol < row.length) {
+							if(lastSeating[newRow][newCol].equals("#") || lastSeating[newRow][newCol].equals("L")) {
+								if(lastSeating[newRow][newCol].equals("#")) {
+									adjacentSeats++;
 								}
+								break;
 							}
+							newRow--;
+							newCol++;
 						}
 						
-						l: // left
-						for(int newCol = curCol-1; newCol >= 0; newCol--) {
+						// left
+						newCol = curCol - 1;
+						while(newCol >= 0) {
 							if(lastSeating[curRow][newCol].equals("#") || lastSeating[curRow][newCol].equals("L")) {
 								if(lastSeating[curRow][newCol].equals("#")) {
 									adjacentSeats++;
 								}
-								break l;
+								break;
 							}
+							newCol--;
 						}
 						
-						r: // right
-						for(int newCol = curCol+1; newCol < row.length; newCol++) {
+						// right
+						newCol = curCol + 1;
+						while(newCol < row.length) {						
 							if(lastSeating[curRow][newCol].equals("#") || lastSeating[curRow][newCol].equals("L")) {
 								if(lastSeating[curRow][newCol].equals("#")) {
 									adjacentSeats++;
 								}
-								break r;
+								break;
 							}
+							newCol++;
 						}
 						
-						bld: // bottom left diagonal
-						for(int newRow = curRow + 1; newRow < lastSeating.length; newRow ++) {
-							for(int newCol = curCol - 1; newCol >= 0; newCol --) {
-								if(lastSeating[newRow][newCol].equals("#") || lastSeating[newRow][newCol].equals("L")) {
-									if(lastSeating[newRow][newCol].equals("#")) {
-										adjacentSeats++;
-									}
-									break bld;
+						// bottom left diagonal
+						newRow = curRow + 1;
+						newCol = curCol - 1;
+						while(newRow < lastSeating.length && newCol >= 0) {
+							if(lastSeating[newRow][newCol].equals("#") || lastSeating[newRow][newCol].equals("L")) {
+								if(lastSeating[newRow][newCol].equals("#")) {
+									adjacentSeats++;
 								}
+								break;
 							}
+							newRow++;
+							newCol--;
 						}
 						
-						d: // down
-						for(int newRow = curRow+1; newRow < lastSeating.length; newRow++) {
+						// down
+						newRow = curRow + 1;
+						while(newRow < lastSeating.length) {
 							if(lastSeating[newRow][curCol].equals("#") || lastSeating[newRow][curCol].equals("L")) {
 								if(lastSeating[newRow][curCol].equals("#")) {
 									adjacentSeats++;
 								}
-								break d;
+								break;
 							}
+							newRow++;
 						}
 					
-						brd: // bottom right diagonal
-						for(int newRow = curRow + 1; newRow < lastSeating.length; newRow ++) {
-							for(int newCol = curCol + 1; newCol < row.length; newCol ++) {
-								if(lastSeating[newRow][newCol].equals("#") || lastSeating[newRow][newCol].equals("L")) {
-									if(lastSeating[newRow][newCol].equals("#")) {
-										adjacentSeats++;
-									}
-									break brd;
+						// bottom right diagonal
+						newRow = curRow + 1;
+						newCol = curCol + 1;
+						while(newRow < lastSeating.length && newCol < row.length) {
+							if(lastSeating[newRow][newCol].equals("#") || lastSeating[newRow][newCol].equals("L")) {
+								if(lastSeating[newRow][newCol].equals("#")) {
+									adjacentSeats++;
 								}
+								break;
 							}
+							newRow++;
+							newCol++;
 						}
 					}
 					

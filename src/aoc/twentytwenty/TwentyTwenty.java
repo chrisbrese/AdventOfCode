@@ -1004,8 +1004,6 @@ public class TwentyTwenty extends Year {
 			}
 		}
 		
-		System.out.println(ferry.printSeatingGrid(0, true));
-		
 		return seatCount;
 	}
 	
