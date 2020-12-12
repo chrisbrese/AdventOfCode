@@ -42,6 +42,13 @@ public class Adapters {
 		return adapters;
 	}
 	
+	
+	/**
+	 * Thanks to u/Whiskee [https://www.reddit.com/user/Whiskee/] for this block of code.
+	 * I was struggling and used their solution to get me started. It still doesn't seem exactly right,
+	 * but I think that is more of me not understanding. Expect this to change later as I rework it.
+	 * For some reason I have to divide the final answer by 2 to get the correct response.
+	 */
 	public long getPaths(int index) {
 		if(possiblePaths.get(index) != null && possiblePaths.get(index) > 0) {
 			return possiblePaths.get(index);

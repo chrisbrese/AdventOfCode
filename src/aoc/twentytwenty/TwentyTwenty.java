@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import aoc.Year;
+import aoc.twentytwenty.dayeleven.Ferry;
 import aoc.twentytwenty.dayseven.Bag;
 import aoc.twentytwenty.dayseven.Carousel;
 import aoc.twentytwenty.dayten.Adapters;
@@ -969,12 +970,79 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
+				day11SeatingSystemSeatEveryone();
 				break;
 			case "B":
+				day11SeatingSystemExtendedSeatView();
 				break;
 			default:
+				day11SeatingSystemSeatEveryone();
+				day11SeatingSystemExtendedSeatView();
 				break;
 		}
+	}
+	
+	public int day11SeatingSystem(int numAdjacentSeats, boolean extendedView) {
+		Ferry ferry = new Ferry(input);
+		
+		int lastHistory = 0;		
+		int newHistory =  -1;
+		
+		while(newHistory != lastHistory) {
+			lastHistory = newHistory;
+			newHistory = ferry.seatPeople(numAdjacentSeats, extendedView);
+		}
+		
+		String[][] seating = ferry.getHistory(newHistory);
+		int seatCount = 0;
+		for(int curRow = 0; curRow < seating.length; curRow++) {
+			String[] row = seating[curRow];
+			for(int curCol = 0; curCol < row.length; curCol++) {
+				if(seating[curRow][curCol].equals("#")) {
+					seatCount++;
+				}
+			}
+		}
+		
+		System.out.println(ferry.printSeatingGrid(0, true));
+		
+		return seatCount;
+	}
+	
+	/**
+	 * The final leg of your journey is on a ferry.
+	 * By modeling the process people use to choose (or abandon) their seat in the waiting area, you're pretty sure you can predict the best place to sit.
+	 * You make a quick map of the seat layout (your puzzle input).
+	 * The seat layout fits neatly on a grid. Each position is either floor (.), an empty seat (L), or an occupied seat (#).
+	 * Now, you just need to model the people who will be arriving shortly. Fortunately, people are entirely predictable and always follow a simple set of rules.
+	 * All decisions are based on the number of occupied seats adjacent to a given seat (one of the eight positions immediately up, down, left, right, or diagonal from the seat).
+	 * The following rules are applied to every seat simultaneously:
+	 *    If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
+	 *    If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty.
+	 *    Otherwise, the seat's state does not change.
+	 *    Floor (.) never changes; seats don't move, and nobody sits on the floor.
+	 * At this point, something interesting happens: the chaos stabilizes and further applications of these rules cause no seats to change state!
+	 * Simulate your seating area by applying the seating rules repeatedly until no seats change state.
+	 * How many seats end up occupied?
+	 */
+	public void day11SeatingSystemSeatEveryone() {
+		int seatCount = day11SeatingSystem(4, false);
+		
+		System.out.println(CUR_YEAR + " Day 11 Part A: " + seatCount);
+	}
+	
+	/**
+	 * As soon as people start to arrive, you realize your mistake. People don't just care about adjacent seats - they care about the first seat they can see in each of those eight directions!
+	 * Now, instead of considering just the eight immediately adjacent seats, consider the first seat in each of those eight directions.
+	 * Also, people seem to be more tolerant than you expected: it now takes five or more visible occupied seats for an occupied seat to become empty.
+	 * The other rules still apply: empty seats that see no occupied seats become occupied, seats matching no rule don't change, and floor never changes.
+	 * Again, at this point, people stop shifting around and the seating area reaches equilibrium.
+	 * Given the new visibility method and the rule change for occupied seats becoming empty, once equilibrium is reached, how many seats end up occupied?
+	 */
+	public void day11SeatingSystemExtendedSeatView() {
+		int seatCount = day11SeatingSystem(5, true);
+		
+		System.out.println(CUR_YEAR + " Day 11 Part B: " + seatCount);
 	}
 	
 	/**
