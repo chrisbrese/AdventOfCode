@@ -1,12 +1,14 @@
 package aoc.twentysixteen;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import aoc.Year;
 import aoc.utilities.MD5;
 import aoc.utilities.ReadInputFile;
+import aoc.utilities.grid.GridUtilities;
 
 public class TwentySixteen extends Year {
 	
@@ -22,13 +24,13 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day1NoTimeTaxicabHowManyBlocks(false);
+				day1NoTimeTaxicabHowManyBlocksToDestination();
 				break;
 			case "B":
 				day1day1NoTimeTaxicabFirstOneTwice();
 				break;
 			default:
-				day1NoTimeTaxicabHowManyBlocks(false);
+				day1NoTimeTaxicabHowManyBlocksToDestination();
 				day1day1NoTimeTaxicabFirstOneTwice();
 				break;
 		}		
@@ -41,210 +43,12 @@ public class TwentySixteen extends Year {
 	 * Given that you can only walk on the street grid of the city, how far is the shortest path to the destination?
 	 * How many blocks away is Easter Bunny HQ?
 	 */
-	public int day1NoTimeTaxicabHowManyBlocks(boolean useGrid) {
-		int blocks = 0;
+	public void day1NoTimeTaxicabHowManyBlocksToDestination() {
+		List<String> directions = Arrays.asList(input.get(0).split(", "));
 		
-		int MAX = 5000;
-		int[][] grid = new int[MAX][MAX];
+		int blocks = GridUtilities.howManyBlocks(directions, 5000, "N", false, 0, false);
 		
-		int curX = MAX/2;
-		int curY = MAX/2;
-		
-		int startX = curX;
-		int startY = curY;
-		int endX = -1 , endY = -1;
-		
-		grid[curX][curY] = 1;
-		
-		String[] directions = input.get(0).split(", ");
-		
-		// pointer can be N, E, S, W
-		String pointer = "N";
-
-		int counter = 0;
-		boolean done = false;
-		for(String d : directions) {
-			char dir = d.charAt(0);
-			int num = Integer.parseInt(d.substring(1));
-			
-			int endXTmp = curX;
-			int endYTmp = curY;
-			
-			if(dir == 'L') {
-				switch(pointer) {
-					case "N":
-						endXTmp -= num;
-						
-						if(useGrid) {
-							while(curX > endXTmp && !done) {
-								curX--;
-								grid[curX][curY]++;
-								
-								if(grid[curX][curY] == 2) {
-									done = true;
-									break;
-								}
-							}
-						}
-						
-						pointer = "W";
-						break;
-					case "E":
-						endYTmp -= num;
-						
-						if(useGrid) {
-							while(curY > endYTmp && !done) {
-								curY--;
-								grid[curX][curY]++;
-								
-								if(grid[curX][curY] == 2) {
-									done = true;
-									break;
-								}
-							}
-						}
-						
-						pointer = "N";
-						break;
-					case "S":
-						endXTmp += num;
-						
-						if(useGrid) {
-							while(curX < endXTmp && !done) {
-								curX++;
-								grid[curX][curY]++;
-								
-								if(grid[curX][curY] == 2) {
-									done = true;
-									break;
-								}
-							}
-						}
-						
-						pointer = "E";
-						break;
-					case "W":
-						endYTmp += num;
-						
-						if(useGrid) {
-							while(curY < endYTmp && !done) {
-								curY++;
-								grid[curX][curY]++;
-								
-								if(grid[curX][curY] == 2) {
-									done = true;
-									break;
-								}
-							}
-						}
-						
-						pointer = "S";
-						break;
-				}
-				
-				if(done) {
-					break;
-				}
-			}
-			else if(dir == 'R') {
-				switch(pointer) {
-					case "N":
-						endXTmp += num;
-						
-						if(useGrid) {
-							while(curX < endXTmp && !done) {
-								curX++;
-								grid[curX][curY]++;
-								
-								if(grid[curX][curY] == 2) {
-									done = true;
-									break;
-								}
-							}
-						}
-						
-						pointer = "E";
-						break;
-					case "E":
-						endYTmp += num;
-						
-						if(useGrid) {
-							while(curY < endYTmp && !done) {
-								curY++;
-								grid[curX][curY]++;
-								
-								if(grid[curX][curY] == 2) {
-									done = true;
-									break;
-								}
-							}
-						}
-						
-						pointer = "S";
-						break;
-					case "S":
-						endXTmp -= num;
-						
-						if(useGrid) {
-							while(curX > endXTmp && !done) {
-								curX--;
-								grid[curX][curY]++;
-								
-								if(grid[curX][curY] == 2) {
-									done = true;
-									break;
-								}
-							}
-						}
-						
-						pointer = "W";
-						break;
-					case "W":
-						endYTmp -= num;
-						
-						if(useGrid) {
-							while(curY > endYTmp && !done) {
-								curY--;
-								grid[curX][curY]++;
-								
-								if(grid[curX][curY] == 2) {
-									done = true;
-									break;
-								}
-							}
-						}
-						
-						pointer = "N";
-						break;
-				}
-			}			
-			
-			if(!useGrid) {
-				curX = endXTmp;
-				curY = endYTmp;
-				
-				if(counter == (directions.length-1)) {
-					endX = curX;
-					endY = curY;
-					break;
-				}				
-			}			
-			else if(useGrid) {				
-				if(done) {
-					endX = curX;
-					endY = curY;
-					break;
-				}
-			}
-			
-			counter++;
-		}
-		
-		blocks = Math.abs(endX-startX) + Math.abs(endY-startY);
-		
-		System.out.println(CUR_YEAR + " Day 1 Part A: " + blocks);
-		
-		return blocks;
+		System.out.println(CUR_YEAR + " Day 1 Part 1: " + blocks);
 	}
 	
 	/**
@@ -253,9 +57,11 @@ public class TwentySixteen extends Year {
 	 * How many blocks away is the first location you visit twice?
 	 */
 	public void day1day1NoTimeTaxicabFirstOneTwice() {
-		int blocks = day1NoTimeTaxicabHowManyBlocks(true);
+		List<String> directions = Arrays.asList(input.get(0).split(", "));
 		
-		System.out.println(CUR_YEAR + " Day 1 Part B: " + blocks);
+		int blocks = GridUtilities.howManyBlocks(directions, 5000, "N", true, 2, false);
+		
+		System.out.println(CUR_YEAR + " Day 1 Part 2: " + blocks);
 	}
 	
 	/**
@@ -337,7 +143,7 @@ public class TwentySixteen extends Year {
 		
 		String key = day2KeypadSearch(numPad, "5");
 		
-		System.out.println(CUR_YEAR + " Day 2 Part A: " + key);
+		System.out.println(CUR_YEAR + " Day 2 Part 1: " + key);
 	}
 	
 	/**
@@ -355,7 +161,7 @@ public class TwentySixteen extends Year {
 		
 		String key = day2KeypadSearch(numPad, "5");
 		
-		System.out.println(CUR_YEAR + " Day 2 Part B: " + key);
+		System.out.println(CUR_YEAR + " Day 2 Part 2: " + key);
 	}
 	
 	/**
@@ -433,7 +239,7 @@ public class TwentySixteen extends Year {
 			curY++;
 		}
 		
-		System.out.println(CUR_YEAR + " Day 3 Part A: " + valid);
+		System.out.println(CUR_YEAR + " Day 3 Part 1: " + valid);
 	}
 	
 	/**
@@ -457,7 +263,7 @@ public class TwentySixteen extends Year {
 			curY+=3;
 		}
 		
-		System.out.println(CUR_YEAR + " Day 3 Part B: " + valid);
+		System.out.println(CUR_YEAR + " Day 3 Part 2: " + valid);
 	}
 	
 	/**
@@ -546,7 +352,7 @@ public class TwentySixteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 4 Part A: " + sum);
+		System.out.println(CUR_YEAR + " Day 4 Part 1: " + sum);
 	}
 	
 	/**
@@ -591,7 +397,7 @@ public class TwentySixteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 4 Part B: " + result);
+		System.out.println(CUR_YEAR + " Day 4 Part 2: " + result);
 	}
 	
 	/**
@@ -630,7 +436,7 @@ public class TwentySixteen extends Year {
 			pass += s.substring(5,6);
 		}
 		
-		System.out.println(CUR_YEAR + " Day 5 Part A: " + pass);
+		System.out.println(CUR_YEAR + " Day 5 Part 1: " + pass);
 	}
 	
 	/**
@@ -648,7 +454,7 @@ public class TwentySixteen extends Year {
 			pass += s;
 		}
 		
-		System.out.println(CUR_YEAR + " Day 5 Part B: " + pass);
+		System.out.println(CUR_YEAR + " Day 5 Part 2: " + pass);
 	}
 	
 	/**
@@ -744,7 +550,7 @@ public class TwentySixteen extends Year {
 	public void day6day6SignalsNoiseVerticalPasswordMost() {
 		String pw = day6SignalsNoiseVerticalPassword(true);
 		
-		System.out.println(CUR_YEAR + " Day 6 Part A: " + pw);
+		System.out.println(CUR_YEAR + " Day 6 Part 1: " + pw);
 	}
 	
 	/**
@@ -754,7 +560,7 @@ public class TwentySixteen extends Year {
 	public void day6day6SignalsNoiseVerticalPasswordLeast() {
 		String pw = day6SignalsNoiseVerticalPassword(false);
 		
-		System.out.println(CUR_YEAR + " Day 6 Part B: " + pw);
+		System.out.println(CUR_YEAR + " Day 6 Part 2: " + pw);
 	}
 	
 	/**
@@ -831,7 +637,7 @@ public class TwentySixteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 7 Part A: " + abbaCount);
+		System.out.println(CUR_YEAR + " Day 7 Part 1: " + abbaCount);
 	}
 	
 	/**
@@ -913,7 +719,7 @@ public class TwentySixteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 7 Part B: " + abaBabCount);
+		System.out.println(CUR_YEAR + " Day 7 Part 2: " + abaBabCount);
 	}
 	
 	/**
@@ -1141,7 +947,7 @@ public class TwentySixteen extends Year {
 			totalLength += tmpLine.length();
 		}
 		
-		System.out.println(CUR_YEAR + " Day 9 Part A: " + totalLength);
+		System.out.println(CUR_YEAR + " Day 9 Part 1: " + totalLength);
 	}
 	
 	/**
@@ -1157,7 +963,7 @@ public class TwentySixteen extends Year {
 			totalLength += day9RecursiveDecompression(0, line, 0);
 		}
 		
-		System.out.println(CUR_YEAR + " Day 9 Part B: " + totalLength);
+		System.out.println(CUR_YEAR + " Day 9 Part 2: " + totalLength);
 	}
 	
 	/**

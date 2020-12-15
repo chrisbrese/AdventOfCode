@@ -119,7 +119,7 @@ public class AdventOfCode {
     /**
 	  * args[0] should be the current year e.g. 2020 (if left empty, run all years with the given day at args[1] and part at args[2])
 	  * args[1] should be the day's test to run (if 0, run all!)
-	  * args[2] should be the "part" (A/B) of the day to run (if left empty, or marked "Z", run all parts of the day)
+	  * args[2] should be the "part" (1/2) of the day to run (if left empty, or marked "Z", run all parts of the day)
 	  */
     public static void main(String args[]) {
     	String year = "0";

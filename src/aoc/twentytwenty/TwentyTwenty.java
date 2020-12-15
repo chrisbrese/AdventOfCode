@@ -6,10 +6,12 @@ import java.util.List;
 
 import aoc.Year;
 import aoc.twentytwenty.dayeleven.Ferry;
+import aoc.twentytwenty.dayfour.Passport;
 import aoc.twentytwenty.dayseven.Bag;
 import aoc.twentytwenty.dayseven.Carousel;
 import aoc.twentytwenty.dayten.Adapters;
 import aoc.utilities.ReadInputFile;
+import aoc.utilities.grid.GridUtilities;
 
 public class TwentyTwenty extends Year {
 	
@@ -25,14 +27,14 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
-				day1ReportRepair2Nums();
+				day1ReportRepairPart1();
 				break;
 			case "B":
-				day1ReportRepair3Nums();
+				day1ReportRepairPart2();
 				break;
 			default:
-				day1ReportRepair2Nums();
-				day1ReportRepair3Nums();
+				day1ReportRepairPart1();
+				day1ReportRepairPart2();
 				break;
 		}		
 	}
@@ -40,7 +42,7 @@ public class TwentyTwenty extends Year {
 	/**
 	 * Find the two entries that sum to 2020 and then multiply those two numbers together.
 	 */
-	public void day1ReportRepair2Nums(){
+	public void day1ReportRepairPart1(){
 		int val1,val2 = 0;
         
         for(int i = 0; i < input.size(); i++){
@@ -49,7 +51,7 @@ public class TwentyTwenty extends Year {
                 val2 = Integer.parseInt(input.get(j));
                 
                 if((val1 + val2) == CUR_YEAR){
-					System.out.println(CUR_YEAR + " Day 1 Part A: val1(" + val1 + "), val2(" + val2 + ") = " + (val1 * val2));
+					System.out.println(CUR_YEAR + " Day 1 Part 1: val1(" + val1 + "), val2(" + val2 + ") = " + (val1 * val2));
 				}
             }
         }
@@ -58,7 +60,7 @@ public class TwentyTwenty extends Year {
 	/**
 	 * What is the product of the three entries that sum to 2020?
 	 */
-	public void day1ReportRepair3Nums(){
+	public void day1ReportRepairPart2(){
 		int val1, val2, val3 = 0;
         
         for(int i = 0; i < input.size(); i++){
@@ -69,7 +71,7 @@ public class TwentyTwenty extends Year {
 					val3 = Integer.parseInt(input.get(k));
                 
 					if((val1 + val2 + val3) == CUR_YEAR){
-						System.out.println(CUR_YEAR + " Day 1 Part B: val1(" + val1 + "), val2(" + val2 + "), val3(" + val3 + ") = " + (val1 * val2 * val3));
+						System.out.println(CUR_YEAR + " Day 1 Part 2: val1(" + val1 + "), val2(" + val2 + "), val3(" + val3 + ") = " + (val1 * val2 * val3));
 					}
 				}
             }
@@ -84,14 +86,14 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
-				day2PasswordPhilosophyMinMax();
+				day2PasswordPhilosophyPart1();
 				break;
 			case "B":
-				day2PasswordPhilosophyExactSpot();
+				day2PasswordPhilosophyPart2();
 				break;
 			default:
-				day2PasswordPhilosophyMinMax();
-				day2PasswordPhilosophyExactSpot();
+				day2PasswordPhilosophyPart1();
+				day2PasswordPhilosophyPart2();
 				break;
 		}
 	}
@@ -103,7 +105,7 @@ public class TwentyTwenty extends Year {
 	 *				1-3 b: cdefg
 	 *				2-9 c: ccccccccc
 	 */
-	public void day2PasswordPhilosophyMinMax() {
+	public void day2PasswordPhilosophyPart1() {
 		int validCount = 0;
 		
 		for(int i = 0; i < input.size(); i++) {
@@ -130,7 +132,7 @@ public class TwentyTwenty extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 2 Part A: " + validCount);
+		System.out.println(CUR_YEAR + " Day 2 Part 1: " + validCount);
 	}
 	
 	/**
@@ -141,7 +143,7 @@ public class TwentyTwenty extends Year {
 	 *				1-3 b: cdefg
 	 *				2-9 c: ccccccccc
 	 */
-	public void day2PasswordPhilosophyExactSpot() {
+	public void day2PasswordPhilosophyPart2() {
 		int validCount = 0;
 		
 		for(int i = 0; i < input.size(); i++) {
@@ -164,7 +166,7 @@ public class TwentyTwenty extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 2 Part B: " + validCount);
+		System.out.println(CUR_YEAR + " Day 2 Part 2: " + validCount);
 	}
 	
 	/**
@@ -175,14 +177,14 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
-				day3TobogganTrajectoryTreesInSlope(3, 1);
+				day3TobogganTrajectoryPart1(3, 1);
 				break;
 			case "B":
-				day3TobogganTrajectoryTreesMultipleSlopes();
+				day3TobogganTrajectoryTreesPart2();
 				break;
 			default:
-				day3TobogganTrajectoryTreesInSlope(3, 1);
-				day3TobogganTrajectoryTreesMultipleSlopes();
+				day3TobogganTrajectoryPart1(3, 1);
+				day3TobogganTrajectoryTreesPart2();
 				break;
 		}
 	}
@@ -194,7 +196,7 @@ public class TwentyTwenty extends Year {
 	 * You start on the open square (.) in the top-left corner and need to reach the bottom (below the bottom-most row on your map).
 	 * Starting at the top-left corner of your map and following a slope of "right" and "down", how many trees would you encounter?
 	 */
-	public int day3TobogganTrajectoryTreesInSlope(int right, int down) {
+	public int day3TobogganTrajectoryPart1(int right, int down) {
 		int width = input.get(0).length();
 		int height = input.size();
 		
@@ -229,7 +231,7 @@ public class TwentyTwenty extends Year {
 			curY += down;
 		}
 		
-		System.out.println(CUR_YEAR + " Day 3 Part A: " + treeCount);
+		System.out.println(CUR_YEAR + " Day 3 Part 1: " + treeCount);
 		return treeCount;
 	}
 	
@@ -242,16 +244,16 @@ public class TwentyTwenty extends Year {
 	 *    Right 1, down 2.
 	 * What do you get if you multiply together the number of trees encountered on each of the listed slopes?
 	 */
-	public void day3TobogganTrajectoryTreesMultipleSlopes() {
-		double count1 = day3TobogganTrajectoryTreesInSlope(1, 1) * 1.0;
-		double count2 = day3TobogganTrajectoryTreesInSlope(3, 1) * 1.0;
-		double count3 = day3TobogganTrajectoryTreesInSlope(5, 1) * 1.0;
-		double count4 = day3TobogganTrajectoryTreesInSlope(7, 1) * 1.0;
-		double count5 = day3TobogganTrajectoryTreesInSlope(1, 2) * 1.0;
+	public void day3TobogganTrajectoryTreesPart2() {
+		double count1 = day3TobogganTrajectoryPart1(1, 1) * 1.0;
+		double count2 = day3TobogganTrajectoryPart1(3, 1) * 1.0;
+		double count3 = day3TobogganTrajectoryPart1(5, 1) * 1.0;
+		double count4 = day3TobogganTrajectoryPart1(7, 1) * 1.0;
+		double count5 = day3TobogganTrajectoryPart1(1, 2) * 1.0;
 		
 		double product = count1 * count2 * count3 * count4 * count5;
 		
-		System.out.println(CUR_YEAR + " Day 3 Part B: " + product);
+		System.out.println(CUR_YEAR + " Day 3 Part 2: " + product);
 	}
 	
 	/**
@@ -265,11 +267,11 @@ public class TwentyTwenty extends Year {
 				day4PassportProcessingRequiredFields(0,0,0,0,0,0,false,false,false,false);
 				break;
 			case "B":
-				day4PassportProcessingValidation();
+				day4PassportProcessingPart2();
 				break;
 			default:
 				day4PassportProcessingRequiredFields(0,0,0,0,0,0,false,false,false,false);
-				day4PassportProcessingValidation();
+				day4PassportProcessingPart2();
 				break;
 		}
 	}
@@ -370,7 +372,7 @@ public class TwentyTwenty extends Year {
 	 * Your job is to count the passports where all required fields are both present and valid according to the above rules.
 	 * In your batch file, how many passports are valid?
 	 */
-	public void day4PassportProcessingValidation() {
+	public void day4PassportProcessingPart2() {
 		day4PassportProcessingRequiredFields(1920,2002,2010,2020,2020,2030,true,true,true,true);
 	}
 	
@@ -382,14 +384,14 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
-				day5BinaryBoardingWhichSeatIdIsHighest();
+				day5BinaryBoardingPart1();
 				break;
 			case "B":
-				day5BinaryBoardingWhichSeatIsMine();
+				day5BinaryBoardingPart2();
 				break;
 			default:
-				day5BinaryBoardingWhichSeatIdIsHighest();
-				day5BinaryBoardingWhichSeatIsMine();
+				day5BinaryBoardingPart1();
+				day5BinaryBoardingPart2();
 				break;
 		}
 	}
@@ -437,7 +439,7 @@ public class TwentyTwenty extends Year {
 	 * Every seat also has a unique seat ID: multiply the row by 8, then add the column.
 	 * What is the highest seat ID on a boarding pass?
 	 */
-	public void day5BinaryBoardingWhichSeatIdIsHighest() {
+	public void day5BinaryBoardingPart1() {
 		int highestSeatId = 0;
 		
 		for(String line : input) {			
@@ -451,7 +453,7 @@ public class TwentyTwenty extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 5 Part A: " + highestSeatId);
+		System.out.println(CUR_YEAR + " Day 5 Part 1: " + highestSeatId);
 	}
 	
 	/**
@@ -460,7 +462,7 @@ public class TwentyTwenty extends Year {
 	 * Your seat wasn't at the very front or back, though; the seats with IDs +1 and -1 from yours will be in your list.
 	 * What is the ID of your seat?
 	 */
-	public void day5BinaryBoardingWhichSeatIsMine() {
+	public void day5BinaryBoardingPart2() {
 		int ROWS = 128;
 		int COLUMNS = 8;
 		
@@ -492,7 +494,7 @@ public class TwentyTwenty extends Year {
 		
 		for(Integer s : nullSeatIds) {
 			if(seatIds.contains(s-1) && seatIds.contains(s+1)) {
-				System.out.println(CUR_YEAR + " Day 5 Part B: " + s);
+				System.out.println(CUR_YEAR + " Day 5 Part 2: " + s);
 			}
 		}
 	}
@@ -505,14 +507,14 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
-				day6CustomCustomsSumOfAllYeses();
+				day6CustomCustomsPart1();
 				break;
 			case "B":
-				day6CustomCustomsSumOfOnlyYeses();
+				day6CustomCustomsPart2();
 				break;
 			default:
-				day6CustomCustomsSumOfAllYeses();
-				day6CustomCustomsSumOfOnlyYeses();
+				day6CustomCustomsPart1();
+				day6CustomCustomsPart2();
 				break;
 		}
 	}
@@ -525,7 +527,7 @@ public class TwentyTwenty extends Year {
 	 * Each group's answers are separated by a blank line, and within each group, each person's answers are on a single line.
 	 * For each group, count the number of questions to which anyone answered "yes". What is the sum of those counts?
 	 */
-	public void day6CustomCustomsSumOfAllYeses() {
+	public void day6CustomCustomsPart1() {
 		int sum = 0;
 		List<String> yes = new ArrayList<String>();
 		int count = 0;
@@ -547,7 +549,7 @@ public class TwentyTwenty extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 6 Part A: " + sum);
+		System.out.println(CUR_YEAR + " Day 6 Part 1: " + sum);
 	}
 	
 	/**
@@ -555,7 +557,7 @@ public class TwentyTwenty extends Year {
 	 * For each group, count the number of questions to which everyone answered "yes".
 	 * What is the sum of those counts?
 	 */
-	public void day6CustomCustomsSumOfOnlyYeses() {
+	public void day6CustomCustomsPart2() {
 		int sum = 0;
 		List<List<String>> yeses = new ArrayList<List<String>>();
 		int count = 0;
@@ -588,7 +590,7 @@ public class TwentyTwenty extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 6 Part B: " + sum);
+		System.out.println(CUR_YEAR + " Day 6 Part 2: " + sum);
 	}
 	
 	/**
@@ -599,14 +601,14 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
-				day7HandyHaversacksHowManyBags();
+				day7HandyHaversacksPart1();
 				break;
 			case "B":
-				day7HandyHaversacksHowManyBagsInside();
+				day7HandyHaversacksPart2();
 				break;
 			default:
-				day7HandyHaversacksHowManyBags();
-				day7HandyHaversacksHowManyBagsInside();
+				day7HandyHaversacksPart1();
+				day7HandyHaversacksPart2();
 				break;
 		}
 	}
@@ -619,7 +621,7 @@ public class TwentyTwenty extends Year {
 	 * (In other words: how many colors can, eventually, contain at least one shiny gold bag?)
 	 * How many bag colors can eventually contain at least one shiny gold bag?
 	 */
-	public void day7HandyHaversacksHowManyBags() {
+	public void day7HandyHaversacksPart1() {
 		Carousel carousel = new Carousel();
 		int numBags = 0;
 		
@@ -633,13 +635,13 @@ public class TwentyTwenty extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 7 Part A: " + numBags);
+		System.out.println(CUR_YEAR + " Day 7 Part 1: " + numBags);
 	}
 	
 	/**
 	 * How many individual bags are required inside your single shiny gold bag?
 	 */
-	public void day7HandyHaversacksHowManyBagsInside() {
+	public void day7HandyHaversacksPart2() {
 		Carousel carousel = new Carousel();
 		
 		for(String line : input) {
@@ -648,7 +650,7 @@ public class TwentyTwenty extends Year {
 		
 		Bag b = carousel.getBag("shiny gold");
 		
-		System.out.println(CUR_YEAR + " Day 7 Part B: " + b.howManyBagsInside());
+		System.out.println(CUR_YEAR + " Day 7 Part 2: " + b.howManyBagsInside());
 	}
 	
 	/**
@@ -659,14 +661,14 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
-				day8HandheldHaltingInfiniteLoop();
+				day8HandheldHaltingPart1();
 				break;
 			case "B":
-				day8HandheldHaltingInfiniteLoopFix();
+				day8HandheldHaltingPart2();
 				break;
 			default:
-				day8HandheldHaltingInfiniteLoop();
-				day8HandheldHaltingInfiniteLoopFix();
+				day8HandheldHaltingPart1();
+				day8HandheldHaltingPart2();
 				break;
 		}
 	}
@@ -725,10 +727,10 @@ public class TwentyTwenty extends Year {
 	 *    nop stands for No OPeration - it does nothing. The instruction immediately below it is executed next.
 	 * Run your copy of the boot code. Immediately before any instruction is executed a second time, what value is in the accumulator?
 	 */
-	public void day8HandheldHaltingInfiniteLoop() {
+	public void day8HandheldHaltingPart1() {
 		int accumulator = day8RunBootCode(input).get(0);
 		
-		System.out.println(CUR_YEAR + " Day 8 Part A: " + accumulator);
+		System.out.println(CUR_YEAR + " Day 8 Part 1: " + accumulator);
 	}
 	
 	/**
@@ -739,7 +741,7 @@ public class TwentyTwenty extends Year {
 	 * Fix the program so that it terminates normally by changing exactly one jmp (to nop) or nop (to jmp).
 	 * What is the value of the accumulator after the program terminates?
 	 */
-	public void day8HandheldHaltingInfiniteLoopFix() {
+	public void day8HandheldHaltingPart2() {
 		int accumulator = 0;
 		
 		List<String> newInput;
@@ -775,7 +777,7 @@ public class TwentyTwenty extends Year {
 			count++;
 		}
 		
-		System.out.println(CUR_YEAR + " Day 8 Part B: " + accumulator);
+		System.out.println(CUR_YEAR + " Day 8 Part 2: " + accumulator);
 	}
 	
 	/**
@@ -786,14 +788,14 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
-				day9EncodingErrorNumberWithNoSum();
+				day9EncodingErrorPart1();
 				break;
 			case "B":
-				day9EncodingErrorForceSum();
+				day9EncodingErrorPart2();
 				break;
 			default:
-				day9EncodingErrorNumberWithNoSum();
-				day9EncodingErrorForceSum();
+				day9EncodingErrorPart1();
+				day9EncodingErrorPart2();
 				break;
 		}
 	}
@@ -806,7 +808,7 @@ public class TwentyTwenty extends Year {
 	 *    which is not the sum of two of the 25 numbers before it.
 	 * What is the first number that does not have this property?
 	 */
-	public void day9EncodingErrorNumberWithNoSum() {
+	public void day9EncodingErrorPart1() {
 		List<Long> longs = new ArrayList<Long>(input.size());
 		for(String line : input) {
 			long l = Long.parseLong(line);
@@ -838,10 +840,10 @@ public class TwentyTwenty extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 9 Part A: " + badLong);
+		System.out.println(CUR_YEAR + " Day 9 Part 1: " + badLong);
 	}
 	
-	public void day9EncodingErrorForceSum() {
+	public void day9EncodingErrorPart2() {
 		List<Long> longs = new ArrayList<Long>(input.size());
 		for(String line : input) {
 			long l = Long.parseLong(line);
@@ -885,7 +887,7 @@ public class TwentyTwenty extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 9 Part B: " + (smallest + biggest));
+		System.out.println(CUR_YEAR + " Day 9 Part 2: " + (smallest + biggest));
 	}
 	
 	/**
@@ -896,14 +898,14 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
-				day10AdapterArrayAdapterChain();
+				day10AdapterArrayPart1();
 				break;
 			case "B":
-				day10AdapterArrayNumAdapterCombos();
+				day10AdapterArrayPart2();
 				break;
 			default:
-				day10AdapterArrayAdapterChain();
-				day10AdapterArrayNumAdapterCombos();
+				day10AdapterArrayPart1();
+				day10AdapterArrayPart2();
 				break;
 		}
 	}
@@ -920,7 +922,7 @@ public class TwentyTwenty extends Year {
 	 *    count the joltage differences between the charging outlet, the adapters, and your device.
 	 * What is the number of 1-jolt differences multiplied by the number of 3-jolt differences?
 	 */
-	public void day10AdapterArrayAdapterChain() {
+	public void day10AdapterArrayPart1() {
 		Adapters adapters = new Adapters(input);
 		
 		int deviceJoltage = adapters.getAdapters().get(adapters.getAdapters().size()-1) + 3;
@@ -940,7 +942,7 @@ public class TwentyTwenty extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 10 Part A: " + (num1JoltDiff * num3JoltDiff));
+		System.out.println(CUR_YEAR + " Day 10 Part 1: " + (num1JoltDiff * num3JoltDiff));
 	}
 	
 	/**
@@ -950,7 +952,7 @@ public class TwentyTwenty extends Year {
 	 * Surely, there must be an efficient way to count the arrangements.
 	 * What is the total number of distinct ways you can arrange the adapters to connect the charging outlet to your device?
 	 */
-	public void day10AdapterArrayNumAdapterCombos() {
+	public void day10AdapterArrayPart2() {
 		Adapters adapters = new Adapters(input);
 		
 		int deviceJoltage = adapters.getAdapters().get(adapters.getAdapters().size()-1) + 3;
@@ -959,7 +961,7 @@ public class TwentyTwenty extends Year {
 		long numPaths = adapters.getPaths(adapters.getAdapters().size()-1);
 		
 		// why does this have to be divided by 2?
-		System.out.println(CUR_YEAR + " Day 10 Part B: " + numPaths/2);
+		System.out.println(CUR_YEAR + " Day 10 Part 2: " + numPaths/2);
 	}
 	
 	/**
@@ -1026,7 +1028,7 @@ public class TwentyTwenty extends Year {
 	public void day11SeatingSystemSeatEveryone() {
 		int seatCount = day11SeatingSystem(4, false);
 		
-		System.out.println(CUR_YEAR + " Day 11 Part A: " + seatCount);
+		System.out.println(CUR_YEAR + " Day 11 Part 1: " + seatCount);
 	}
 	
 	/**
@@ -1040,7 +1042,7 @@ public class TwentyTwenty extends Year {
 	public void day11SeatingSystemExtendedSeatView() {
 		int seatCount = day11SeatingSystem(5, true);
 		
-		System.out.println(CUR_YEAR + " Day 11 Part B: " + seatCount);
+		System.out.println(CUR_YEAR + " Day 11 Part 2: " + seatCount);
 	}
 	
 	/**
@@ -1051,12 +1053,34 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
+				day12RainRiskPart1();
 				break;
 			case "B":
 				break;
 			default:
+				day12RainRiskPart1();
 				break;
 		}
+	}
+	
+	/**
+	 * The navigation instructions (your puzzle input) consists of a sequence of single-character actions paired with integer input values.
+	 *    Action N means to move north by the given value.
+	 *    Action S means to move south by the given value.
+	 *    Action E means to move east by the given value.
+	 *    Action W means to move west by the given value.
+	 *    Action L means to turn left the given number of degrees.
+	 *    Action R means to turn right the given number of degrees.
+	 *    Action F means to move forward by the given value in the direction the ship is currently facing.
+	 * The ship starts by facing east. Only the L and R actions change the direction the ship is facing. 
+	 *    (That is, if the ship is facing east and the next instruction is N10, the ship would move north 10 units, but would still move east if the following action were F.)
+	 * Figure out where the navigation instructions lead.
+	 * What is the Manhattan distance (sum of the absolute values of its east/west position and its north/south position) from its starting position?
+	 */
+	public void day12RainRiskPart1() {
+		int blocks = GridUtilities.howManyBlocks(input, 5000, "E", false, 0, true);
+		
+		System.out.println(CUR_YEAR + " Day 12 Part 1: " + blocks);
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-package aoc.twentytwenty;
+package aoc.twentytwenty.dayfour;
 
 public class Passport {
 	private int birthYear = 0;

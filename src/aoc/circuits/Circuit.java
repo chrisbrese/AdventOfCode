@@ -1,13 +1,13 @@
-package circuits;
+package aoc.circuits;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import circuits.gates.AndGate;
-import circuits.gates.LShiftGate;
-import circuits.gates.NotGate;
-import circuits.gates.OrGate;
-import circuits.gates.RShiftGate;
+import aoc.circuits.gates.AndGate;
+import aoc.circuits.gates.LShiftGate;
+import aoc.circuits.gates.NotGate;
+import aoc.circuits.gates.OrGate;
+import aoc.circuits.gates.RShiftGate;
 
 public class Circuit {
 	private List<Wire> knownWires = new ArrayList<Wire>();

@@ -1,6 +1,6 @@
-package circuits.gates;
+package aoc.circuits.gates;
 
-import circuits.Gate;
+import aoc.circuits.Gate;
 
 /*
      	  |

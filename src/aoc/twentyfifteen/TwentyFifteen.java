@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import aoc.Year;
+import aoc.circuits.Circuit;
+import aoc.circuits.Wire;
+import aoc.circuits.gates.AndGate;
+import aoc.circuits.gates.LShiftGate;
+import aoc.circuits.gates.NotGate;
+import aoc.circuits.gates.OrGate;
+import aoc.circuits.gates.RShiftGate;
 import aoc.twentyfifteen.daynine.City;
 import aoc.twentyfifteen.daynine.Country;
 import aoc.utilities.MD5;
 import aoc.utilities.ReadInputFile;
-import circuits.Circuit;
-import circuits.Wire;
-import circuits.gates.AndGate;
-import circuits.gates.LShiftGate;
-import circuits.gates.NotGate;
-import circuits.gates.OrGate;
-import circuits.gates.RShiftGate;
 
 public class TwentyFifteen extends Year {
 	
@@ -60,7 +60,7 @@ public class TwentyFifteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 1 Part A: " + count);
+		System.out.println(CUR_YEAR + " Day 1 Part 1: " + count);
 	}
 	
 	/**
@@ -86,7 +86,7 @@ public class TwentyFifteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 1 Part B: " + floorPos);
+		System.out.println(CUR_YEAR + " Day 1 Part 2: " + floorPos);
 	}
 	
 	/**
@@ -148,7 +148,7 @@ public class TwentyFifteen extends Year {
 			total += curArea;
 		}
 		
-		System.out.println(CUR_YEAR + " Day 2 Part A: " + total);
+		System.out.println(CUR_YEAR + " Day 2 Part 1: " + total);
 	}
 	
 	/**
@@ -190,7 +190,7 @@ public class TwentyFifteen extends Year {
 			total += curLength;
 		}
 		
-		System.out.println(CUR_YEAR + " Day 2 Part B: " + total);
+		System.out.println(CUR_YEAR + " Day 2 Part 2: " + total);
 	}
 	
 	/**
@@ -254,7 +254,7 @@ public class TwentyFifteen extends Year {
 			houseGrid[curX][curY] ++;
 		}
 		
-		System.out.println(CUR_YEAR + " Day 3 Part A: " + total);
+		System.out.println(CUR_YEAR + " Day 3 Part 1: " + total);
 	}
 	
 	/**
@@ -321,7 +321,7 @@ public class TwentyFifteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 3 Part B: " + total);
+		System.out.println(CUR_YEAR + " Day 3 Part 2: " + total);
 	}
 	
 	/**
@@ -421,7 +421,7 @@ public class TwentyFifteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 5 Part A: " + count);
+		System.out.println(CUR_YEAR + " Day 5 Part 1: " + count);
 	}
 	
 	/**
@@ -470,7 +470,7 @@ public class TwentyFifteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 5 Part B: " + count);
+		System.out.println(CUR_YEAR + " Day 5 Part 2: " + count);
 	}
 	
 	/**
@@ -559,7 +559,7 @@ public class TwentyFifteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 6 Part A: " + count);
+		System.out.println(CUR_YEAR + " Day 6 Part 1: " + count);
 	}
 	
 	/**
@@ -626,7 +626,7 @@ public class TwentyFifteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 6 Part B: " + count);
+		System.out.println(CUR_YEAR + " Day 6 Part 2: " + count);
 	}
 	
 	/**
@@ -823,7 +823,7 @@ public class TwentyFifteen extends Year {
 		
 		circuit.runCircuit();
 		
-		System.out.println(CUR_YEAR + " Day 7 Part A: " + circuit.getWireValue("a"));
+		System.out.println(CUR_YEAR + " Day 7 Part 1: " + circuit.getWireValue("a"));
 	}
 	
 	/**
@@ -839,7 +839,7 @@ public class TwentyFifteen extends Year {
 		
 		circuit.runCircuit();
 		
-		System.out.println(CUR_YEAR + " Day 7 Part B: " + circuit.getWireValue("a"));
+		System.out.println(CUR_YEAR + " Day 7 Part 2: " + circuit.getWireValue("a"));
 	}
 	
 	/**
@@ -900,7 +900,7 @@ public class TwentyFifteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 8 Part A: " + (actualChars - inMemoryChars));
+		System.out.println(CUR_YEAR + " Day 8 Part 1: " + (actualChars - inMemoryChars));
 	}
 	
 	public void day8MatchsticksEncodeStringLiterals() {
@@ -923,7 +923,7 @@ public class TwentyFifteen extends Year {
 			afterEncodedChars += line.length();
 		}
 		
-		System.out.println(CUR_YEAR + " Day 8 Part B: " + (afterEncodedChars - actualChars));
+		System.out.println(CUR_YEAR + " Day 8 Part 2: " + (afterEncodedChars - actualChars));
 	}
 	
 	/**
@@ -998,7 +998,7 @@ public class TwentyFifteen extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 9 Part A: " + shortestRoute);
+		System.out.println(CUR_YEAR + " Day 9 Part 1: " + shortestRoute);
 	}
 	
 	/**
