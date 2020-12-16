@@ -16,12 +16,15 @@ public class Grid {
 	private String pointerStr;
 	private int pointerNum;
 	
+	int[] waypointPosition = null;
+	
 	/**
 	 * Instantiates a new Grid object.
 	 * @param gridSize The Max Rows/Cols of the grid.
 	 * @param initialPointer The initial direction to face
+	 * @param useWaypoint true if moving towards a waypoint
 	 */
-	public Grid(int gridSize, String initialPointer) {
+	public Grid(int gridSize, String initialPointer, boolean useWaypoint) {
 		GRID_SIZE = gridSize;
 		
 		grid = new int[GRID_SIZE][GRID_SIZE];
@@ -36,6 +39,12 @@ public class Grid {
 		
 		pointerStr = initialPointer;
 		pointerNum = GridUtilities.getPointerNum(initialPointer);
+		
+		if(useWaypoint) {
+			waypointPosition = new int[2];
+			waypointPosition[0] = -1; // starting row in comparison to ship
+			waypointPosition[1] = 10; // starting col in comparison to ship
+		}
 	}
 	
 	/**
@@ -55,212 +64,288 @@ public class Grid {
 		
 		boolean done = false;
 		
-		if(dir.equals("F")) {
-			dir = pointerStr;			
-		}
-		
-		if(dir.equals("N")) {
-			endRowTmp = curRow - num;
-		}
-		else if(dir.equals("E")) {
-			endColTmp = curCol + num;
-		}
-		else if(dir.equals("S")) {
-			endRowTmp = curRow + num;
-		}
-		else if(dir.equals("W")) {
-			endColTmp = curCol - num;
-		}
-		else if((dir.equals("L") || dir.equals("R")) && rLMeansRotate) {
-			if(dir.equals("L")) {
-				pointerNum = Math.floorMod((pointerNum - num), 360);
-			}
-			else if(dir.equals("R")) {
-				pointerNum = Math.floorMod((pointerNum + num), 360);
-			}
-
-			pointerStr = GridUtilities.getPointerString(pointerNum);
-		}
-		else if(dir.equals("L")) {			
-			switch(pointerStr) {
+		if(waypointPosition != null) {
+			switch(dir) {
 				case "N":
-					endColTmp -= num;
-					
-					if(checkIndividualCells) {
-						while(curCol > endColTmp && !done) {
-							curCol--;
-							grid[curRow][curCol]++;
-							
-							if(grid[curRow][curCol] == maxNumInCellToEnd) {
-								done = true;
-								break;
-							}
-						}
-					}
-					
-					pointerStr = "W";
+					waypointPosition[0] = waypointPosition[0] - num;
 					break;
 				case "E":
-					endRowTmp -= num;
-					
-					if(checkIndividualCells) {
-						while(curRow > endRowTmp && !done) {
-							curRow--;
-							grid[curRow][curCol]++;
-							
-							if(grid[curRow][curCol] == 2) {
-								done = true;
-								break;
-							}
-						}
-					}
-					
-					pointerStr = "N";
+					waypointPosition[1] = waypointPosition[1] + num;
 					break;
 				case "S":
-					endColTmp += num;
-					
-					if(checkIndividualCells) {
-						while(curCol < endColTmp && !done) {
-							curCol++;
-							grid[curRow][curCol]++;
-							
-							if(grid[curRow][curCol] == 2) {
-								done = true;
-								break;
-							}
-						}
-					}
-					
-					pointerStr = "E";
+					waypointPosition[0] = waypointPosition[0] + num;
 					break;
 				case "W":
-					endRowTmp += num;
-					
-					if(checkIndividualCells) {
-						while(curRow < endRowTmp && !done) {
-							curRow++;
-							grid[curRow][curCol]++;
-							
-							if(grid[curRow][curCol] == 2) {
-								done = true;
-								break;
+					waypointPosition[1] = waypointPosition[1] - num;
+					break;
+				case "F":
+					for(int i = 0; i < num; i++) {
+						endRowTmp += waypointPosition[0];
+						endColTmp += waypointPosition[1];
+					}
+					break;
+				default:
+					for(int i = 0; i < (num/90); i++) {
+						int tmpRow = waypointPosition[0];
+						int tmpCol = waypointPosition[1];
+						
+						// case if north
+						if(tmpRow < 0) {
+							if(tmpCol >= 0) { // case if east
+								if(dir.equals("R")) {
+									waypointPosition[1] = -1 * tmpRow;
+									waypointPosition[0] = tmpCol;
+								}
+								else {
+									waypointPosition[1] = tmpRow;
+									waypointPosition[0] = -1 * tmpCol;
+								}
+							}
+							else { // case if west
+								if(dir.equals("R")) {
+									waypointPosition[1] = -1 * tmpRow;
+									waypointPosition[0] = tmpCol;
+								}
+								else {
+									waypointPosition[1] = tmpRow;
+									waypointPosition[0] = -1 * tmpCol;
+								}
 							}
 						}
+						else if(tmpRow >= 0) { // case if south
+							if(tmpCol >= 0) { // case if east
+								if(dir.equals("R")) {
+									waypointPosition[1] = -1 * tmpRow;
+									waypointPosition[0] = tmpCol;
+								}
+								else {
+									waypointPosition[1] = tmpRow;
+									waypointPosition[0] = -1 * tmpCol;
+								}
+							}
+							else { // case if west
+								if(dir.equals("R")) {
+									waypointPosition[1] = -1 * tmpRow;
+									waypointPosition[0] = tmpCol;
+								}
+								else {
+									waypointPosition[1] = tmpRow;
+									waypointPosition[0] = -1 * tmpCol;
+								}
+							}
+						}
+						
 					}
-					
-					pointerStr = "S";
 					break;
 			}
-		}
-		else if(dir.equals("R")) {
-			switch(pointerStr) {
-				case "N":
-					endColTmp += num;
-					
-					if(checkIndividualCells) {
-						while(curCol < endColTmp && !done) {
-							curCol++;
-							grid[curRow][curCol]++;
-							
-							if(grid[curRow][curCol] == 2) {
-								done = true;
-								break;
+		}		
+		else {
+			if(dir.equals("F")) {
+				dir = pointerStr;			
+			}
+			
+			if(dir.equals("N")) {
+				endRowTmp = curRow - num;
+			}
+			else if(dir.equals("E")) {
+				endColTmp = curCol + num;
+			}
+			else if(dir.equals("S")) {
+				endRowTmp = curRow + num;
+			}
+			else if(dir.equals("W")) {
+				endColTmp = curCol - num;
+			}
+			else if((dir.equals("L") || dir.equals("R")) && rLMeansRotate) {
+				if(dir.equals("L")) {
+					pointerNum = Math.floorMod((pointerNum - num), 360);
+				}
+				else if(dir.equals("R")) {
+					pointerNum = Math.floorMod((pointerNum + num), 360);
+				}
+	
+				pointerStr = GridUtilities.getPointerString(pointerNum);
+			}
+			else if(dir.equals("L")) {			
+				switch(pointerStr) {
+					case "N":
+						endColTmp -= num;
+						
+						if(checkIndividualCells) {
+							while(curCol > endColTmp && !done) {
+								curCol--;
+								grid[curRow][curCol]++;
+								
+								if(grid[curRow][curCol] == maxNumInCellToEnd) {
+									done = true;
+									break;
+								}
 							}
 						}
-					}
-					
-					pointerStr = "E";
-					break;
-				case "E":
-					endRowTmp += num;
-					
-					if(checkIndividualCells) {
-						while(curRow < endRowTmp && !done) {
-							curRow++;
-							grid[curRow][curCol]++;
-							
-							if(grid[curRow][curCol] == 2) {
-								done = true;
-								break;
+						
+						pointerStr = "W";
+						break;
+					case "E":
+						endRowTmp -= num;
+						
+						if(checkIndividualCells) {
+							while(curRow > endRowTmp && !done) {
+								curRow--;
+								grid[curRow][curCol]++;
+								
+								if(grid[curRow][curCol] == 2) {
+									done = true;
+									break;
+								}
 							}
 						}
-					}
-					
-					pointerStr = "S";
-					break;
-				case "S":
-					endColTmp -= num;
-					
-					if(checkIndividualCells) {
-						while(curCol > endColTmp && !done) {
-							curCol--;
-							grid[curRow][curCol]++;
-							
-							if(grid[curRow][curCol] == 2) {
-								done = true;
-								break;
+						
+						pointerStr = "N";
+						break;
+					case "S":
+						endColTmp += num;
+						
+						if(checkIndividualCells) {
+							while(curCol < endColTmp && !done) {
+								curCol++;
+								grid[curRow][curCol]++;
+								
+								if(grid[curRow][curCol] == 2) {
+									done = true;
+									break;
+								}
 							}
 						}
-					}
-					
-					pointerStr = "W";
-					break;
-				case "W":
-					endRowTmp -= num;
-					
-					if(checkIndividualCells) {
-						while(curRow > endRowTmp && !done) {
-							curRow--;
-							grid[curRow][curCol]++;
-							
-							if(grid[curRow][curCol] == 2) {
-								done = true;
-								break;
+						
+						pointerStr = "E";
+						break;
+					case "W":
+						endRowTmp += num;
+						
+						if(checkIndividualCells) {
+							while(curRow < endRowTmp && !done) {
+								curRow++;
+								grid[curRow][curCol]++;
+								
+								if(grid[curRow][curCol] == 2) {
+									done = true;
+									break;
+								}
 							}
 						}
-					}
-					
-					pointerStr = "N";
+						
+						pointerStr = "S";
 						break;
 				}
 			}
-			
-			if(checkIndividualCells) {				
-				if(done) {
-					endRow = curRow;
-					endCol = curCol;
+			else if(dir.equals("R")) {
+				switch(pointerStr) {
+					case "N":
+						endColTmp += num;
+						
+						if(checkIndividualCells) {
+							while(curCol < endColTmp && !done) {
+								curCol++;
+								grid[curRow][curCol]++;
+								
+								if(grid[curRow][curCol] == 2) {
+									done = true;
+									break;
+								}
+							}
+						}
+						
+						pointerStr = "E";
+						break;
+					case "E":
+						endRowTmp += num;
+						
+						if(checkIndividualCells) {
+							while(curRow < endRowTmp && !done) {
+								curRow++;
+								grid[curRow][curCol]++;
+								
+								if(grid[curRow][curCol] == 2) {
+									done = true;
+									break;
+								}
+							}
+						}
+						
+						pointerStr = "S";
+						break;
+					case "S":
+						endColTmp -= num;
+						
+						if(checkIndividualCells) {
+							while(curCol > endColTmp && !done) {
+								curCol--;
+								grid[curRow][curCol]++;
+								
+								if(grid[curRow][curCol] == 2) {
+									done = true;
+									break;
+								}
+							}
+						}
+						
+						pointerStr = "W";
+						break;
+					case "W":
+						endRowTmp -= num;
+						
+						if(checkIndividualCells) {
+							while(curRow > endRowTmp && !done) {
+								curRow--;
+								grid[curRow][curCol]++;
+								
+								if(grid[curRow][curCol] == 2) {
+									done = true;
+									break;
+								}
+							}
+						}
+						
+						pointerStr = "N";
+							break;
 				}
 			}
-			else {
-				curRow = endRowTmp;
-				curCol = endColTmp;
+		}
+		if(checkIndividualCells) {				
+			if(done) {
+				endRow = curRow;
+				endCol = curCol;
 			}
-			
-			return new int[]{curRow, curCol};
 		}
-
-		public int[][] getGrid() {
-			return grid;
-		}
-	
-		public int getStartRow() {
-			return startRow;
-		}
-	
-		public int getStartCol() {
-			return startCol;
-		}
-	
-		public int getEndRow() {
-			return endRow;
-		}
-	
-		public int getEndCol() {
-			return endCol;
+		else {
+			curRow = endRowTmp;
+			curCol = endColTmp;
 		}
 		
-		public int getGridSize() {
-			return GRID_SIZE;
-		}
+		return new int[]{curRow, curCol};
+	}
+
+	public int[][] getGrid() {
+		return grid;
+	}
+
+	public int getStartRow() {
+		return startRow;
+	}
+
+	public int getStartCol() {
+		return startCol;
+	}
+
+	public int getEndRow() {
+		return endRow;
+	}
+
+	public int getEndCol() {
+		return endCol;
+	}
+	
+	public int getGridSize() {
+		return GRID_SIZE;
+	}
 }

@@ -1056,9 +1056,11 @@ public class TwentyTwenty extends Year {
 				day12RainRiskPart1();
 				break;
 			case "B":
+				day12RainRiskPart2();
 				break;
 			default:
 				day12RainRiskPart1();
+				day12RainRiskPart2();
 				break;
 		}
 	}
@@ -1078,9 +1080,28 @@ public class TwentyTwenty extends Year {
 	 * What is the Manhattan distance (sum of the absolute values of its east/west position and its north/south position) from its starting position?
 	 */
 	public void day12RainRiskPart1() {
-		int blocks = GridUtilities.howManyBlocks(input, 5000, "E", false, 0, true);
+		int blocks = GridUtilities.howManyBlocks(input, 5000, "E", false, 0, true, false);
 		
 		System.out.println(CUR_YEAR + " Day 12 Part 1: " + blocks);
+	}
+	
+	/**
+	 * Before you can give the destination to the captain, you realize that the actual action meanings were printed on the back of the instructions the whole time.
+	 * Almost all of the actions indicate how to move a waypoint which is relative to the ship's position:
+	 *    Action N means to move the waypoint north by the given value.
+	 *    Action S means to move the waypoint south by the given value.
+	 *    Action E means to move the waypoint east by the given value.
+	 *    Action W means to move the waypoint west by the given value.
+	 *    Action L means to rotate the waypoint around the ship left (counter-clockwise) the given number of degrees.
+	 *    Action R means to rotate the waypoint around the ship right (clockwise) the given number of degrees.
+	 *    Action F means to move forward to the waypoint a number of times equal to the given value.
+	 * The waypoint starts 10 units east and 1 unit north relative to the ship. The waypoint is relative to the ship; that is, if the ship moves, the waypoint moves with it.
+	 * Figure out where the navigation instructions actually lead. What is the Manhattan distance between that location and the ship's starting position?
+	 */
+	public void day12RainRiskPart2() {
+		int blocks = GridUtilities.howManyBlocks(input, 10000, "E", false, 0, false, true);
+		
+		System.out.println(CUR_YEAR + " Day 12 Part 2: " + blocks);
 	}
 	
 	/**

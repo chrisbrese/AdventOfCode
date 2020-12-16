@@ -46,7 +46,7 @@ public class TwentySixteen extends Year {
 	public void day1NoTimeTaxicabHowManyBlocksToDestination() {
 		List<String> directions = Arrays.asList(input.get(0).split(", "));
 		
-		int blocks = GridUtilities.howManyBlocks(directions, 5000, "N", false, 0, false);
+		int blocks = GridUtilities.howManyBlocks(directions, 5000, "N", false, 0, false, false);
 		
 		System.out.println(CUR_YEAR + " Day 1 Part 1: " + blocks);
 	}
@@ -59,7 +59,7 @@ public class TwentySixteen extends Year {
 	public void day1day1NoTimeTaxicabFirstOneTwice() {
 		List<String> directions = Arrays.asList(input.get(0).split(", "));
 		
-		int blocks = GridUtilities.howManyBlocks(directions, 5000, "N", true, 2, false);
+		int blocks = GridUtilities.howManyBlocks(directions, 5000, "N", true, 2, false, false);
 		
 		System.out.println(CUR_YEAR + " Day 1 Part 2: " + blocks);
 	}

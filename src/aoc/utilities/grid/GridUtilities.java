@@ -21,9 +21,10 @@ public class GridUtilities {
 	 * @param checkIndividualCells true if counting all touched spaces on the grid, false if only care about final destination
 	 * @param maxNumInCellToEnd the number to reach in a cell to consider the search 'done'
 	 * @param rLMeansRotate true if R/L means to rotate x degrees, if false, R/L means rotate that direction 90 degrees
+	 * @param useWaypoint true if moving towards a waypoint
 	 */
-	public static int howManyBlocks(List<String> input, int gridSize, String initialPointer, boolean checkIndividualCells, int maxNumInCellToEnd, boolean rlMeansRotate) {
-		Grid grid = new Grid(gridSize, initialPointer);
+	public static int howManyBlocks(List<String> input, int gridSize, String initialPointer, boolean checkIndividualCells, int maxNumInCellToEnd, boolean rlMeansRotate, boolean useWaypoint) {
+		Grid grid = new Grid(gridSize, initialPointer, useWaypoint);
 		int blocks = 0;
 
 		int[] lastPosition = null;
