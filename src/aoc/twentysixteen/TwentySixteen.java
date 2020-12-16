@@ -24,14 +24,14 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day1NoTimeTaxicabHowManyBlocksToDestination();
+				day1NoTimeTaxicabPart1();
 				break;
 			case "B":
-				day1day1NoTimeTaxicabFirstOneTwice();
+				day1day1NoTimeTaxicabPart2();
 				break;
 			default:
-				day1NoTimeTaxicabHowManyBlocksToDestination();
-				day1day1NoTimeTaxicabFirstOneTwice();
+				day1NoTimeTaxicabPart1();
+				day1day1NoTimeTaxicabPart2();
 				break;
 		}		
 	}
@@ -43,7 +43,7 @@ public class TwentySixteen extends Year {
 	 * Given that you can only walk on the street grid of the city, how far is the shortest path to the destination?
 	 * How many blocks away is Easter Bunny HQ?
 	 */
-	public void day1NoTimeTaxicabHowManyBlocksToDestination() {
+	public void day1NoTimeTaxicabPart1() {
 		List<String> directions = Arrays.asList(input.get(0).split(", "));
 		
 		int blocks = GridUtilities.howManyBlocks(directions, 5000, "N", false, 0, false, false);
@@ -56,7 +56,7 @@ public class TwentySixteen extends Year {
 	 * Easter Bunny HQ is actually at the first location you visit twice.
 	 * How many blocks away is the first location you visit twice?
 	 */
-	public void day1day1NoTimeTaxicabFirstOneTwice() {
+	public void day1day1NoTimeTaxicabPart2() {
 		List<String> directions = Arrays.asList(input.get(0).split(", "));
 		
 		int blocks = GridUtilities.howManyBlocks(directions, 5000, "N", true, 2, false, false);
@@ -72,14 +72,14 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day2BathroomSecurityNumPad();
+				day2BathroomSecurityPart1();
 				break;
 			case "B":
-				day2BathroomSecurityDiamondPad();
+				day2BathroomSecurityPart2();
 				break;
 			default:
-				day2BathroomSecurityNumPad();
-				day2BathroomSecurityDiamondPad();
+				day2BathroomSecurityPart1();
+				day2BathroomSecurityPart2();
 				break;
 		}
 	}
@@ -138,7 +138,7 @@ public class TwentySixteen extends Year {
 	 * Each line of instructions corresponds to one button, starting at the previous button (or, for the first line, the "5" button).
 	 * Press whatever button you're on at the end of each line. If a move doesn't lead to a button, ignore it.
 	 */
-	public void day2BathroomSecurityNumPad() {
+	public void day2BathroomSecurityPart1() {
 		String[][] numPad = {{"1","4","7"},{"2","5","8"},{"3","6","9"}};
 		
 		String key = day2KeypadSearch(numPad, "5");
@@ -156,7 +156,7 @@ public class TwentySixteen extends Year {
 			    D
      * You still start at "5" and stop when you're at an edge
 	 */
-	public void day2BathroomSecurityDiamondPad() {
+	public void day2BathroomSecurityPart2() {
 		String[][] numPad = {{"X","X","5","X","X"},{"X","2","6","A","X"},{"1","3","7","B","D"},{"X","4","8","C","X"},{"X","X","9","X","X"}};
 		
 		String key = day2KeypadSearch(numPad, "5");
@@ -176,14 +176,14 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day3Squares3SidesPossibleTriangles(triangleSides);
+				day3Squares3SidesPart1(triangleSides);
 				break;
 			case "B":
-				day3TrianglesVertical(triangleSides);
+				day3Squares3SidesPart2(triangleSides);
 				break;
 			default:
-				day3Squares3SidesPossibleTriangles(triangleSides);
-				day3TrianglesVertical(triangleSides);
+				day3Squares3SidesPart1(triangleSides);
+				day3Squares3SidesPart2(triangleSides);
 				break;
 		}
 	}
@@ -224,7 +224,7 @@ public class TwentySixteen extends Year {
 	 * In a valid triangle, the sum of any two sides must be larger than the remaining side.
 	 * In your puzzle input, how many of the listed triangles are possible?
 	 */
-	public void day3Squares3SidesPossibleTriangles(int[][] triangleSides) {
+	public void day3Squares3SidesPart1(int[][] triangleSides) {
 		int valid = 0;
 		
 		int curY = 0;
@@ -246,7 +246,7 @@ public class TwentySixteen extends Year {
 	 * it occurs to you that triangles are specified in groups of three vertically. Each set of three numbers in a column specifies a triangle. Rows are unrelated.
 	 * In your puzzle input, and instead reading by columns, how many of the listed triangles are possible?
 	 */
-	public void day3TrianglesVertical(int[][] triangleSides) {
+	public void day3Squares3SidesPart2(int[][] triangleSides) {
 		int valid = 0;
 		
 		int curY = 0;
@@ -274,14 +274,14 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day4SecurityObscuritySectorIdSums();
+				day4SecurityObscurityPart1();
 				break;
 			case "B":
-				day4SecurityObscuritySectorShiftCipher();
+				day4SecurityObscurityPart2();
 				break;
 			default:
-				day4SecurityObscuritySectorIdSums();
-				day4SecurityObscuritySectorShiftCipher();
+				day4SecurityObscurityPart1();
+				day4SecurityObscurityPart2();
 				break;
 		}
 	}
@@ -293,7 +293,7 @@ public class TwentySixteen extends Year {
 	 * A room is real (not a decoy) if the checksum is the five most common letters in the encrypted name, in order, with ties broken by alphabetization.
 	 * What is the sum of the sector IDs of the real rooms?
 	 */
-	public void day4SecurityObscuritySectorIdSums() {
+	public void day4SecurityObscurityPart1() {
 		String alphabet = "abcdefghijklmnopqrstuvwxyz";
 		int sum = 0;
 		
@@ -362,7 +362,7 @@ public class TwentySixteen extends Year {
 	 * A room is real (not a decoy) if the checksum is the five most common letters in the encrypted name, in order, with ties broken by alphabetization.
 	 * What is the sum of the sector IDs of the real rooms?
 	 */
-	public void day4SecurityObscuritySectorShiftCipher() {
+	public void day4SecurityObscurityPart2() {
 		String alphabet = "abcdefghijklmnopqrstuvwxyz";
 		String result = "";
 		
@@ -408,14 +408,14 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day5NiceGameOfChessMD5SixthCharacter();
+				day5NiceGameOfChessMD5Part1();
 				break;
 			case "B":
-				day5NiceGameOfChessMD5SixthPositionSeventhCharacter();
+				day5NiceGameOfChessMD5Part2();
 				break;
 			default:
-				day5NiceGameOfChessMD5SixthCharacter();
-				day5NiceGameOfChessMD5SixthPositionSeventhCharacter();
+				day5NiceGameOfChessMD5Part1();
+				day5NiceGameOfChessMD5Part2();
 				break;
 		}
 	}
@@ -426,7 +426,7 @@ public class TwentySixteen extends Year {
 	 * If it does, the sixth character in the hash is the next character of the password.
 	 * Given the actual Door ID, what is the password?
 	 */
-	public void day5NiceGameOfChessMD5SixthCharacter() {
+	public void day5NiceGameOfChessMD5Part1() {
 		String line = input.get(0);
 		
 		List<String> hashList = MD5.findMD5HashesOfIncreasingIntegersWithNumZeros(line, 5, 8, true, false);
@@ -444,7 +444,7 @@ public class TwentySixteen extends Year {
 	 * You still look for hashes that begin with five zeroes; however, now, the sixth character represents the position (0-7), and the seventh character is the character to put in that position.
 	 * Given the actual Door ID and this new method, what is the password?
 	 */
-	public void day5NiceGameOfChessMD5SixthPositionSeventhCharacter() {
+	public void day5NiceGameOfChessMD5Part2() {
 		String line = input.get(0);
 		
 		List<String> hashList = MD5.findMD5HashesOfIncreasingIntegersWithNumZeros(line, 5, 8, false, true);
@@ -465,14 +465,14 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day6day6SignalsNoiseVerticalPasswordMost();
+				day6day6SignalsNoisePart1();
 				break;
 			case "B":
-				day6day6SignalsNoiseVerticalPasswordLeast();
+				day6day6SignalsNoisePart2();
 				break;
 			default:
-				day6day6SignalsNoiseVerticalPasswordMost();
-				day6day6SignalsNoiseVerticalPasswordLeast();
+				day6day6SignalsNoisePart1();
+				day6day6SignalsNoisePart2();
 				break;
 		}
 	}
@@ -547,7 +547,7 @@ public class TwentySixteen extends Year {
 	 * All you need to do is figure out which character is most frequent for each position (vertically).
 	 * Given the recording in your puzzle input, what is the error-corrected version of the message being sent?
 	 */
-	public void day6day6SignalsNoiseVerticalPasswordMost() {
+	public void day6day6SignalsNoisePart1() {
 		String pw = day6SignalsNoiseVerticalPassword(true);
 		
 		System.out.println(CUR_YEAR + " Day 6 Part 1: " + pw);
@@ -557,7 +557,7 @@ public class TwentySixteen extends Year {
 	 * You can look at the letter distributions in each column and choose the least common letter to reconstruct the original message.
 	 * Given the recording in your puzzle input and this new decoding methodology, what is the original message that Santa is trying to send?
 	 */
-	public void day6day6SignalsNoiseVerticalPasswordLeast() {
+	public void day6day6SignalsNoisePart2() {
 		String pw = day6SignalsNoiseVerticalPassword(false);
 		
 		System.out.println(CUR_YEAR + " Day 6 Part 2: " + pw);
@@ -571,14 +571,14 @@ public class TwentySixteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day7IPv7AbbaTLS();
+				day7IPv7Part1();
 				break;
 			case "B":
-				day7IPv7AbaBabSSL();
+				day7IPv7Part2();
 				break;
 			default:
-				day7IPv7AbbaTLS();
-				day7IPv7AbaBabSSL();
+				day7IPv7Part1();
+				day7IPv7Part2();
 				break;
 		}
 	}
@@ -589,7 +589,7 @@ public class TwentySixteen extends Year {
 	 * However, the IP also must not have an ABBA within any hypernet sequences, which are contained by square brackets.
 	 * How many IPs in your puzzle input support TLS?
 	 */
-	public void day7IPv7AbbaTLS() {
+	public void day7IPv7Part1() {
 		int abbaCount = 0;
 		for(String line : input) {
 			boolean insideBrackets = false;
@@ -648,7 +648,7 @@ public class TwentySixteen extends Year {
 	 * The interior character must be different.
 	 * How many IPs in your puzzle input support SSL?
 	 */
-	public void day7IPv7AbaBabSSL() {
+	public void day7IPv7Part2() {
 		int abaBabCount = 0;
 		for(String line : input) {
 			boolean insideBrackets = false;
@@ -729,18 +729,13 @@ public class TwentySixteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "8");
 		
 		switch(part) {
-			case "A":
-				day82FARotatingGrid();
-				break;
-			case "B":
-				break;
 			default:
 				day82FARotatingGrid();
 				break;
 		}
 	}
 	
-	public void printGrid(boolean[][] grid) {
+	public void day8PrintGrid(boolean[][] grid) {
 		int NUM_COLUMNS = 50;
 		int NUM_ROWS = 6;
 		for(int y = 0; y < NUM_ROWS; y++) {
@@ -833,7 +828,7 @@ public class TwentySixteen extends Year {
 			}
 		}
 		
-		printGrid(grid);
+		day8PrintGrid(grid);
 		
 		System.out.println(CUR_YEAR + " Day 8: " + lightCount);
 	}
@@ -849,11 +844,10 @@ public class TwentySixteen extends Year {
 				day9ExplosivesCyperspace();
 				break;
 			case "B":
-				day9ExplosivesCyperspaceAllDecompress();
+				// TODO:
 				break;
 			default:
 				day9ExplosivesCyperspace();
-				day9ExplosivesCyperspaceAllDecompress();
 				break;
 		}
 	}
@@ -948,22 +942,6 @@ public class TwentySixteen extends Year {
 		}
 		
 		System.out.println(CUR_YEAR + " Day 9 Part 1: " + totalLength);
-	}
-	
-	/**
-	 * Apparently, the file actually uses version two of the format.
-	 * In version two, the only difference is that markers within decompressed data are decompressed.
-	 * Unfortunately, the computer you brought probably doesn't have enough memory to actually decompress the file; you'll have to come up with another way to get its decompressed length.
-	 * What is the decompressed length of the file using this improved format?
-	 */
-	public void day9ExplosivesCyperspaceAllDecompress() {
-		long totalLength = 0;
-		
-		for(String line : input) {
-			totalLength += day9RecursiveDecompression(0, line, 0);
-		}
-		
-		System.out.println(CUR_YEAR + " Day 9 Part 2: " + totalLength);
 	}
 	
 	/**

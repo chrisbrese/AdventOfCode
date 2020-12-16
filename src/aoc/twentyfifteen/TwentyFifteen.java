@@ -30,14 +30,14 @@ public class TwentyFifteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day1NotQuiteLispFloorNavigation();
+				day1NotQuiteLispPart1();
 				break;
 			case "B":
-				day1NotQuiteLispFindBasement();
+				day1NotQuiteLispPart2();
 				break;
 			default:
-				day1NotQuiteLispFloorNavigation();
-				day1NotQuiteLispFindBasement();
+				day1NotQuiteLispPart1();
+				day1NotQuiteLispPart2();
 				break;
 		}		
 	}
@@ -47,7 +47,7 @@ public class TwentyFifteen extends Year {
 	 * A '(' means go up one floor, and ')', means go down one floor.
 	 * To what floor do the instructions take Santa?
 	*/
-	public void day1NotQuiteLispFloorNavigation() {
+	public void day1NotQuiteLispPart1() {
 		int count = 0;
 		String line = input.get(0);
 		
@@ -67,7 +67,7 @@ public class TwentyFifteen extends Year {
 	 * Given the same instructions, find the position of the first character that causes him to enter the basement (floor -1).
 	 * The first character in the instructions has position 1, the second character has position 2, and so on.
 	 */
-	public void day1NotQuiteLispFindBasement() {
+	public void day1NotQuiteLispPart2() {
 		int count = 0;
 		String line = input.get(0);
 		
@@ -97,14 +97,14 @@ public class TwentyFifteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day2NoMathWrappingPaper();
+				day2NoMathPart1();
 				break;
 			case "B":
-				day2NoMathRibbon();
+				day2NoMathPart2();
 				break;
 			default:
-				day2NoMathWrappingPaper();
-				day2NoMathRibbon();
+				day2NoMathPart1();
+				day2NoMathPart2();
 				break;
 		}
 	}
@@ -113,7 +113,7 @@ public class TwentyFifteen extends Year {
 	 * Find the surface area of the box, which is 2*l*w + 2*w*h + 2*h*l.
 	 * The elves also need a little extra paper for each present: the area of the smallest side.
 	 */
-	public void day2NoMathWrappingPaper() {
+	public void day2NoMathPart1() {
 		int total = 0;
 		for(String s : input) {
 			String[] measurementsStr = s.split("x");
@@ -155,7 +155,7 @@ public class TwentyFifteen extends Year {
 	 * The ribbon required to wrap a present is the shortest distance around its sides, or the smallest perimeter of any one face.
 	 * Each present also requires a bow made out of ribbon as well; the feet of ribbon required for the perfect bow is equal to the cubic feet of volume of the present.
 	 */
-	public void day2NoMathRibbon() {
+	public void day2NoMathPart2() {
 		int total = 0;
 		for(String s : input) {
 			String[] measurementsStr = s.split("x");
@@ -201,14 +201,14 @@ public class TwentyFifteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day3HousesInAVacuumHowManyHomesGotAPresent();
+				day3HousesInAVacuumPart1();
 				break;
 			case "B":
-				day3HousesInAVacuumHowManyHomesGotAPresentTwoSantas();
+				day3HousesInAVacuumPart2();
 				break;
 			default:
-				day3HousesInAVacuumHowManyHomesGotAPresent();
-				day3HousesInAVacuumHowManyHomesGotAPresentTwoSantas();
+				day3HousesInAVacuumPart1();
+				day3HousesInAVacuumPart2();
 				break;
 		}
 	}
@@ -220,7 +220,7 @@ public class TwentyFifteen extends Year {
 	 * After each move, he delivers another present to the house at his new location.
 	 * How many houses receive at least one present?
 	 */
-	public void day3HousesInAVacuumHowManyHomesGotAPresent() {
+	public void day3HousesInAVacuumPart1() {
 		int total = 1;
 		String line = input.get(0);
 		int MAX = 5000;
@@ -262,7 +262,7 @@ public class TwentyFifteen extends Year {
 	 * Santa and Robo-Santa start at the same location (delivering two presents to the same starting house), then take turns moving based on instructions.
 	 * This year, how many houses receive at least one present?
 	 */
-	public void day3HousesInAVacuumHowManyHomesGotAPresentTwoSantas() {
+	public void day3HousesInAVacuumPart2() {
 		int total = 1;
 		String line = input.get(0);
 		int MAX = 5000;
@@ -365,14 +365,14 @@ public class TwentyFifteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day5InternElvesNaughtyNiceStringsEasy();
+				day5InternElvesNaughtyNicePart1();
 				break;
 			case "B":
-				day5InternElvesNaughtyNiceStringsHard();
+				day5InternElvesNaughtyNicePart2();
 				break;
 			default:
-				day5InternElvesNaughtyNiceStringsEasy();
-				day5InternElvesNaughtyNiceStringsHard();
+				day5InternElvesNaughtyNicePart1();
+				day5InternElvesNaughtyNicePart2();
 				break;
 		}
 	}
@@ -385,7 +385,7 @@ public class TwentyFifteen extends Year {
 	 *     It does not contain the strings ab, cd, pq, or xy, even if they are part of one of the other requirements.
 	 * How many strings are nice?
 	 */
-	public void day5InternElvesNaughtyNiceStringsEasy() {
+	public void day5InternElvesNaughtyNicePart1() {
 		int count = 0;
 		
 		for(String line : input) {
@@ -431,7 +431,7 @@ public class TwentyFifteen extends Year {
 	 *    It contains at least one letter which repeats with exactly one letter between them, like xyx, abcdefeghi (efe), or even aaa.
 	 * How many strings are nice?
 	 */
-	public void day5InternElvesNaughtyNiceStringsHard() {
+	public void day5InternElvesNaughtyNicePart2() {
 		int count = 0;
 		
 		for(String line : input) {
@@ -481,14 +481,14 @@ public class TwentyFifteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day6FireHazardLightToggle();
+				day6FireHazardPart1();
 				break;
 			case "B":
-				day6FireHazardLightBrightness();
+				day6FireHazardPart2();
 				break;
 			default:
-				day6FireHazardLightToggle();
-				day6FireHazardLightBrightness();
+				day6FireHazardPart1();
+				day6FireHazardPart2();
 				break;
 		}
 	}
@@ -504,7 +504,7 @@ public class TwentyFifteen extends Year {
 	 *    turn off 499,499 through 500,500 would turn off (or leave off) the middle four lights.
 	 * How many lights are lit?
 	 */
-	public void day6FireHazardLightToggle() {
+	public void day6FireHazardPart1() {
 		int GRID_SIZE = 1000;
 		boolean[][] lights = new boolean[GRID_SIZE][GRID_SIZE];
 		
@@ -569,15 +569,9 @@ public class TwentyFifteen extends Year {
 	 * The phrase toggle actually means that you should increase the brightness of those lights by 2.
 	 * What is the total brightness of all lights combined?
 	 */
-	public void day6FireHazardLightBrightness() {
+	public void day6FireHazardPart2() {
 		int GRID_SIZE = 1000;
 		int[][] lights = new int[GRID_SIZE][GRID_SIZE];
-		
-		/*
-		 *  turn off 674,321 through 793,388
-			toggle 749,672 through 973,965
-			turn on 943,30 through 990,907
-		 */
 		
 		for(String line : input) {
 			String[] lineParts = line.split(" ");
@@ -637,14 +631,14 @@ public class TwentyFifteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day7AssemblyRequiredWireInputs();
+				day7AssemblyRequiredPart1();
 				break;
 			case "B":
-				day7AssemblyRequiredWireOverride();
+				day7AssemblyRequiredPart2();
 				break;
 			default:
-				day7AssemblyRequiredWireInputs();
-				day7AssemblyRequiredWireOverride();
+				day7AssemblyRequiredPart1();
+				day7AssemblyRequiredPart2();
 				break;
 		}
 	}
@@ -818,7 +812,7 @@ public class TwentyFifteen extends Year {
 	 *    Other possible gates include OR (bitwise OR) and RSHIFT (right-shift).
 	 * What signal is ultimately provided to wire a?
 	 */
-	public void day7AssemblyRequiredWireInputs() {
+	public void day7AssemblyRequiredPart1() {
 		Circuit circuit = day7BuildCircuit();
 		
 		circuit.runCircuit();
@@ -830,7 +824,7 @@ public class TwentyFifteen extends Year {
 	 * Now, take the signal you got on wire a, override wire b to that signal, and reset the other wires (including wire a). 
 	 * What new signal is ultimately provided to wire a?
 	 */
-	public void day7AssemblyRequiredWireOverride() {
+	public void day7AssemblyRequiredPart2() {
 		Circuit circuit = day7BuildCircuit();
 		
 		Wire bWire = circuit.getWire("b");
@@ -850,14 +844,14 @@ public class TwentyFifteen extends Year {
 		
 		switch(part) {
 			case "A":
-				day8MatchsticksDecodeStringLiterals();
+				day8MatchsticksPart1();
 				break;
 			case "B":
-				day8MatchsticksEncodeStringLiterals();
+				day8MatchsticksPart2();
 				break;
 			default:
-				day8MatchsticksDecodeStringLiterals();
-				day8MatchsticksEncodeStringLiterals();
+				day8MatchsticksPart1();
+				day8MatchsticksPart2();
 				break;
 		}
 	}
@@ -874,7 +868,7 @@ public class TwentyFifteen extends Year {
 	 * Disregarding the whitespace in the file, what is the number of characters of code for string literals, 
 	 * minus the number of characters in memory for the values of the strings in total for the entire file?
 	 */
-	public void day8MatchsticksDecodeStringLiterals() {
+	public void day8MatchsticksPart1() {
 		int actualChars = 0;
 		int inMemoryChars = 0;
 		
@@ -903,7 +897,7 @@ public class TwentyFifteen extends Year {
 		System.out.println(CUR_YEAR + " Day 8 Part 1: " + (actualChars - inMemoryChars));
 	}
 	
-	public void day8MatchsticksEncodeStringLiterals() {
+	public void day8MatchsticksPart2() {
 		int actualChars = 0;
 		int afterEncodedChars = 0;
 		
@@ -949,6 +943,7 @@ public class TwentyFifteen extends Year {
 	 * He can start and end at any two (different) locations he wants, but he must visit each location exactly once.
 	 * What is the shortest distance he can travel to achieve this?
 	 */
+	// TODO:
 	public void day9SingleNightShortestRoute() {
 		Country country = new Country();
 		
