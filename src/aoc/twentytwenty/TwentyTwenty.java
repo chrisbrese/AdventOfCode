@@ -1112,12 +1112,63 @@ public class TwentyTwenty extends Year {
 		
 		switch(part) {
 			case "A":
+				day13ShuttleSearchPart1();
 				break;
 			case "B":
 				break;
 			default:
+				day13ShuttleSearchPart1();
 				break;
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void day13ShuttleSearchPart1() {
+		long myTimestamp = 0;
+		String busListStr;
+		String[] busListWithXs;
+		
+		List<Long> possibleBusTimes = new ArrayList<Long>();
+		
+		myTimestamp = Long.parseLong(input.get(0));
+		busListStr = input.get(1);
+		
+		busListWithXs = busListStr.split(",");
+		int[] busList = new int[busListWithXs.length];
+		
+		for(int i = 0; i < busListWithXs.length; i++) {
+			if(!busListWithXs[i].equals("x")) {
+				int busTime = Integer.parseInt(busListWithXs[i]);
+				long busTimeLong = busTime;
+				
+				while(busTimeLong < myTimestamp) {
+					busTimeLong += busTime;
+				}
+				busList[i] = busTime;
+				possibleBusTimes.add(busTimeLong);
+			}
+		}
+		
+		Long soonest = 0L;
+		int soonestIndex = 0;
+		
+		for(int i = 0; i < possibleBusTimes.size(); i++) {
+			if(i == 0) {
+				soonest = possibleBusTimes.get(0);
+			}
+			else {
+				if(possibleBusTimes.get(i) < soonest) {
+					soonest = possibleBusTimes.get(i);
+					soonestIndex = i;
+				}
+			}
+		}
+		
+		Long waitTime = soonest - myTimestamp;
+		
+		System.out.println(CUR_YEAR + " Day 13 Part 1: " + (waitTime * busList[soonestIndex]));
 	}
 	
 	/**
