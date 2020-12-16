@@ -17,12 +17,66 @@ public class TwentySeventeen extends Year {
 		
 		switch(part) {
 			case "A":
+				day1InverseCaptchaPart1();
 				break;
 			case "B":
+				day1InverseCaptchaPart2();
 				break;
 			default:
+				day1InverseCaptchaPart1();
+				day1InverseCaptchaPart2();
 				break;
 		}		
+	}
+	
+	/**
+	 * You're standing in a room with "digitization quarantine" written in LEDs along one wall.
+	 * The only door is locked, but it includes a small interface. "Restricted Area - Strictly No Digitized Users Allowed."
+	 * It goes on to explain that you may only leave by solving a captcha to prove you're not a human.
+	 * The captcha requires you to review a sequence of digits (your puzzle input) and find the sum of all digits that match the next digit in the list.
+	 * The list is circular, so the digit after the last digit is the first digit in the list.
+	 * What is the solution to your captcha?
+	 */
+	public void day1InverseCaptchaPart1() {
+		String line = input.get(0);
+		int sum = 0;
+		
+		for(int i = 0; i < line.length(); i++) {
+			if(i == line.length()-1) {
+				if(Integer.parseInt(line.substring(i)) == Integer.parseInt(line.substring(0,1))) {
+					sum = sum + Integer.parseInt(line.substring(i));
+				}
+			}
+			else {
+				if(Integer.parseInt(line.substring(i,i+1)) == Integer.parseInt(line.substring(i+1,i+2))) {
+					sum = sum + Integer.parseInt(line.substring(i,i+1));
+				}
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 1 Part 1: " + sum);
+	}
+	
+	/**
+	 * Apparently, the door isn't yet satisfied.
+	 * Now, instead of considering the next digit, it wants you to consider the digit halfway around the circular list.
+	 * That is, if your list contains 10 items, only include a digit in your sum if the digit 10/2 = 5 steps forward matches it.
+	 * Fortunately, your list has an even number of elements.
+	 * What is the solution to your new captcha?
+	 */
+	public void day1InverseCaptchaPart2() {
+		String line = input.get(0);
+		int sum = 0;
+		int lineHalf = line.length() / 2;
+		
+		for(int i = 0; i < line.length(); i++) {
+			int tmpI = (i+lineHalf) % line.length();
+			if(Integer.parseInt(line.substring(i,i+1)) == Integer.parseInt(line.substring(tmpI,tmpI+1))) {
+				sum = sum + Integer.parseInt(line.substring(i,i+1));
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 1 Part 2: " + sum);
 	}
 	
 	/**
@@ -33,12 +87,44 @@ public class TwentySeventeen extends Year {
 		
 		switch(part) {
 			case "A":
+				day2CorruptionChecksumPart1();
 				break;
 			case "B":
 				break;
 			default:
+				day2CorruptionChecksumPart1();
 				break;
 		}
+	}
+	
+	/**
+	 * The spreadsheet consists of rows of apparently-random numbers.
+	 * To make sure the recovery process is on the right track, they need you to calculate the spreadsheet's checksum.
+	 * For each row, determine the difference between the largest value and the smallest value; the checksum is the sum of all of these differences.
+	 * What is the checksum for the spreadsheet in your puzzle input?
+	 */
+	public void day2CorruptionChecksumPart1() {
+		int sum = 0;
+		for(String line : input) {
+			String[] parts = line.split("\t");
+			
+			int smallest = 0;
+			int largest = 0;
+			for(int i = 0; i < parts.length; i++) {
+				int num = Integer.parseInt(parts[i]);
+				
+				if(smallest == 0 || num < smallest) {
+					smallest = num;
+				}
+				if(largest == 0 || num > largest) {
+					largest = num;
+				}
+			}
+			
+			sum += (largest - smallest);
+		}
+		
+		System.out.println(CUR_YEAR + " Day 2 Part 1: " + sum);
 	}
 	
 	/**
