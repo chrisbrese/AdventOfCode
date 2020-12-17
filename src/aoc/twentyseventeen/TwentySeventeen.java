@@ -1,5 +1,10 @@
 package aoc.twentyseventeen;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 import aoc.Year;
 import aoc.utilities.ReadInputFile;
 
@@ -16,10 +21,10 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "1");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				day1InverseCaptchaPart1();
 				break;
-			case "B":
+			case "2":
 				day1InverseCaptchaPart2();
 				break;
 			default:
@@ -86,13 +91,15 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "2");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				day2CorruptionChecksumPart1();
 				break;
-			case "B":
+			case "2":
+				day2CorruptionChecksumPart2();
 				break;
 			default:
 				day2CorruptionChecksumPart1();
+				day2CorruptionChecksumPart2();
 				break;
 		}
 	}
@@ -128,19 +135,162 @@ public class TwentySeventeen extends Year {
 	}
 	
 	/**
+	 * It looks like all the User wanted is some information about the evenly divisible values in the spreadsheet.
+	 * Find the only two numbers in each row where one evenly divides the other - 
+	 *    that is, where the result of the division operation is a whole number.
+	 * Find those numbers on each line, divide them, and add up each line's result.
+	 * What is the sum of each row's result in your puzzle input?
+	 */
+	public void day2CorruptionChecksumPart2() {
+		int sum = 0;
+		for(String line : input) {
+			String[] parts = line.split("\t");
+
+			evensearch:
+			for(int i = 0; i < parts.length; i++) {
+				for(int j = 0; j < parts.length; j++) {
+					if(i != j) {
+						Double num1 = Double.parseDouble(parts[i]);
+						Double num2 = Double.parseDouble(parts[j]);
+						
+						Double quotient = (num1 / num2);
+						
+						if(quotient % 1 == 0) {						
+							sum += quotient;
+							break evensearch;
+						}
+					}
+				}
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 2 Part 2: " + sum);
+	}
+	
+	/**
 	 * Run all Day 3 reports.
 	 */
 	public void day3(String part) {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "3");
 		
 		switch(part) {
-			case "A":
+			case "1":
+				day3SpiralMemoryPart1();
 				break;
-			case "B":
+			case "2":
+				day3SpiralMemoryPart2();
 				break;
 			default:
+				day3SpiralMemoryPart1();
+				day3SpiralMemoryPart2();
 				break;
 		}
+	}
+	
+	/**
+	 * You come across an experimental new kind of memory stored on an infinite two-dimensional grid.
+	 * Each square on the grid is allocated in a spiral pattern starting at a location marked 1 and then counting up while spiraling outward.
+	 * While this is very space-efficient (no squares are skipped), requested data must be carried back to square 1 
+	 *    (the location of the only access port for this memory system) by programs that can only move up, down, left, or right.
+	 * They always take the shortest path: the Manhattan Distance between the location of the data and square 1.
+	 * How many steps are required to carry the data from the square identified in your puzzle input all the way to the access port?
+	 */
+	public void day3SpiralMemoryPart1() {
+		int[][] grid;
+		
+		int curRow;
+		int curCol;
+		
+		int startRow;
+		int startCol;
+		int endRow;
+		int endCol;
+		
+		grid = new int[1000][1000];
+		
+		curRow = 1000/2;
+		curCol = 1000/2;
+		
+		startRow = curRow;
+		startCol = curCol;
+		
+		grid[curRow][curCol] = 1;
+		int myInput = Integer.parseInt(input.get(0));
+		
+		int count = 2;
+		curCol++;
+		while(count < myInput) {
+			grid[curRow][curCol] = count;
+			if(grid[curRow][curCol-1] > 0 && grid[curRow-1][curCol] <= 0) {
+				curRow--;
+			}
+			else if(grid[curRow+1][curCol] > 0 && grid[curRow][curCol-1] <= 0) {
+				curCol--;
+			}
+			else if(grid[curRow][curCol+1] > 0 && grid[curRow+1][curCol] <= 0) {
+				curRow++;
+			}
+			else if(grid[curRow-1][curCol] > 0 && grid[curRow][curCol+1] <= 0) {
+				curCol++;
+			}
+			count++;
+		}
+		
+		endRow = curRow;
+		endCol = curCol;
+		
+		int blocks = Math.abs(endRow-startRow) + Math.abs(endCol-startCol);
+		System.out.println(CUR_YEAR + " Day 3 Part 1: " + blocks);
+	}
+	
+	/**
+	 * As a stress test on the system, the programs here clear the grid and then store the value 1 in square 1.
+	 * Then, in the same allocation order as shown above, they store the sum of the values in all adjacent squares, including diagonals.
+	 * Once a square is written, its value does not change.
+	 * What is the first value written that is larger than your puzzle input?
+	 */
+	public void day3SpiralMemoryPart2() {
+		int[][] grid;
+		
+		int curRow;
+		int curCol;
+		
+		grid = new int[1000][1000];
+		
+		curRow = 1000/2;
+		curCol = 1000/2;
+		
+		grid[curRow][curCol] = 1;
+		int myInput = Integer.parseInt(input.get(0));
+		
+		int curSum = 0;
+		curCol++;
+		while(curSum < myInput) {
+			curSum = grid[curRow-1][curCol-1] +
+					 grid[curRow-1][curCol] +
+					 grid[curRow-1][curCol+1] +					 
+					 grid[curRow][curCol+1] +
+					 grid[curRow][curCol-1] +
+					 grid[curRow+1][curCol-1] +
+					 grid[curRow+1][curCol] +
+					 grid[curRow+1][curCol+1];
+			
+			grid[curRow][curCol] = curSum;
+			if(grid[curRow][curCol-1] > 0 && grid[curRow-1][curCol] <= 0) {
+				curRow--;
+			}
+			else if(grid[curRow+1][curCol] > 0 && grid[curRow][curCol-1] <= 0) {
+				curCol--;
+			}
+			else if(grid[curRow][curCol+1] > 0 && grid[curRow+1][curCol] <= 0) {
+				curRow++;
+			}
+			else if(grid[curRow-1][curCol] > 0 && grid[curRow][curCol+1] <= 0) {
+				curCol++;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 3 Part 2: " + curSum);
 	}
 	
 	/**
@@ -150,13 +300,79 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "4");
 		
 		switch(part) {
-			case "A":
+			case "1":
+				day4HighEntropyPassphrasesPart1();
 				break;
-			case "B":
+			case "2":
+				day4HighEntropyPassphrasesPart2();
 				break;
 			default:
+				day4HighEntropyPassphrasesPart1();
+				day4HighEntropyPassphrasesPart2();
 				break;
 		}
+	}
+	
+	/**
+	 * A new system policy has been put in place that requires all accounts to use a passphrase instead of simply a password.
+	 * A passphrase consists of a series of words (lowercase letters) separated by spaces.
+	 * To ensure security, a valid passphrase must contain no duplicate words.
+	 * The system's full passphrase list is available as your puzzle input. How many passphrases are valid?
+	 */
+	public void day4HighEntropyPassphrasesPart1() {
+		int numCorrect = 0;
+		for(String line : input) {
+			String[] parts = line.split(" ");
+			
+			boolean invalid = false;
+			pwcheck:
+			for(int i = 0; i < parts.length; i++) {
+				for(int j = i+1; j < parts.length; j++) {
+					if(parts[i].equals(parts[j])) {
+						invalid = true;
+						break pwcheck;
+					}
+				}
+			}
+			
+			if(!invalid) {
+				numCorrect ++;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 4 Part 1: " + numCorrect);
+	}
+	
+	/**
+	 * For added security, yet another system policy has been put in place.
+	 * Now, a valid passphrase must contain no two words that are anagrams of each other - 
+	 *    that is, a passphrase is invalid if any word's letters can be rearranged to form any other word in the passphrase.
+	 * Under this new system policy, how many passphrases are valid?
+	 */
+	public void day4HighEntropyPassphrasesPart2() {
+		int numCorrect = 0;
+		for(String line : input) {
+			String[] parts = line.split(" ");
+			
+			boolean invalid = false;
+			pwcheck:
+			for(int i = 0; i < parts.length; i++) {
+				List<String> piecesI = Arrays.asList(parts[i].split(""));
+				for(int j = i+1; j < parts.length; j++) {
+					List<String> piecesJ = Arrays.asList(parts[j].split(""));
+					if(piecesI.containsAll(piecesJ) && piecesJ.containsAll(piecesI)) {
+						invalid = true;
+						break pwcheck;
+					}
+				}
+			}
+			
+			if(!invalid) {
+				numCorrect ++;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 4 Part 2: " + numCorrect);
 	}
 	
 	/**
@@ -166,13 +382,90 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "5");
 		
 		switch(part) {
-			case "A":
+			case "1":
+				day5MazeTwistyTrampolinesPart1();
 				break;
-			case "B":
+			case "2":
+				day5MazeTwistyTrampolinesPart2();
 				break;
 			default:
+				day5MazeTwistyTrampolinesPart1();
+				day5MazeTwistyTrampolinesPart2();
 				break;
 		}
+	}
+	
+	/**
+	 * An urgent interrupt arrives from the CPU: it's trapped in a maze of jump instructions, and it would like assistance from any programs with spare cycles to help find the exit.
+	 * The message includes a list of the offsets for each jump.
+	 * Jumps are relative:
+	 *    -1 moves to the previous instruction
+	 *    2 skips the next one.
+	 * Start at the first instruction in the list. The goal is to follow the jumps until one leads outside the list.
+	 * In addition, these instructions are a little strange; after each jump, the offset of that instruction increases by 1.
+	 * So, if you come across an offset of 3, you would move three instructions forward, but change it to a 4 for the next time it is encountered.
+	 * Positive jumps ("forward") move downward; negative jumps move upward.
+	 * How many steps does it take to reach the exit?
+	 */
+	public void day5MazeTwistyTrampolinesPart1() {
+		List<Integer> instructions = new ArrayList<Integer>(input.size());
+		
+		for(String line : input) {
+			instructions.add(Integer.parseInt(line));
+		}
+		
+		Integer curInstructionIndex = 0;
+		Integer nextInstructionMove;
+		Integer stepCount = 0;
+		
+		while(true) {
+			try {
+				nextInstructionMove = instructions.get(curInstructionIndex);
+				instructions.set(curInstructionIndex, nextInstructionMove+1);				
+				curInstructionIndex += nextInstructionMove;
+			}
+			catch(IndexOutOfBoundsException ioobe) {
+				break;
+			}
+			stepCount++;
+		}
+		
+		System.out.println(CUR_YEAR + " Day 5 Part 1: " + stepCount);
+	}
+	
+	/**
+	 * Now, the jumps are even stranger: after each jump, if the offset was three or more, instead decrease it by 1. Otherwise, increase it by 1 as before.
+	 * How many steps does it now take to reach the exit?
+	 */
+	public void day5MazeTwistyTrampolinesPart2() {
+		List<Integer> instructions = new ArrayList<Integer>(input.size());
+		
+		for(String line : input) {
+			instructions.add(Integer.parseInt(line));
+		}
+		
+		Integer curInstructionIndex = 0;
+		Integer nextInstructionMove;
+		Integer stepCount = 0;
+		
+		while(true) {
+			try {
+				nextInstructionMove = instructions.get(curInstructionIndex);
+				if(nextInstructionMove >= 3) {
+					instructions.set(curInstructionIndex, nextInstructionMove-1);
+				}
+				else {
+					instructions.set(curInstructionIndex, nextInstructionMove+1);
+				}
+				curInstructionIndex += nextInstructionMove;
+			}
+			catch(IndexOutOfBoundsException ioobe) {
+				break;
+			}
+			stepCount++;
+		}
+		
+		System.out.println(CUR_YEAR + " Day 5 Part 2: " + stepCount);
 	}
 	
 	/**
@@ -182,13 +475,105 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "6");
 		
 		switch(part) {
-			case "A":
+			case "1":
+				day6MemoryReallocationPart1();
 				break;
-			case "B":
+			case "2":
+				day6MemoryReallocationPart2();
 				break;
 			default:
+				day6MemoryReallocationPart1();
+				day6MemoryReallocationPart2();
 				break;
 		}
+	}
+	
+	/**
+	 * Helper method for day 6 Memory Reallocation problems
+	 * @param findLoopSize true if we care about the difference between the duplicate allocation and the original time it was seen
+	 * @return int with the number of cycles to find the duplicate, or if findLoopSize is true, the the difference between final count and the first time the allocation was seen
+	 */
+	public int day6MemoryReallocationHelper(boolean findLoopSize) {
+		HashMap<Integer, Integer> memoryHistory = new HashMap<Integer, Integer>();
+		List<String> memoryStr = Arrays.asList(input.get(0).split("\t"));
+		int count = 0;
+		
+		List<Integer> lastMemory = new ArrayList<Integer>(memoryStr.size());
+		for(int i = 0; i < memoryStr.size(); i++) {
+			lastMemory.add(Integer.parseInt(memoryStr.get(i)));
+		}
+		
+		memoryHistory.put(count, lastMemory.hashCode());
+		
+		while(true) {
+			count++;
+			int blocks = 0;
+			int blocksIndex = 0;
+			
+			// get the highest memory for this cycle
+			for(int i = 0; i < lastMemory.size(); i++) {
+				if(blocks == 0 || lastMemory.get(i) > blocks) {
+					blocks = lastMemory.get(i);
+					blocksIndex = i;
+				}
+			}
+			
+			List<Integer> newMemory = lastMemory;
+			newMemory.set(blocksIndex, 0);
+			
+			// redistribute the blocks
+			for(int i = (blocksIndex+1 == newMemory.size() ? 0 : blocksIndex+1); i < newMemory.size() && blocks > 0; i++) {
+				newMemory.set(i, newMemory.get(i) + 1);
+				
+				if(i == newMemory.size()-1) {
+					i = -1;
+				}
+				blocks--;
+			}
+			
+			if(memoryHistory.containsValue(newMemory.hashCode())) {
+				if(findLoopSize) {
+					for(int i = 0; i < memoryHistory.size(); i++) {
+						if(memoryHistory.get(i) == newMemory.hashCode()) {
+							count -= i;
+						}
+					}
+				}
+				break;
+			}
+			
+			memoryHistory.put(count, newMemory.hashCode());
+		}
+		
+		return count;
+	}
+	
+	/**
+	 * A debugger program here is having an issue: it is trying to repair a memory reallocation routine, but it keeps getting stuck in an infinite loop.
+	 * In this area, there are sixteen memory banks; each memory bank can hold any number of blocks.
+	 * The goal of the reallocation routine is to balance the blocks between the memory banks.
+	 * The reallocation routine operates in cycles.
+	 * In each cycle, it finds the memory bank with the most blocks (ties won by the lowest-numbered memory bank) and redistributes those blocks among the banks.
+	 * To do this, it removes all of the blocks from the selected bank, then moves to the next (by index) memory bank and inserts one of the blocks.
+	 * It continues doing this until it runs out of blocks; if it reaches the last memory bank, it wraps around to the first one.
+	 * The debugger would like to know how many redistributions can be done before a blocks-in-banks configuration is produced that has been seen before.
+	 * Given the initial block counts in your puzzle input, how many redistribution cycles must be completed before a configuration is produced that has been seen before?
+	 */
+	public void day6MemoryReallocationPart1() {
+		int count = day6MemoryReallocationHelper(false);
+		
+		System.out.println(CUR_YEAR + " Day 6 Part 1: " + count);
+	}
+	
+	/**
+	 * Out of curiosity, the debugger would also like to know the size of the loop:
+	 *    starting from a state that has already been seen, how many block redistribution cycles must be performed before that same state is seen again?
+	 * How many cycles are in the infinite loop that arises from the configuration in your puzzle input?
+	 */
+	public void day6MemoryReallocationPart2() {
+		int count = day6MemoryReallocationHelper(true);
+		
+		System.out.println(CUR_YEAR + " Day 6 Part 2: " + count);
 	}
 	
 	/**
@@ -198,9 +583,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "7");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -214,9 +599,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "8");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -230,9 +615,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "9");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -246,9 +631,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "10");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -262,9 +647,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "11");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -278,9 +663,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "12");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -294,9 +679,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "13");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -310,9 +695,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "14");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -326,9 +711,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "15");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -342,9 +727,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "16");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -358,9 +743,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "17");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -374,9 +759,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "18");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -390,9 +775,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "19");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -406,9 +791,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "20");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -422,9 +807,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "21");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -438,9 +823,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "22");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -454,9 +839,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "23");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -470,9 +855,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "24");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -486,9 +871,9 @@ public class TwentySeventeen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "25");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;

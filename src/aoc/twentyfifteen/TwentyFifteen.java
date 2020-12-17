@@ -29,10 +29,10 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "1");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				day1NotQuiteLispPart1();
 				break;
-			case "B":
+			case "2":
 				day1NotQuiteLispPart2();
 				break;
 			default:
@@ -96,10 +96,10 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "2");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				day2NoMathPart1();
 				break;
-			case "B":
+			case "2":
 				day2NoMathPart2();
 				break;
 			default:
@@ -200,10 +200,10 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "3");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				day3HousesInAVacuumPart1();
 				break;
-			case "B":
+			case "2":
 				day3HousesInAVacuumPart2();
 				break;
 			default:
@@ -331,10 +331,10 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "4");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				day4IdealStockingStufferAdventCoins(5);
 				break;
-			case "B":
+			case "2":
 				day4IdealStockingStufferAdventCoins(6);
 				break;
 			default:
@@ -364,10 +364,10 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "5");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				day5InternElvesNaughtyNicePart1();
 				break;
-			case "B":
+			case "2":
 				day5InternElvesNaughtyNicePart2();
 				break;
 			default:
@@ -480,10 +480,10 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "6");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				day6FireHazardPart1();
 				break;
-			case "B":
+			case "2":
 				day6FireHazardPart2();
 				break;
 			default:
@@ -630,10 +630,10 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "7");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				day7AssemblyRequiredPart1();
 				break;
-			case "B":
+			case "2":
 				day7AssemblyRequiredPart2();
 				break;
 			default:
@@ -843,10 +843,10 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "8");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				day8MatchsticksPart1();
 				break;
-			case "B":
+			case "2":
 				day8MatchsticksPart2();
 				break;
 			default:
@@ -927,10 +927,10 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "9");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				day9SingleNightShortestRoute();
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				day9SingleNightShortestRoute();
@@ -1003,9 +1003,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "10");
 		
 		switch(part) {
-			case "A":				
+			case "1":				
 				break;
-			case "B":
+			case "2":
 				break;
 			default:				
 				break;
@@ -1019,9 +1019,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "11");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1035,9 +1035,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "12");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1051,9 +1051,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "13");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1067,9 +1067,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "14");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1083,9 +1083,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "15");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1099,9 +1099,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "16");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1115,9 +1115,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "17");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1131,9 +1131,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "18");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1147,9 +1147,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "19");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1163,9 +1163,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "20");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1179,9 +1179,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "21");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1195,9 +1195,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "22");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1211,9 +1211,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "23");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1227,9 +1227,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "24");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
@@ -1243,9 +1243,9 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "25");
 		
 		switch(part) {
-			case "A":
+			case "1":
 				break;
-			case "B":
+			case "2":
 				break;
 			default:
 				break;
