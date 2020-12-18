@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import aoc.Year;
+import aoc.circuits.Circuit;
+import aoc.circuits.Wire;
+import aoc.circuits.gates.MultiOutputGate;
 import aoc.utilities.ReadInputFile;
 
 public class TwentySeventeen extends Year {
@@ -584,12 +587,86 @@ public class TwentySeventeen extends Year {
 		
 		switch(part) {
 			case "1":
+				day7RecursiveCircusPart1();
 				break;
 			case "2":
 				break;
 			default:
+				day7RecursiveCircusPart1();
 				break;
 		}
+	}
+	
+	public Circuit day7BuildCircuit() {
+		Circuit circuit = new Circuit();
+		
+		for(String line : input) {
+			String[] lineParts = line.split(" ");
+			
+			Wire w;
+			if((w = circuit.getWire(lineParts[0])) == null) {
+				w = new Wire(lineParts[0]);				
+			}
+			
+			// Strip the parens
+			String weight = lineParts[1].substring(1, lineParts[1].length()-1);
+			w.setValue(weight);
+			circuit.addOrUpdateWire(w);
+			
+			if(lineParts.length > 2) {
+				MultiOutputGate mog = new MultiOutputGate();
+				mog.setInputWireNameOrValue(w.getName());
+				
+				String[] outputs = line.substring(line.indexOf("-> ")+3).split(",");
+				
+				for(String out : outputs) {
+					Wire o;
+					if((o = circuit.getWire(out.trim())) == null) {
+						o = new Wire(out.trim());
+						circuit.addOrUpdateWire(o);
+					}
+					mog.addOutputWireNameOrValue(o.getName());
+				}
+				
+				circuit.addGate(mog);
+			}
+		}
+		
+		return circuit;
+	}
+	
+	/**
+	 * You come upon a tower of programs that have gotten themselves into a bit of trouble.
+	 * A recursive algorithm has gotten out of hand, and now they're balanced precariously in a large tower.
+	 * One program at the bottom supports the entire tower. It's holding a large disc, and on the disc are balanced several more sub-towers.
+	 * At the bottom of these sub-towers, standing on the bottom disc, are other programs, each holding their own disc, and so on.
+	 * At the very tops of these sub-sub-sub-...-towers, many programs stand simply keeping the disc below them balanced but with no disc of their own.
+	 * You offer to help, but first you need to understand the structure of these towers.
+	 * You ask each program to yell out their name, their weight, and (if they're holding a disc) the names of the programs immediately above them balancing on that disc.
+	 * You write this information down (your puzzle input).
+	 * Unfortunately, in their panic, they don't do this in an orderly fashion; by the time you're done, you're not sure which program gave which information.
+	 * Before you're ready to help them, you need to make sure your information is correct. What is the name of the bottom program?
+	 */
+	public void day7RecursiveCircusPart1() {
+		Circuit circuit = day7BuildCircuit();
+		
+		String firstBlock = circuit.findFirstWireOfCircuit().getName();
+		
+		System.out.println(CUR_YEAR + " Day 7 Part 1: " + firstBlock);
+	}
+	
+	/**
+	 * The programs explain the situation: they can't get down. Rather, they could get down, if they weren't expending all of their energy trying to keep the tower balanced.
+	 * Apparently, one program has the wrong weight, and until it's fixed, they're stuck here.
+	 * For any program holding a disc, each program standing on that disc forms a sub-tower.
+	 * Each of those sub-towers are supposed to be the same weight, or the disc itself isn't balanced. The weight of a tower is the sum of the weights of the programs in that tower.
+	 * For a tower to be balanced, each of the programs standing on its disc and all programs above it must each match. This means that the sums must all be the same.
+	 * Given that exactly one program is the wrong weight, what would its weight need to be to balance the entire tower?
+	 */
+	public void day7RecursiveCircusPart2() {
+		Circuit circuit = day7BuildCircuit();
+		
+		System.out.println(CUR_YEAR + " Day 7 Part 2: " + firstBlock);
 	}
 	
 	/**

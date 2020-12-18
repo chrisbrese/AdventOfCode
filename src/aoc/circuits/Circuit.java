@@ -5,6 +5,7 @@ import java.util.List;
 
 import aoc.circuits.gates.AndGate;
 import aoc.circuits.gates.LShiftGate;
+import aoc.circuits.gates.MultiOutputGate;
 import aoc.circuits.gates.NotGate;
 import aoc.circuits.gates.OrGate;
 import aoc.circuits.gates.RShiftGate;
@@ -86,6 +87,65 @@ public class Circuit {
 		return true;
 	}
 	
+	/**
+	 * For 2017 Day 7 Part 1
+	 */
+	public Wire findFirstWireOfCircuit() {
+		List<Wire> potentialWiresWithNoInputs = new ArrayList<Wire>();
+		for(Gate gate : knownGates) {
+			if(gate instanceof MultiOutputGate) {
+				MultiOutputGate mog = (MultiOutputGate) gate;
+				potentialWiresWithNoInputs.add(getWire(mog.getInputWireNameOrValue()));
+			}
+		}
+		
+		for(Wire w : potentialWiresWithNoInputs) {
+			boolean inOutputs = false;
+			for(Gate gate : knownGates) {
+				if(gate instanceof MultiOutputGate) {
+					MultiOutputGate mog = (MultiOutputGate) gate;
+					if(mog.hasOutputWireNameOrValue(w.getName()) >= 0) {
+						inOutputs = true;
+						break;
+					}
+				}
+			}
+			if(!inOutputs) {
+				return w;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * For 2017 Day 7 Part 2
+	 */
+	public void findUnbalancedTowerInCircuit() {
+		Wire first = findFirstWireOfCircuit();
+		MultiOutputGate firstGate = null;
+		
+		for(Gate gate : knownGates) {
+			if(gate instanceof MultiOutputGate) {
+				MultiOutputGate mog = (MultiOutputGate) gate;
+				
+				if(mog.getInputWireNameOrValue().equals(first.getName())) {
+					firstGate = mog;
+					break;
+				}
+			}
+		}
+		
+		if(firstGate != null) {
+			int sum = 0;
+			for(String output : firstGate.getOutputWireNamesOrValues()) {
+				sum += getWireValue(output);
+			}
+		}
+	}
+	
+	/**
+	 * For 2015 Day 7
+	 */
 	public void runCircuit() {
 		while(!haveAllGatesRun()) {
 			for(Gate gate : knownGates) {
