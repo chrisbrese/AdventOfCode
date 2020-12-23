@@ -88,59 +88,72 @@ public class Circuit {
 	}
 	
 	/**
-	 * For 2017 Day 7 Part 1
+	 * For 2017 Day 7 Part 2
+	 * @param gates
 	 */
-	public Wire findFirstWireOfCircuit() {
-		List<Wire> potentialWiresWithNoInputs = new ArrayList<Wire>();
-		for(Gate gate : knownGates) {
-			if(gate instanceof MultiOutputGate) {
-				MultiOutputGate mog = (MultiOutputGate) gate;
-				potentialWiresWithNoInputs.add(getWire(mog.getInputWireNameOrValue()));
+	public int day7RecursiveCircus(List<MultiOutputGate> gates) {
+		for(MultiOutputGate mog : gates) {
+			List<Integer> curWeights = new ArrayList<Integer>(mog.getOutputWireNamesOrValues().size());
+			for(String w : mog.getOutputWireNamesOrValues()) {
+				curWeights.add(getWireValue(w));
 			}
-		}
-		
-		for(Wire w : potentialWiresWithNoInputs) {
-			boolean inOutputs = false;
-			for(Gate gate : knownGates) {
-				if(gate instanceof MultiOutputGate) {
-					MultiOutputGate mog = (MultiOutputGate) gate;
-					if(mog.hasOutputWireNameOrValue(w.getName()) >= 0) {
-						inOutputs = true;
-						break;
+			
+			for(int i = 0; i < curWeights.size(); i++) {
+				for(int j = 0; j < curWeights.size(); j++) {
+					if(i != j) {
+						if(curWeights.get(i) != curWeights.get(j)) {
+							if(j != curWeights.size()-1) {
+								if(curWeights.get(i) != curWeights.get(j+1)) {
+									return i + (j-i);
+								}
+							}
+							else if(curWeights.get(i) != curWeights.get(0)) {
+								return i + (j-i);
+							}
+							else {
+								return j + (i-j);
+							}
+						}
 					}
 				}
 			}
-			if(!inOutputs) {
-				return w;
+		}
+		
+		return 0;
+	}
+	
+	/**
+	 * For 2017 Day 7
+	 */
+	public Gate findGateWithOutput(String outputName) {
+		for(Gate g : knownGates) {
+			if(g instanceof MultiOutputGate) {
+				MultiOutputGate mog = (MultiOutputGate) g;
+				if(mog.getOutputWireNamesOrValues().contains(outputName)) {
+					return mog;
+				}
 			}
 		}
+		
+		// this means the wire is not in any outputs, therefore is the first one
 		return null;
 	}
 	
 	/**
 	 * For 2017 Day 7 Part 2
 	 */
-	public void findUnbalancedTowerInCircuit() {
-		Wire first = findFirstWireOfCircuit();
-		MultiOutputGate firstGate = null;
-		
-		for(Gate gate : knownGates) {
-			if(gate instanceof MultiOutputGate) {
-				MultiOutputGate mog = (MultiOutputGate) gate;
-				
-				if(mog.getInputWireNameOrValue().equals(first.getName())) {
-					firstGate = mog;
-					break;
+	public Gate findGateWithInput(String inputName) {
+		for(Gate g : knownGates) {
+			if(g instanceof MultiOutputGate) {
+				MultiOutputGate mog = (MultiOutputGate) g;
+				if(mog.getInputWireNameOrValue().equalsIgnoreCase(inputName)) {
+					return mog;
 				}
 			}
 		}
 		
-		if(firstGate != null) {
-			int sum = 0;
-			for(String output : firstGate.getOutputWireNamesOrValues()) {
-				sum += getWireValue(output);
-			}
-		}
+		// this means the wire is not an input, therefore is one of the last gates
+		return null;
 	}
 	
 	/**

@@ -7,6 +7,7 @@ import java.util.List;
 
 import aoc.Year;
 import aoc.circuits.Circuit;
+import aoc.circuits.Gate;
 import aoc.circuits.Wire;
 import aoc.circuits.gates.MultiOutputGate;
 import aoc.utilities.ReadInputFile;
@@ -650,7 +651,12 @@ public class TwentySeventeen extends Year {
 	public void day7RecursiveCircusPart1() {
 		Circuit circuit = day7BuildCircuit();
 		
-		String firstBlock = circuit.findFirstWireOfCircuit().getName();
+		String firstBlock = "";
+		for(Wire w : circuit.getWires()) {
+			if(circuit.findGateWithOutput(w.getName()) == null) {
+				firstBlock = w.getName();
+			}
+		}
 		
 		System.out.println(CUR_YEAR + " Day 7 Part 1: " + firstBlock);
 	}
@@ -666,7 +672,21 @@ public class TwentySeventeen extends Year {
 	public void day7RecursiveCircusPart2() {
 		Circuit circuit = day7BuildCircuit();
 		
-		System.out.println(CUR_YEAR + " Day 7 Part 2: " + firstBlock);
+		List<MultiOutputGate> curGates = new ArrayList<MultiOutputGate>();
+		for(Wire w : circuit.getWires()) {
+			// start at the bottom, then we'll do it differently next time
+			Gate mog;
+			if((mog = circuit.findGateWithInput(w.getName())) == null) {
+				curGates.add((MultiOutputGate) mog);
+			}
+		}
+		
+		// check the sum of what we have, then using the the gate, get the inputs and find the gates of where they are outputs, and get sum...
+		// continue until we've found the bad one
+		int newWeight = 0;
+		if((newWeight = circuit.day7RecursiveCircus(curGates)) > 0) {
+			System.out.println(CUR_YEAR + " Day 7 Part 2: " + newWeight);
+		}		
 	}
 	
 	/**
