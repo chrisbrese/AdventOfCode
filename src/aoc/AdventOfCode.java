@@ -6,6 +6,7 @@ import aoc.twentynineteen.TwentyNineteen;
 import aoc.twentyseventeen.TwentySeventeen;
 import aoc.twentysixteen.TwentySixteen;
 import aoc.twentytwenty.TwentyTwenty;
+import aoc.twentytwentyone.TwentyTwentyOne;
 
 public class AdventOfCode {
 	
@@ -157,6 +158,9 @@ public class AdventOfCode {
 	    	case "2020":
 	    		run(day, part, new TwentyTwenty());
 	    		break;
+	    	case "2021":
+	    		run(day, part, new TwentyTwentyOne());
+	    		break;
     		default: // run all
     			run(day, part, new TwentyFifteen());
     			run(day, part, new TwentySixteen());
@@ -164,6 +168,7 @@ public class AdventOfCode {
     			run(day, part, new TwentyEighteen());
     			run(day, part, new TwentyNineteen());
     			run(day, part, new TwentyTwenty());
+    			run(day, part, new TwentyTwentyOne());
     			break;
     	}
     }
