@@ -2,6 +2,7 @@ package aoc.twentytwentyone;
 
 import aoc.Year;
 import aoc.utilities.ReadInputFile;
+import aoc.utilities.grid.Grid;
 
 public class TwentyTwentyOne extends Year {
 	
@@ -78,12 +79,66 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
+				day2MultiplyFinalGridPositionIndexes();
 				break;
 			case "2":
+				day2MulitplyFinalGridPositionIndexesWithAim();
 				break;
 			default:
+				day2MultiplyFinalGridPositionIndexes();
+				day2MulitplyFinalGridPositionIndexesWithAim();
 				break;
 		}
+	}
+	
+	/**
+	 * It seems like the submarine can take a series of commands like forward 1, down 2, or up 3.
+	 * Note that since you're on a submarine, down and up affect your depth, and so they have the opposite result of what you might expect.
+	 * The submarine seems to already have a planned course (your puzzle input).
+	 * Your horizontal position and depth both start at 0.
+	 * Calculate the horizontal position and depth you would have after following the planned course. What do you get if you multiply your final horizontal position by your final depth?
+	 */
+	public void day2MultiplyFinalGridPositionIndexes() {
+		Grid grid = new Grid(2000, "E", false, false);
+		int[] curPos = new int[2];
+		
+		for(String line : input) {
+			String[] split = line.split(" ");
+			
+			String dir = split[0].substring(0,1);
+			int num = Integer.parseInt(split[1]);
+			curPos = grid.move(dir + num, false, 0, false, false);
+		}
+		
+		System.out.println(CUR_YEAR + " Day 2 Part 1: " + (curPos[0] * curPos[1]));
+	}
+	
+	/**
+	 * Based on your calculations, the planned course doesn't seem to make any sense.
+	 * You find the submarine manual and discover that the process is actually slightly more complicated.
+	 * In addition to horizontal position and depth, you'll also need to track a third value, aim, which also starts at 0.
+	 * The commands also mean something entirely different than you first thought:
+	 *     - down X increases your aim by X units.
+	 *     - up X decreases your aim by X units.
+	 *     - forward X does two things:
+	 *         a. It increases your horizontal position by X units.
+	 *         b. It increases your depth by your aim multiplied by X.
+	 * Using this new interpretation of the commands, calculate the horizontal position and depth you would have after following the planned course.
+	 * What do you get if you multiply your final horizontal position by your final depth?
+	 */
+	public void day2MulitplyFinalGridPositionIndexesWithAim() {
+		Grid grid = new Grid(10000, "E", false, false);
+		int[] curPos = new int[2];
+		
+		for(String line : input) {
+			String[] split = line.split(" ");
+			
+			String dir = split[0].substring(0,1);
+			int num = Integer.parseInt(split[1]);
+			curPos = grid.move(dir + num, false, 0, false, true);
+		}
+		
+		System.out.println(CUR_YEAR + " Day 2 Part 2: " + (curPos[0] * curPos[1]));
 	}
 	
 	/**

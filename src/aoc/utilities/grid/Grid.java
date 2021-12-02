@@ -18,19 +18,31 @@ public class Grid {
 	
 	int[] waypointPosition = null;
 	
+	private int curAim;
+	
 	/**
 	 * Instantiates a new Grid object.
 	 * @param gridSize The Max Rows/Cols of the grid.
 	 * @param initialPointer The initial direction to face
 	 * @param useWaypoint true if moving towards a waypoint
+	 * @param startInMiddle true if starting in the middle, false if starting at [0][0]
 	 */
-	public Grid(int gridSize, String initialPointer, boolean useWaypoint) {
+	public Grid(int gridSize, String initialPointer, boolean useWaypoint, boolean startInMiddle) {
 		GRID_SIZE = gridSize;
 		
 		grid = new int[GRID_SIZE][GRID_SIZE];
 		
 		curRow = GRID_SIZE/2;
 		curCol = GRID_SIZE/2;
+		
+		if(startInMiddle) {
+			curRow = GRID_SIZE/2;
+			curCol = GRID_SIZE/2;
+		}
+		else {
+			curRow = 0;
+			curCol = 0;
+		}
 		
 		startRow = curRow;
 		startCol = curCol;
@@ -45,6 +57,8 @@ public class Grid {
 			waypointPosition[0] = -1; // starting row in comparison to ship
 			waypointPosition[1] = 10; // starting col in comparison to ship
 		}
+		
+		curAim = 0;
 	}
 	
 	/**
@@ -53,9 +67,10 @@ public class Grid {
 	 * @param checkIndividualCells if true, then we care to find the {@link maxNumInCellToEnd} by tracking individual cells
 	 * @param maxNumInCellToEnd the number to reach in a cell to consider the search 'done'
 	 * @param rLMeansRotate true if R/L means to rotate x degrees, if false, R/L means rotate that direction 90 degrees
+	 * @param adjustAim true if u/d means to adjust aim, and modifies how f is handled (submarine puzzles)
 	 * @return int[curX,curY] to indicate last position reached in the search. Can be used against getEndX() and getEndY() to determine a final state.
 	 */
-	public int[] move(String input, boolean checkIndividualCells, int maxNumInCellToEnd, boolean rLMeansRotate) {
+	public int[] move(String input, boolean checkIndividualCells, int maxNumInCellToEnd, boolean rLMeansRotate, boolean adjustAim) {
 		String dir = input.substring(0, 1);
 		int num = Integer.parseInt(input.substring(1));
 		
@@ -138,19 +153,33 @@ public class Grid {
 					}
 					break;
 			}
-		}		
+		}
+		else if(adjustAim) {
+			if(dir.equals("u")) {
+				curAim -= num;
+			}
+			else if(dir.equals("f")) {
+				endColTmp = curCol + num;
+				endRowTmp = curRow + (curAim * num);
+			}
+			else if(dir.equals("d")) {
+				curAim += num;
+			}
+		}
 		else {
 			if(dir.equals("F")) {
 				dir = pointerStr;			
 			}
-			
-			if(dir.equals("N")) {
+			if(dir.equals("U")) {
+				endColTmp = curCol - num;
+			}
+			if(dir.equals("N") || dir.equals("u")) {
 				endRowTmp = curRow - num;
 			}
-			else if(dir.equals("E")) {
+			else if(dir.equals("E") || dir.equals("f")) {
 				endColTmp = curCol + num;
 			}
-			else if(dir.equals("S")) {
+			else if(dir.equals("S") || dir.equals("d")) {
 				endRowTmp = curRow + num;
 			}
 			else if(dir.equals("W")) {

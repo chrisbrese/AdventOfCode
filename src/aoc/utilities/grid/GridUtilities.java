@@ -14,7 +14,7 @@ public class GridUtilities {
 	}};
 	
 	/**
-	 * Helper method to work with the Grid object
+	 * Helper method to work with the Grid object to calculate how many blocks away from the ship is the waypoint.
 	 * @param input The list of input for the day
 	 * @param gridSize The size of the grid to initialize
 	 * @param initialPointer The way the object is facing
@@ -24,12 +24,12 @@ public class GridUtilities {
 	 * @param useWaypoint true if moving towards a waypoint
 	 */
 	public static int howManyBlocks(List<String> input, int gridSize, String initialPointer, boolean checkIndividualCells, int maxNumInCellToEnd, boolean rlMeansRotate, boolean useWaypoint) {
-		Grid grid = new Grid(gridSize, initialPointer, useWaypoint);
+		Grid grid = new Grid(gridSize, initialPointer, useWaypoint, true);
 		int blocks = 0;
 
 		int[] lastPosition = null;
 		for(String d : input) {
-			lastPosition = grid.move(d, checkIndividualCells, maxNumInCellToEnd, rlMeansRotate);
+			lastPosition = grid.move(d, checkIndividualCells, maxNumInCellToEnd, rlMeansRotate, false);
 			
 			if(checkIndividualCells) {
 				int endX = grid.getEndRow();
