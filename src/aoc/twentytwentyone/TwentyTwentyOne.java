@@ -1,5 +1,9 @@
 package aoc.twentytwentyone;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import aoc.Year;
 import aoc.utilities.ReadInputFile;
 import aoc.utilities.grid.Grid;
@@ -149,12 +153,155 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
+				day3CalculatePowerConsumption();
 				break;
 			case "2":
+				day3CalculateLifeSupportRating();
 				break;
 			default:
+				day3CalculatePowerConsumption();
+				day3CalculateLifeSupportRating();
 				break;
 		}
+	}
+	
+	/**
+	 * The diagnostic report (your puzzle input) consists of a list of binary numbers which, when decoded properly, can tell you many useful things about the conditions of the submarine.
+	 * The first parameter to check is the power consumption.
+	 * You need to use the binary numbers in the diagnostic report to generate two new binary numbers (called the gamma rate and the epsilon rate).
+	 * The power consumption can then be found by multiplying the gamma rate by the epsilon rate.
+	 * Each bit in the gamma rate can be determined by finding the most common bit in the corresponding position of all numbers in the diagnostic report.
+	 * The epsilon rate is calculated in a similar way; rather than use the most common bit, the least common bit from each position is used.
+	 * Use the binary numbers in your diagnostic report to calculate the gamma rate and epsilon rate, then multiply them together.
+	 * What is the power consumption of the submarine? (Be sure to represent your answer in decimal, not binary.)
+	 */
+	public void day3CalculatePowerConsumption() {
+		HashMap<Integer, int[]> posToBitCount = new HashMap<Integer, int[]>();
+		String binaryStrGamma = "";
+		String binaryStrEpsilon = "";
+		
+		for(String line : input) {
+			char[] bits = line.toCharArray();
+			for(int i = 0; i < bits.length; i++) {
+				int[] updated = posToBitCount.get(i);
+				if(updated == null) {
+					updated = new int[2];
+				}
+				
+				if(bits[i] == '0') {
+					updated[0]++;
+					posToBitCount.put(new Integer(i), updated);
+				}
+				else if(bits[i] == '1') {
+					updated[1]++;
+					posToBitCount.put(new Integer(i), updated);
+				}
+			}
+		}
+		
+		for(int[] cur : posToBitCount.values()) {
+			if(cur[0] > cur[1]) {
+				binaryStrGamma += "0";
+				binaryStrEpsilon += "1";
+			}
+			else {
+				binaryStrGamma += "1";
+				binaryStrEpsilon += "0";
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 3 Part 1: " + (Integer.parseInt(binaryStrGamma,2) * Integer.parseInt(binaryStrEpsilon,2)));
+	}
+	
+	/**
+	 * Next, you should verify the life support rating, which can be determined by multiplying the oxygen generator rating by the CO2 scrubber rating.
+	 * Before searching for either rating value, start with the full list of binary numbers from your diagnostic report.
+	 * Then:
+	 *    - Keep only numbers selected by the bit criteria for the type of rating value for which you are searching. Discard numbers which do not match the bit criteria.
+	 *    - If you only have one number left, stop; this is the rating value for which you are searching.
+	 *    - Otherwise, repeat the process, considering the next bit to the right.
+	 * 
+	 * The bit criteria depends on which type of rating value you want to find:
+	 *    - To find oxygen generator rating, determine the most common value (0 or 1) in the current bit position, and keep only numbers with that bit in that position.
+	 *      If 0 and 1 are equally common, keep values with a 1 in the position being considered.
+	 *    - To find CO2 scrubber rating, determine the least common value (0 or 1) in the current bit position, and keep only numbers with that bit in that position.
+	 *      If 0 and 1 are equally common, keep values with a 0 in the position being considered.
+	 * Use the binary numbers in your diagnostic report to calculate the oxygen generator rating and CO2 scrubber rating, then multiply them together.
+	 * What is the life support rating of the submarine? (Be sure to represent your answer in decimal, not binary.)
+	 */
+	public void day3CalculateLifeSupportRating() {
+		List<String> oxyRatingOptions = new ArrayList<String>();
+		List<String> co2ScrubbingOptions = new ArrayList<String>();
+		oxyRatingOptions.addAll(input);
+		co2ScrubbingOptions.addAll(input);
+		String binaryStringOxy = "";
+		String binaryStringCo2 = "";
+		
+		int curBit = 0;
+		while(curBit < input.get(0).length()) {
+			int[] oxyRatingTracking = new int[2];
+			int[] co2ScrubbingTracking = new int[2];
+			
+			if(oxyRatingOptions.size() > 1) {
+				for(String line : oxyRatingOptions) {
+					if(line.substring(curBit, curBit+1).equals("0")) {
+						oxyRatingTracking[0]++;
+					}
+					else {
+						oxyRatingTracking[1]++;					
+					}				
+				}
+				
+				String val = "";
+				if(oxyRatingTracking[0] > oxyRatingTracking[1]) {
+					val = "0";
+				}
+				else {
+					val = "1";
+				}
+				
+				for(String line : input) {
+					if(!line.substring(curBit,curBit+1).equals(val)) {
+						oxyRatingOptions.remove(line);
+					}
+				}
+			}
+			else {
+				binaryStringOxy = oxyRatingOptions.get(0);
+			}
+			
+			if(co2ScrubbingOptions.size() > 1) {
+				for(String line : co2ScrubbingOptions) {
+					if(line.substring(curBit, curBit+1).equals("0")) {
+						co2ScrubbingTracking[0]++;
+					}
+					else {
+						co2ScrubbingTracking[1]++;					
+					}				
+				}
+
+				String val = "";
+				if(co2ScrubbingTracking[0] <= co2ScrubbingTracking[1]) {
+					val = "0";
+				}
+				else {
+					val = "1";
+				}
+				
+				for(String line : input) {
+					if(!line.substring(curBit,curBit+1).equals(val)) {
+						co2ScrubbingOptions.remove(line);
+					}
+				}
+			}
+			else {
+				binaryStringCo2 = co2ScrubbingOptions.get(0);
+			}
+			
+			curBit++;
+		}
+		
+		System.out.println(CUR_YEAR + " Day 3 Part 2: " + (Integer.parseInt(binaryStringOxy,2) * Integer.parseInt(binaryStringCo2,2)));
 	}
 	
 	/**
