@@ -238,10 +238,11 @@ public class TwentyTwentyOne extends Year {
 		String binaryStringCo2 = "";
 		
 		int curBit = 0;
-		while(curBit < input.get(0).length()) {
+		while(curBit < input.get(0).length()) { // do all pieces 1 bit at a time
 			int[] oxyRatingTracking = new int[2];
 			int[] co2ScrubbingTracking = new int[2];
 			
+			// Do oxyRating first, don't continue if we've narrowed down to 1
 			if(oxyRatingOptions.size() > 1) {
 				for(String line : oxyRatingOptions) {
 					if(line.substring(curBit, curBit+1).equals("0")) {
@@ -252,6 +253,7 @@ public class TwentyTwentyOne extends Year {
 					}				
 				}
 				
+				// ok, see which has a higher count
 				String val = "";
 				if(oxyRatingTracking[0] > oxyRatingTracking[1]) {
 					val = "0";
@@ -260,6 +262,7 @@ public class TwentyTwentyOne extends Year {
 					val = "1";
 				}
 				
+				// trim the options
 				for(String line : input) {
 					if(!line.substring(curBit,curBit+1).equals(val)) {
 						oxyRatingOptions.remove(line);
@@ -267,9 +270,11 @@ public class TwentyTwentyOne extends Year {
 				}
 			}
 			else {
+				// found it!
 				binaryStringOxy = oxyRatingOptions.get(0);
 			}
 			
+			// Do co2Scrubbing next, don't continue if we've narrowed down to 1
 			if(co2ScrubbingOptions.size() > 1) {
 				for(String line : co2ScrubbingOptions) {
 					if(line.substring(curBit, curBit+1).equals("0")) {
@@ -280,6 +285,7 @@ public class TwentyTwentyOne extends Year {
 					}				
 				}
 
+				// ok, see which has a higher count
 				String val = "";
 				if(co2ScrubbingTracking[0] <= co2ScrubbingTracking[1]) {
 					val = "0";
@@ -288,6 +294,7 @@ public class TwentyTwentyOne extends Year {
 					val = "1";
 				}
 				
+				// trim the options
 				for(String line : input) {
 					if(!line.substring(curBit,curBit+1).equals(val)) {
 						co2ScrubbingOptions.remove(line);
@@ -295,7 +302,13 @@ public class TwentyTwentyOne extends Year {
 				}
 			}
 			else {
+				// found it!
 				binaryStringCo2 = co2ScrubbingOptions.get(0);
+			}
+			
+			// stop the loop if we are done
+			if(!binaryStringOxy.isEmpty() && ! binaryStringCo2.isEmpty()) {
+				break;
 			}
 			
 			curBit++;
