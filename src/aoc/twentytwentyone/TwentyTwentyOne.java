@@ -1,10 +1,12 @@
 package aoc.twentytwentyone;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import aoc.Year;
+import aoc.twentytwentyone.day4.BingoBoard;
 import aoc.utilities.ReadInputFile;
 import aoc.utilities.grid.Grid;
 
@@ -325,11 +327,77 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
+				day4FindWinningBingoCard(true);
 				break;
 			case "2":
+				day4FindWinningBingoCard(false);
 				break;
 			default:
+				day4FindWinningBingoCard(true);
+				day4FindWinningBingoCard(false);
 				break;
+		}
+	}
+	
+	/**
+	 * What you can see, is a giant squid that has attached itself to the outside of your submarine.
+	 * Maybe it wants to play bingo?
+	 * Bingo is played on a set of boards each consisting of a 5x5 grid of numbers.
+	 * Numbers are chosen at random, and the chosen number is marked on all boards on which it appears.
+	 * (Numbers may not appear on all boards.) If all numbers in any row or any column of a board are marked, that board wins.
+	 * (Diagonals don't count.)
+	 * The score of the winning board is the sum of all unmarked numbers on that board, multiplied by the number that was just called when the board won.
+	 * @param getFirstWinner true if looking for first board to win; false if looking for last board to win
+	 */
+	public void day4FindWinningBingoCard(boolean getFirstWinner) {
+		String[] numberCalls = input.get(0).split(",");
+		List<BingoBoard> boards = new ArrayList<BingoBoard>();
+		
+		for(int i = 2; i < input.size(); i++) {
+			List<List<String>> boardCells = new ArrayList<List<String>>();
+			for(int j = i; j < (i+5); j++) {
+				boardCells.add(Arrays.asList(input.get(j).split("\\s+")));				
+			}
+			
+			boards.add(new BingoBoard(boardCells));
+			i += 5;
+		}
+		
+		int count = 1;
+		int lastBoardToWin = 0;
+		for(String call : numberCalls) {
+			int curCall = Integer.parseInt(call);
+			
+			boolean winner = false;
+			for(BingoBoard board : boards) {
+				if(!board.isWinner()) {
+					winner = false;
+					int[] lastMark = board.markCell(curCall);				
+					
+					if(count >= 5 && lastMark != null) {
+						winner = board.checkIfWinner(lastMark[0], lastMark[1]);
+					}
+					
+					if(winner) {
+						board.markAsWinner(curCall);
+						lastBoardToWin = boards.indexOf(board);
+						if(getFirstWinner) {
+							System.out.println(CUR_YEAR + " Day 4 Part 1: " + (board.getUnmarkedCellSum() * board.getWinningCall()));
+							break;
+						}
+					}
+				}
+			}
+			
+			if(winner && getFirstWinner) {
+				break;
+			}
+			count++;
+		}
+		
+		if(!getFirstWinner) {
+			BingoBoard lastBoard = boards.get(lastBoardToWin);
+			System.out.println(CUR_YEAR + " Day 4 Part 2: " + (lastBoard.getUnmarkedCellSum() * lastBoard.getWinningCall()));
 		}
 	}
 	

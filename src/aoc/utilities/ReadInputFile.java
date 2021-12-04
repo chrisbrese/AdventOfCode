@@ -25,14 +25,14 @@ public class ReadInputFile {
 			
 			String line;
 			while((line = br.readLine()) != null) {
-				input.add(line);
+				input.add(line.trim());
 			}
 			
 			br.close();
 		}
 		catch (IOException e) {
-//			System.out.println("Could not find file for year " + year + " and day " + day);
-//			e.printStackTrace();
+			System.out.println("Could not find file for year " + year + " and day " + day);
+			e.printStackTrace();
 		}
 		
 		return input;
