@@ -1,6 +1,5 @@
 package aoc;
 
-import aoc.Year;
 import aoc.utilities.ReadInputFile;
 
 public class AnnualTemplate extends Year {

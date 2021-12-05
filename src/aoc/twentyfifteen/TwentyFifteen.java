@@ -828,7 +828,7 @@ public class TwentyFifteen extends Year {
 		Circuit circuit = day7BuildCircuit();
 		
 		Wire bWire = circuit.getWire("b");
-		bWire.setValue((new Integer(16076)).toString());
+		bWire.setValue(Integer.toString(16076));
 		circuit.addOrUpdateWire(bWire);
 		
 		circuit.runCircuit();

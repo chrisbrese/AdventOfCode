@@ -192,11 +192,11 @@ public class TwentyTwentyOne extends Year {
 				
 				if(bits[i] == '0') {
 					updated[0]++;
-					posToBitCount.put(new Integer(i), updated);
+					posToBitCount.put(i, updated);
 				}
 				else if(bits[i] == '1') {
 					updated[1]++;
-					posToBitCount.put(new Integer(i), updated);
+					posToBitCount.put(i, updated);
 				}
 			}
 		}

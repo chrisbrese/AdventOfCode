@@ -473,7 +473,7 @@ public class TwentyTwenty extends Year {
 			int column = day5BinarySearch(1,8,line,7,9);
 			
 			int seatId = (row*8) + column;
-			seats[row][column] = new Integer(seatId);
+			seats[row][column] = seatId;
 		}
 		
 		List<Integer> seatIds = new ArrayList<Integer>();
