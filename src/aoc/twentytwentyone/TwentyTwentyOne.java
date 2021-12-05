@@ -409,11 +409,135 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
+				day5CalculateVentLineOverlap(false);
 				break;
 			case "2":
+				day5CalculateVentLineOverlap(true);
 				break;
 			default:
+				day5CalculateVentLineOverlap(false);
+				day5CalculateVentLineOverlap(true);
 				break;
+		}
+	}
+	
+	/**
+	 * You come across a field of hydrothermal vents on the ocean floor!
+	 * These vents constantly produce large, opaque clouds, so it would be best to avoid them if possible.
+	 * They tend to form in lines; the submarine helpfully produces a list of nearby lines of vents (your puzzle input).
+	 * For now, only consider horizontal and vertical lines.
+	 * To avoid the most dangerous areas, you need to determine the number of points where at least two lines overlap.
+	 * Consider only horizontal and vertical lines. At how many points do at least two lines overlap?
+	 * @param includeDiagonals if true, calculate overlap including diagonals (part 2)
+	 */
+	public void day5CalculateVentLineOverlap(boolean includeDiagonals) {
+		int[][] grid = new int[1000][1000];
+		int total = 0;
+		for(String line : input) {
+			String[] lineParts = line.split("\\s+");
+			int x1 = Integer.valueOf(lineParts[0].substring(0, lineParts[0].indexOf(",")));
+			int y1 = Integer.valueOf(lineParts[0].substring(lineParts[0].indexOf(",")+1));
+			int x2 = Integer.valueOf(lineParts[2].substring(0, lineParts[2].indexOf(",")));
+			int y2 = Integer.valueOf(lineParts[2].substring(lineParts[2].indexOf(",")+1));
+			
+			if(x1 == x2 || y1 == y2) {
+				if(x1 == x2) {
+					if(y1 < y2) {
+						for(int y = y1; y <= y2; y++) {
+							grid[y][x1]++;
+							if(grid[y][x1] == 2) {
+								total++;
+							}
+						}
+					}
+					else {
+						for(int y = y1; y >= y2; y--) {
+							grid[y][x1]++;
+							if(grid[y][x1] == 2) {
+								total++;
+							}
+						}
+					}
+				}
+				else {
+					if(x1 < x2) {
+						for(int x = x1; x <= x2; x++) {
+							grid[y1][x]++;
+							if(grid[y1][x] == 2) {
+								total++;
+							}
+						}
+					}
+					else {
+						for(int x = x1; x >= x2; x--) {
+							grid[y1][x]++;
+							if(grid[y1][x] == 2) {
+								total++;
+							}
+						}
+					}
+				}
+			}
+			else if(includeDiagonals) {
+				// down and to the right
+				if(x1 < x2 && y1 < y2) {
+					int x = x1;
+					for(int y = y1; y <= y2; y++) {
+						grid[y][x]++;
+						if(grid[y][x] == 2) {
+							total++;
+						}
+						x++;
+					}
+				}
+				// up and to the right
+				else if(x1 < x2 && y1 > y2) {
+					int x = x1;
+					for(int y = y1; y >= y2; y--) {
+						grid[y][x]++;
+						if(grid[y][x] == 2) {
+							total++;
+						}
+						x++;
+					}
+				}
+				// down and to the left
+				else if(x1 > x2 && y1 < y2) {
+					int x = x1;
+					for(int y = y1; y <= y2; y++) {
+						grid[y][x]++;
+						if(grid[y][x] == 2) {
+							total++;
+						}
+						x--;
+					}
+				}
+				// up and to the left
+				else if(x1 > x2 && y1 > y2) {
+					int x = x1;
+					for(int y = y1; y >= y2; y--) {
+						grid[y][x]++;
+						if(grid[y][x] == 2) {
+							total++;
+						}
+						x--;
+					}
+				}
+			}
+		}
+		// print the grid
+//		for(int y = 0; y < grid.length; y++) {
+//			for(int x = 0; x < grid[y].length; x++) {
+//				System.out.print(grid[y][x]);
+//			}
+//			System.out.println();
+//		}
+		
+		if(!includeDiagonals) {
+			System.out.println(CUR_YEAR + " Day 5 Part 1: " + total);
+		}
+		else {
+			System.out.println(CUR_YEAR + " Day 5 Part 2: " + total);
 		}
 	}
 	
