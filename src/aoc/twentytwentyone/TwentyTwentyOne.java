@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import aoc.Year;
 import aoc.twentytwentyone.day4.BingoBoard;
-import aoc.twentytwentyone.day6.School;
 import aoc.utilities.ReadInputFile;
 import aoc.utilities.grid.Grid;
 
