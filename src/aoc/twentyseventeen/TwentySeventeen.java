@@ -591,9 +591,11 @@ public class TwentySeventeen extends Year {
 				day7RecursiveCircusPart1();
 				break;
 			case "2":
+				day7RecursiveCircusPart2();
 				break;
 			default:
 				day7RecursiveCircusPart1();
+				day7RecursiveCircusPart2();
 				break;
 		}
 	}
@@ -672,21 +674,17 @@ public class TwentySeventeen extends Year {
 	public void day7RecursiveCircusPart2() {
 		Circuit circuit = day7BuildCircuit();
 		
-		List<MultiOutputGate> curGates = new ArrayList<MultiOutputGate>();
+		Gate firstGate = null;
 		for(Wire w : circuit.getWires()) {
-			// start at the bottom, then we'll do it differently next time
-			Gate mog;
-			if((mog = circuit.findGateWithInput(w.getName())) == null) {
-				curGates.add((MultiOutputGate) mog);
+			if(circuit.findGateWithOutput(w.getName()) == null) {
+				firstGate = circuit.findGateWithInput(w.getName());
 			}
 		}
 		
 		// check the sum of what we have, then using the the gate, get the inputs and find the gates of where they are outputs, and get sum...
 		// continue until we've found the bad one
-		int newWeight = 0;
-		if((newWeight = circuit.day7RecursiveCircus(curGates)) > 0) {
-			System.out.println(CUR_YEAR + " Day 7 Part 2: " + newWeight);
-		}		
+		int newWeight = circuit.day7RecursiveCircus(firstGate);
+		System.out.println(CUR_YEAR + " Day 7 Part 2: " + newWeight);
 	}
 	
 	/**

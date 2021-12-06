@@ -26,9 +26,10 @@ import aoc.circuits.Gate;
 /**
  * This class is used in 2017 Day 7 as a circuit/gate equivalent type problem
  */
-public class MultiOutputGate extends Gate{
+public class MultiOutputGate extends Gate {
 	private String inputWireNameOrValue;
 	private List<String> outputWireNamesOrValues;
+	private int outputValueSum;
 	
 	public MultiOutputGate() {
 		super("");
@@ -68,5 +69,13 @@ public class MultiOutputGate extends Gate{
 	
 	public List<String> getOutputWireNamesOrValues() {
 		return outputWireNamesOrValues;
+	}
+
+	public int getOutputValueSum() {
+		return outputValueSum;
+	}
+
+	public void setOutputValueSum(int outputValueSum) {
+		this.outputValueSum = outputValueSum;
 	}
 }

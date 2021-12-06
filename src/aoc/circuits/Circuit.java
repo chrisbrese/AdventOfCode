@@ -91,34 +91,40 @@ public class Circuit {
 	 * For 2017 Day 7 Part 2
 	 * @param gates
 	 */
-	public int day7RecursiveCircus(List<MultiOutputGate> gates) {
-		for(MultiOutputGate mog : gates) {
-			List<Integer> curWeights = new ArrayList<Integer>(mog.getOutputWireNamesOrValues().size());
-			for(String w : mog.getOutputWireNamesOrValues()) {
-				curWeights.add(getWireValue(w));
-			}
-			
-			for(int i = 0; i < curWeights.size(); i++) {
-				for(int j = 0; j < curWeights.size(); j++) {
-					if(i != j) {
-						if(curWeights.get(i) != curWeights.get(j)) {
-							if(j != curWeights.size()-1) {
-								if(curWeights.get(i) != curWeights.get(j+1)) {
-									return i + (j-i);
+	public int day7RecursiveCircus(Gate gate) {
+		if(gate !=  null) {
+			MultiOutputGate mog = null;
+			if(gate instanceof MultiOutputGate) {
+				mog = (MultiOutputGate) gate;
+				for(String wireName : mog.getOutputWireNamesOrValues()) {
+					Wire w = getWire(wireName);
+					System.out.println(getWire(((MultiOutputGate) gate).getInputWireNameOrValue()));
+					System.out.println(w);
+					List<Integer> curWeights = new ArrayList<Integer>(mog.getOutputWireNamesOrValues().size());
+					curWeights.add(Integer.parseInt(w.getValue()));
+					
+					for(int i = 0; i < curWeights.size(); i++) {
+						for(int j = 0; j < curWeights.size(); j++) {
+							if(i != j) {
+								if(curWeights.get(i) != curWeights.get(j)) {
+									if(j != curWeights.size()-1) {
+										if(curWeights.get(i) != curWeights.get(j+1)) {
+											return i + (j-i);
+										}
+									}
+									else if(curWeights.get(i) != curWeights.get(0)) {
+										return i + (j-i);
+									}
+									else {
+										return j + (i-j);
+									}
 								}
-							}
-							else if(curWeights.get(i) != curWeights.get(0)) {
-								return i + (j-i);
-							}
-							else {
-								return j + (i-j);
 							}
 						}
 					}
 				}
 			}
 		}
-		
 		return 0;
 	}
 	
@@ -159,205 +165,218 @@ public class Circuit {
 	/**
 	 * For 2015 Day 7
 	 */
-	public void runCircuit() {
+	public void runCircuit(boolean checkValueSums) {
 		while(!haveAllGatesRun()) {
 			for(Gate gate : knownGates) {
 				if(!gate.hasRun()) {
-					Integer out = null;
-					if(gate instanceof AndGate) {
-						AndGate g = (AndGate) gate;
-						
-						Integer left = null, right = null;
-						if(g.getLeftInputWireNameOrValue() != null) {
-							if(g.getLeftInputWireNameOrValue().matches("^[a-z]+$")) {
-								Wire w;
-								if((w = getWire(g.getLeftInputWireNameOrValue())) != null) {
-									Integer wireValue;
-									if((wireValue = getWireValue(w.getName())) != null){
-										left = wireValue;
+					if(!checkValueSums) {
+						Integer out = null;
+						if(gate instanceof AndGate) {
+							AndGate g = (AndGate) gate;
+							
+							Integer left = null, right = null;
+							if(g.getLeftInputWireNameOrValue() != null) {
+								if(g.getLeftInputWireNameOrValue().matches("^[a-z]+$")) {
+									Wire w;
+									if((w = getWire(g.getLeftInputWireNameOrValue())) != null) {
+										Integer wireValue;
+										if((wireValue = getWireValue(w.getName())) != null){
+											left = wireValue;
+										}
 									}
 								}
-							}
-							else if(g.getLeftInputWireNameOrValue().matches("^[0-9]+$")) {
-								left = Integer.parseInt(g.getLeftInputWireNameOrValue());
-							}
-						}
-						if(g.getRightInputWireNameOrValue() != null) {
-							if(g.getRightInputWireNameOrValue().matches("^[a-z]+$")) {
-								Wire w;
-								if((w = getWire(g.getRightInputWireNameOrValue())) != null) {
-									Integer wireValue;
-									if((wireValue = getWireValue(w.getName())) != null){
-										right = wireValue;
-									}
+								else if(g.getLeftInputWireNameOrValue().matches("^[0-9]+$")) {
+									left = Integer.parseInt(g.getLeftInputWireNameOrValue());
 								}
 							}
-							else if(g.getRightInputWireNameOrValue().matches("^[0-9]+$")) {
-								right = Integer.parseInt(g.getRightInputWireNameOrValue());
+							if(g.getRightInputWireNameOrValue() != null) {
+								if(g.getRightInputWireNameOrValue().matches("^[a-z]+$")) {
+									Wire w;
+									if((w = getWire(g.getRightInputWireNameOrValue())) != null) {
+										Integer wireValue;
+										if((wireValue = getWireValue(w.getName())) != null){
+											right = wireValue;
+										}
+									}
+								}
+								else if(g.getRightInputWireNameOrValue().matches("^[0-9]+$")) {
+									right = Integer.parseInt(g.getRightInputWireNameOrValue());
+								}
+							}
+	
+							if(left != null && right != null) {
+								if((out = g.run(left, right)) != null) {
+									Wire output = getWire(g.getOutput());
+									output.setValue(out.toString());
+									addOrUpdateWire(output);
+									g.successfullyRan();
+								}
 							}
 						}
-
-						if(left != null && right != null) {
-							if((out = g.run(left, right)) != null) {
-								Wire output = getWire(g.getOutput());
-								output.setValue(out.toString());
-								addOrUpdateWire(output);
-								g.successfullyRan();
+						else if(gate instanceof OrGate) {
+							OrGate g = (OrGate) gate;
+							
+							Integer left = null, right = null;
+							if(g.getLeftInputWireNameOrValue() != null) {
+								if(g.getLeftInputWireNameOrValue().matches("^[a-z]+$")) {
+									Wire w;
+									if((w = getWire(g.getLeftInputWireNameOrValue())) != null) {
+										Integer wireValue;
+										if((wireValue = getWireValue(w.getName())) != null){
+											left = wireValue;
+										}
+									}
+								}
+								else if(g.getLeftInputWireNameOrValue().matches("^[0-9]+$")) {
+									left = Integer.parseInt(g.getLeftInputWireNameOrValue());
+								}
+							}
+							if(g.getRightInputWireNameOrValue() != null) {
+								if(g.getRightInputWireNameOrValue().matches("^[a-z]+$")) {
+									Wire w;
+									if((w = getWire(g.getRightInputWireNameOrValue())) != null) {
+										Integer wireValue;
+										if((wireValue = getWireValue(w.getName())) != null){
+											right = wireValue;
+										}
+									}
+								}
+								else if(g.getRightInputWireNameOrValue().matches("^[0-9]+$")) {
+									right = Integer.parseInt(g.getRightInputWireNameOrValue());
+								}
+							}
+	
+							if(left != null && right != null) {
+								if((out = g.run(left, right)) != null) {
+									Wire output = getWire(g.getOutput());
+									output.setValue(out.toString());
+									addOrUpdateWire(output);
+									g.successfullyRan();
+								}
+							}
+						}
+						else if(gate instanceof NotGate) {
+							NotGate g = (NotGate) gate;
+							
+							Integer input = null;
+							if(g.getInputWireNameOrValue() != null) {
+								if(g.getInputWireNameOrValue().matches("^[a-z]+$")) {
+									Wire w;
+									if((w = getWire(g.getInputWireNameOrValue())) != null) {
+										Integer wireValue;
+										if((wireValue = getWireValue(w.getName())) != null){
+											input = wireValue;
+										}
+									}
+								}
+								else if(g.getInputWireNameOrValue().matches("^[0-9]+$")) {
+									input = Integer.parseInt(g.getInputWireNameOrValue());
+								}
+							}
+	
+							if(input != null) {
+								if((out = g.run(input)) != null) {
+									Wire output = getWire(g.getOutput());
+									output.setValue(out.toString());
+									addOrUpdateWire(output);
+									g.successfullyRan();
+								}
+							}
+						}
+						else if(gate instanceof LShiftGate) {
+							LShiftGate g = (LShiftGate) gate;
+							
+							Integer left = null, right = null;
+							if(g.getLeftInputWireNameOrValue() != null) {
+								if(g.getLeftInputWireNameOrValue().matches("^[a-z]+$")) {
+									Wire w;
+									if((w = getWire(g.getLeftInputWireNameOrValue())) != null) {
+										Integer wireValue;
+										if((wireValue = getWireValue(w.getName())) != null){
+											left = wireValue;
+										}
+									}
+								}
+								else if(g.getLeftInputWireNameOrValue().matches("^[0-9]+$")) {
+									left = Integer.parseInt(g.getLeftInputWireNameOrValue());
+								}
+							}
+							if(g.getRightInputWireNameOrValue() != null) {
+								if(g.getRightInputWireNameOrValue().matches("^[a-z]+$")) {
+									Wire w;
+									if((w = getWire(g.getRightInputWireNameOrValue())) != null) {
+										Integer wireValue;
+										if((wireValue = getWireValue(w.getName())) != null){
+											right = wireValue;
+										}
+									}
+								}
+								else if(g.getRightInputWireNameOrValue().matches("^[0-9]+$")) {
+									right = Integer.parseInt(g.getRightInputWireNameOrValue());
+								}
+							}
+	
+							if(left != null && right != null) {
+								if((out = g.run(left, right)) != null) {
+									Wire output = getWire(g.getOutput());
+									output.setValue(out.toString());
+									addOrUpdateWire(output);
+									g.successfullyRan();
+								}
+							}
+						}
+						else if(gate instanceof RShiftGate) {
+							RShiftGate g = (RShiftGate) gate;
+							
+							Integer left = null, right = null;
+							if(g.getLeftInputWireNameOrValue() != null) {
+								if(g.getLeftInputWireNameOrValue().matches("^[a-z]+$")) {
+									Wire w;
+									if((w = getWire(g.getLeftInputWireNameOrValue())) != null) {
+										Integer wireValue;
+										if((wireValue = getWireValue(w.getName())) != null){
+											left = wireValue;
+										}
+									}
+								}
+								else if(g.getLeftInputWireNameOrValue().matches("^[0-9]+$")) {
+									left = Integer.parseInt(g.getLeftInputWireNameOrValue());
+								}
+							}
+							if(g.getRightInputWireNameOrValue() != null) {
+								if(g.getRightInputWireNameOrValue().matches("^[a-z]+$")) {
+									Wire w;
+									if((w = getWire(g.getRightInputWireNameOrValue())) != null) {
+										Integer wireValue;
+										if((wireValue = getWireValue(w.getName())) != null){
+											right = wireValue;
+										}
+									}
+								}
+								else if(g.getRightInputWireNameOrValue().matches("^[0-9]+$")) {
+									right = Integer.parseInt(g.getRightInputWireNameOrValue());
+								}
+							}
+	
+							if(left != null && right != null) {
+								if((out = g.run(left, right)) != null) {
+									Wire output = getWire(g.getOutput());
+									output.setValue(out.toString());
+									addOrUpdateWire(output);
+									g.successfullyRan();
+								}
 							}
 						}
 					}
-					else if(gate instanceof OrGate) {
-						OrGate g = (OrGate) gate;
-						
-						Integer left = null, right = null;
-						if(g.getLeftInputWireNameOrValue() != null) {
-							if(g.getLeftInputWireNameOrValue().matches("^[a-z]+$")) {
-								Wire w;
-								if((w = getWire(g.getLeftInputWireNameOrValue())) != null) {
-									Integer wireValue;
-									if((wireValue = getWireValue(w.getName())) != null){
-										left = wireValue;
-									}
-								}
+					else {
+						if(gate instanceof MultiOutputGate) {
+							MultiOutputGate mog = (MultiOutputGate) gate;
+							
+							for(String wireName : mog.getOutputWireNamesOrValues()) {
+								mog.setgetWire(wireName);
 							}
-							else if(g.getLeftInputWireNameOrValue().matches("^[0-9]+$")) {
-								left = Integer.parseInt(g.getLeftInputWireNameOrValue());
-							}
-						}
-						if(g.getRightInputWireNameOrValue() != null) {
-							if(g.getRightInputWireNameOrValue().matches("^[a-z]+$")) {
-								Wire w;
-								if((w = getWire(g.getRightInputWireNameOrValue())) != null) {
-									Integer wireValue;
-									if((wireValue = getWireValue(w.getName())) != null){
-										right = wireValue;
-									}
-								}
-							}
-							else if(g.getRightInputWireNameOrValue().matches("^[0-9]+$")) {
-								right = Integer.parseInt(g.getRightInputWireNameOrValue());
-							}
-						}
-
-						if(left != null && right != null) {
-							if((out = g.run(left, right)) != null) {
-								Wire output = getWire(g.getOutput());
-								output.setValue(out.toString());
-								addOrUpdateWire(output);
-								g.successfullyRan();
-							}
-						}
-					}
-					else if(gate instanceof NotGate) {
-						NotGate g = (NotGate) gate;
-						
-						Integer input = null;
-						if(g.getInputWireNameOrValue() != null) {
-							if(g.getInputWireNameOrValue().matches("^[a-z]+$")) {
-								Wire w;
-								if((w = getWire(g.getInputWireNameOrValue())) != null) {
-									Integer wireValue;
-									if((wireValue = getWireValue(w.getName())) != null){
-										input = wireValue;
-									}
-								}
-							}
-							else if(g.getInputWireNameOrValue().matches("^[0-9]+$")) {
-								input = Integer.parseInt(g.getInputWireNameOrValue());
-							}
-						}
-
-						if(input != null) {
-							if((out = g.run(input)) != null) {
-								Wire output = getWire(g.getOutput());
-								output.setValue(out.toString());
-								addOrUpdateWire(output);
-								g.successfullyRan();
-							}
-						}
-					}
-					else if(gate instanceof LShiftGate) {
-						LShiftGate g = (LShiftGate) gate;
-						
-						Integer left = null, right = null;
-						if(g.getLeftInputWireNameOrValue() != null) {
-							if(g.getLeftInputWireNameOrValue().matches("^[a-z]+$")) {
-								Wire w;
-								if((w = getWire(g.getLeftInputWireNameOrValue())) != null) {
-									Integer wireValue;
-									if((wireValue = getWireValue(w.getName())) != null){
-										left = wireValue;
-									}
-								}
-							}
-							else if(g.getLeftInputWireNameOrValue().matches("^[0-9]+$")) {
-								left = Integer.parseInt(g.getLeftInputWireNameOrValue());
-							}
-						}
-						if(g.getRightInputWireNameOrValue() != null) {
-							if(g.getRightInputWireNameOrValue().matches("^[a-z]+$")) {
-								Wire w;
-								if((w = getWire(g.getRightInputWireNameOrValue())) != null) {
-									Integer wireValue;
-									if((wireValue = getWireValue(w.getName())) != null){
-										right = wireValue;
-									}
-								}
-							}
-							else if(g.getRightInputWireNameOrValue().matches("^[0-9]+$")) {
-								right = Integer.parseInt(g.getRightInputWireNameOrValue());
-							}
-						}
-
-						if(left != null && right != null) {
-							if((out = g.run(left, right)) != null) {
-								Wire output = getWire(g.getOutput());
-								output.setValue(out.toString());
-								addOrUpdateWire(output);
-								g.successfullyRan();
-							}
-						}
-					}
-					else if(gate instanceof RShiftGate) {
-						RShiftGate g = (RShiftGate) gate;
-						
-						Integer left = null, right = null;
-						if(g.getLeftInputWireNameOrValue() != null) {
-							if(g.getLeftInputWireNameOrValue().matches("^[a-z]+$")) {
-								Wire w;
-								if((w = getWire(g.getLeftInputWireNameOrValue())) != null) {
-									Integer wireValue;
-									if((wireValue = getWireValue(w.getName())) != null){
-										left = wireValue;
-									}
-								}
-							}
-							else if(g.getLeftInputWireNameOrValue().matches("^[0-9]+$")) {
-								left = Integer.parseInt(g.getLeftInputWireNameOrValue());
-							}
-						}
-						if(g.getRightInputWireNameOrValue() != null) {
-							if(g.getRightInputWireNameOrValue().matches("^[a-z]+$")) {
-								Wire w;
-								if((w = getWire(g.getRightInputWireNameOrValue())) != null) {
-									Integer wireValue;
-									if((wireValue = getWireValue(w.getName())) != null){
-										right = wireValue;
-									}
-								}
-							}
-							else if(g.getRightInputWireNameOrValue().matches("^[0-9]+$")) {
-								right = Integer.parseInt(g.getRightInputWireNameOrValue());
-							}
-						}
-
-						if(left != null && right != null) {
-							if((out = g.run(left, right)) != null) {
-								Wire output = getWire(g.getOutput());
-								output.setValue(out.toString());
-								addOrUpdateWire(output);
-								g.successfullyRan();
-							}
+							
+							mog.successfullyRan();
 						}
 					}
 				}
