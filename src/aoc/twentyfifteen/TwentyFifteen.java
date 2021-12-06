@@ -3,6 +3,8 @@ package aoc.twentyfifteen;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import aoc.Year;
 import aoc.circuits.Circuit;
 import aoc.circuits.Wire;
@@ -928,12 +930,14 @@ public class TwentyFifteen extends Year {
 		
 		switch(part) {
 			case "1":
-				day9SingleNightShortestRoute();
+				day9SingleNightRoute(true);
 				break;
 			case "2":
+				day9SingleNightRoute(false);
 				break;
 			default:
-				day9SingleNightShortestRoute();
+				day9SingleNightRoute(true);
+				day9SingleNightRoute(false);
 				break;
 		}
 	}
@@ -943,8 +947,7 @@ public class TwentyFifteen extends Year {
 	 * He can start and end at any two (different) locations he wants, but he must visit each location exactly once.
 	 * What is the shortest distance he can travel to achieve this?
 	 */
-	// TODO:
-	public void day9SingleNightShortestRoute() {
+	public void day9SingleNightRoute(boolean getShortest) {
 		Country country = new Country();
 		
 		for(String line : input) {
@@ -960,40 +963,36 @@ public class TwentyFifteen extends Year {
 			country.updateCity(destination);
 		}
 		
-		List<List<List<City>>> startPoints = new ArrayList<List<List<City>>>();
-		for(int i = 0; i < country.getCities().size(); i++) {
-			List<List<City>> startPointOptions = new ArrayList<List<City>>();
-			City startCity = country.getCities().get(i);
-			List<String> connections = new ArrayList<String>(startCity.getConnections().keySet());
-			
-			for(int j = 0; j < connections.size(); j++) {
-				List<City> route = new ArrayList<City>();
-				route.add(startCity);
-				startPointOptions.add(country.routeBuilder(route, connections.get(j)));
-			}
-			
-			startPoints.add(startPointOptions);
-		}
+		List<List<City>> combinations = new ArrayList<List<City>>();
+		
+		combinations.addAll(CollectionUtils.permutations(country.getCities()));
 		
 		int shortestRoute = 0;
-		for(List<List<City>> routes : startPoints) {
-			for(List<City> route : routes) {
-				int distance = 0;
-				for(int i = 0; i < route.size()-1; i++) {
-					City thisCity = route.get(i);
-					City nextCity = route.get(i+1);
-					System.out.print(thisCity.getName() + "->" + nextCity.getName());
-					
-					distance += thisCity.getConnections().get(nextCity.getName());
-				}
-				System.out.println();
-				if((shortestRoute == 0) || distance < shortestRoute) {
-					shortestRoute = distance;
-				}
+		int longestRoute = 0;
+		for(List<City> routeSet : combinations) {
+			List<City> route = new ArrayList<>(routeSet);
+			int distance = 0;
+			for(int i = 0; i < route.size()-1; i++) {
+				City thisCity = route.get(i);
+				City nextCity = route.get(i+1);
+				
+				distance += thisCity.getConnections().get(nextCity.getName());
+			}
+			
+			if(shortestRoute == 0 || distance < shortestRoute) {
+				shortestRoute = distance;
+			}
+			if(longestRoute == 0 || distance > longestRoute) {
+				longestRoute = distance;
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 9 Part 1: " + shortestRoute);
+		if(getShortest) {
+			System.out.println(CUR_YEAR + " Day 9 Part 1: " + shortestRoute);
+		}
+		else {
+			System.out.println(CUR_YEAR + " Day 9 Part 2: " + longestRoute);
+		}
 	}
 	
 	/**

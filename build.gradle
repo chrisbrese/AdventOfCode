@@ -1,0 +1,16 @@
+repositories {
+  mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+defaultTasks 'clean', 'build', 'eclipse'
+
+mainClassName = "aoc.AdventOfCode"
+applicationName = "AdventOfCode"
+
+dependencies {
+  compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
+}

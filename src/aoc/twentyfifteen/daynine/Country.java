@@ -47,25 +47,6 @@ public class Country {
 		return cities;
 	}
 	
-	public List<City> routeBuilder(List<City> cities, String curCityName){
-		while(cities.size() < getCities().size()) {
-			City c = getCity(curCityName);
-			
-			if(!cities.contains(c)) {
-				cities.add(c);
-			}
-			
-			for(String city : c.getConnections().keySet()) {
-				if(!cities.contains(getCity(city))) {
-					cities.add(getCity(city));
-					routeBuilder(cities, city);
-				}
-			}
-		}
-		
-		return cities;
-	}
-	
 	public String toString() {
 		String s = "";
 		for(City c : getCities()) {
