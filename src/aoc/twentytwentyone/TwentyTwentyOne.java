@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import aoc.Year;
 import aoc.twentytwentyone.day4.BingoBoard;
+import aoc.twentytwentyone.day6.School;
 import aoc.utilities.ReadInputFile;
 import aoc.utilities.grid.Grid;
 
@@ -549,12 +551,72 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
+				System.out.println(CUR_YEAR + " Day 6 Part 1: " + day6CalculateSpawningFish(80));
 				break;
 			case "2":
+				System.out.println(CUR_YEAR + " Day 6 Part 2: " + day6CalculateSpawningFish(256));
 				break;
 			default:
+				System.out.println(CUR_YEAR + " Day 6 Part 1: " + day6CalculateSpawningFish(80));
+				System.out.println(CUR_YEAR + " Day 6 Part 2: " + day6CalculateSpawningFish(256));
 				break;
 		}
+	}
+	
+	/**
+	 * A massive school of glowing lanternfish swims past. They must spawn quickly to reach such large numbers - maybe exponentially quickly?
+	 * You should model their growth rate to be sure. Although you know nothing about this specific species of lanternfish, you make some guesses about their attributes.
+	 * Surely, each lanternfish creates a new lanternfish once every 7 days. 
+	 * However, this process isn't necessarily synchronized between every lanternfish - one lanternfish might have 2 days left until it creates another lanternfish, while another might have 4.
+	 * So, you can model each fish as a single number that represents the number of days until it creates a new lanternfish. 
+	 * Furthermore, you reason, a new lanternfish would surely need slightly longer before it's capable of producing more lanternfish: two more days for its first cycle.
+	 * Find a way to simulate lanternfish. How many lanternfish would there be after 80 days?
+	 * @param numDays the number of days to calculate
+	 * @return the number of fish in the school after numDays
+	 */
+	public Long day6CalculateSpawningFish(int numDays) {
+		HashMap<Integer, Long> school = new HashMap<Integer, Long>(); //current time left to number of fish with that amount of time left
+		
+		// init
+		for (String s : input.get(0).split(",")) {
+			Integer cur = Integer.parseInt(s);
+			if(school.containsKey(cur)) {
+				school.put(cur, school.get(cur)+1L);
+			}
+			else {
+				school.put(cur, 1L);
+			}
+		}
+		
+		int day = 1;
+		while(day <= numDays) {
+			HashMap<Integer, Long> newDay = new HashMap<Integer, Long>();
+			
+			for(Integer cur : school.keySet()) {
+				if(cur == 0) {
+					newDay.put(6, school.get(cur));
+					newDay.put(8, school.get(cur));
+				}
+				else {
+					// if there were any 0's above, there will be new 6's to update
+					if(newDay.containsKey(cur-1)) {
+						newDay.put(cur-1, school.get(cur) + newDay.get(cur-1));
+					}
+					else {
+						newDay.put(cur-1, school.get(cur));
+					}
+				}
+			}
+			
+			school = newDay;
+			day++;
+		}
+		
+		Long sum = 0L;
+		for(Long num : school.values()) {
+			sum += num;
+		}
+		return sum;
 	}
 	
 	/**
