@@ -946,6 +946,7 @@ public class TwentyFifteen extends Year {
 	 * Santa has some new locations to visit; his elves have provided him the distances between every pair of locations.
 	 * He can start and end at any two (different) locations he wants, but he must visit each location exactly once.
 	 * What is the shortest distance he can travel to achieve this?
+	 * @param getShortest true if return shortest distance, false if return longest distance
 	 */
 	public void day9SingleNightRoute(boolean getShortest) {
 		Country country = new Country();
@@ -1002,13 +1003,73 @@ public class TwentyFifteen extends Year {
 		input = ReadInputFile.readFile(Integer.toString(CUR_YEAR), "10");
 		
 		switch(part) {
-			case "1":				
+			case "1":
+				day10LookAndSay(40);
 				break;
 			case "2":
+				day10LookAndSay(50);
 				break;
-			default:				
+			default:
+				day10LookAndSay(40);
+				day10LookAndSay(50);
 				break;
 		}
+	}
+	
+	/**
+	 * Today, the Elves are playing a game called look-and-say.
+	 * They take turns making sequences by reading aloud the previous sequence and using that reading as the next sequence. For example, 211 is read as "one two, two ones", which becomes 1221 (1 2, 2 1s).
+	 * Look-and-say sequences are generated iteratively, using the previous value as input for the next step.
+	 * For each step, take the previous value, and replace each run of digits with the number of digits followed by the digit itself.
+	 * Starting with the digits in your puzzle input, apply this process x times. What is the length of the result?
+	 * @param numTimes the number of times to apply the look and say process
+	 */
+	// This takes hours!!
+	public void day10LookAndSay(int numTimes) {
+		String result = input.get(0);
+		
+		for(int num = 0; num < numTimes; num++) {
+			String curResult = "";
+			for(int i = 0; i < result.length(); i++) {
+				String s;
+				int count = 0;
+				if(i == result.length() - 1) {
+					s = result.substring(i);
+				}
+				else {
+					s = result.substring(i, i+1);
+				}
+				count++;
+				for(int j = i+1; j < result.length(); j++) {
+					String t;
+					if(j == result.length() - 1) {
+						t = result.substring(j);
+					}
+					else {
+						t = result.substring(j, j+1);
+					}
+					
+					if(s.equals(t)) {
+						count++;
+						
+						if(j == result.length() - 1) {
+							i = j;
+							break;
+						}
+					}
+					else {
+						i = j - 1;
+						break;
+					}
+				}
+				
+				curResult += Integer.toString(count) + s;
+			}
+
+			result = curResult;
+		}
+		
+		System.out.println(CUR_YEAR + " Day 10 Result after (" + numTimes + ") times: " + result.length());
 	}
 	
 	/**
