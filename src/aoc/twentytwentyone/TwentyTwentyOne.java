@@ -722,12 +722,207 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
+				day8SevenSegmentSearchUniqueNumberCount();
 				break;
 			case "2":
+				day8SevenSegmentSearchSumOfOutputs();
 				break;
 			default:
+				day8SevenSegmentSearchUniqueNumberCount();
+				day8SevenSegmentSearchSumOfOutputs();
 				break;
 		}
+	}
+	
+	/**
+	 * You notice that the four-digit seven-segment displays in your submarine are malfunctioning; they must have been damaged during the escape.
+	 * Each digit of a seven-segment display is rendered by turning on or off any of seven segments named a through g.
+	 *   0:      1:      2:      3:      4:
+     * aaaa    ....    aaaa    aaaa    ....
+     * b    c  .    c  .    c  .    c  b    c
+     * b    c  .    c  .    c  .    c  b    c
+     * ....    ....    dddd    dddd    dddd
+     * e    f  .    f  e    .  .    f  .    f
+     * e    f  .    f  e    .  .    f  .    f
+      * gggg    ....    gggg    gggg    ....
+      * 
+      * 5:      6:      7:      8:      9:
+      * aaaa    aaaa    aaaa    aaaa    aaaa
+      * b    .  b    .  .    c  b    c  b    c
+      * b    .  b    .  .    c  b    c  b    c
+      * dddd    dddd    ....    dddd    dddd
+      * .    f  e    f  .    f  e    f  .    f
+      * .    f  e    f  .    f  e    f  .    f
+      * gggg    gggg    ....    gggg    gggg
+      * 
+      * So, to render a 1, only segments c and f would be turned on; the rest would be off. To render a 7, only segments a, c, and f would be turned on.
+      * The problem is that the signals which control the segments have been mixed up on each display.
+      * The submarine is still trying to display numbers by producing output on signal wires a through g, but those wires are connected to segments randomly.
+      * Worse, the wire/segment connections are mixed up separately for each four-digit display! (All of the digits within a display use the same connections, though.)
+      * So, you might know that only signal wires b and g are turned on, but that doesn't mean segments b and g are turned on: 
+      *   the only digit that uses two segments is 1, so it must mean segments c and f are meant to be on.
+      * With just that information, you still can't tell which wire (b/g) goes to which segment (c/f). For that, you'll need to collect more information.
+      * For each display, you watch the changing signals for a while, make a note of all ten unique signal patterns you see, 
+      *   and then write down a single four digit output value (your puzzle input). Using the signal patterns, you should be able to work out which pattern corresponds to which digit.
+      * Because the digits 1, 4, 7, and 8 each use a unique number of segments, you should be able to tell which combinations of signals correspond to those digits.
+      * Counting only digits in the output values (the part after | on each line), in the above example, there are 26 instances of digits that use a unique number of segments (highlighted above).
+      * In the output values, how many times do digits 1, 4, 7, or 8 appear?
+	 */
+	public void day8SevenSegmentSearchUniqueNumberCount() {
+		int count = 0;
+		for(String line : input) {
+			String[] parts = line.split(" \\| ");
+			String[] outputParts = parts[1].split(" ");
+			
+			for(String out : outputParts) {
+				if(out.length() == 2 || out.length() == 4 || out.length() == 3 || out.length() == 7) {
+					count++;
+				}
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 8 Part 1: " + count);
+	}
+	
+	/**
+	 * Given a map of known (solved) numbers to an example string of characters for that number, determine if
+	 * the given string can be solved.
+	 * @param map map of known (solved) numbers to an example string of characters for that number
+	 * @param in current string to determine the number of from the map
+	 * @return -1 if the answer can not yet be determined, otherwise the answer
+	 */
+	public int getNumFromString(HashMap<Integer, String> map, String in) {
+		if(in.length() == 2) {        // 1
+			return 1;
+		}
+		else if (in.length() == 4) {  // 4
+			return 4;
+		}
+		else if(in.length() == 3) {   // 7
+			return 7;
+		}
+		else if(in.length() == 7) {  // 8
+			return 8;
+		}
+		else if(in.length() == 6) {  // 0, 6, 9
+			boolean has1 = true;
+			boolean has4 = true;
+			
+			if(map.containsKey(1)) { // if 1 overlaps, it is a 0
+				for(char c : map.get(1).toCharArray()) {
+					if(in.indexOf(c) == -1) {
+						has1 = false;
+						break;
+					}
+				}
+			}
+			else {
+				has1 = false;
+			}
+			
+			if(map.containsKey(4)) { // if 4 overlaps, it is a 9
+				for(char c : map.get(4).toCharArray()) {
+					if(in.indexOf(c) == -1) {
+						has4 = false;
+						break;
+					}
+				}
+			}
+			else {
+				has4 = false;
+			}
+			
+			if((!has1 && map.containsKey(1)) && (!has4 && map.containsKey(4))) {
+				return 6;
+			}
+			else {
+				if(has4) { // its a 9
+					return 9;
+				}
+				else { // its a 0
+					return 0;
+				}
+			}
+		}
+		else if(in.length() == 5) {   // 2, 3, 5
+			boolean has1 = true;
+			StringBuilder tmp = new StringBuilder(in);
+			char deletedChar = '1';
+			if(map.containsKey(1)) { // if 1 overlaps, it is a 3
+				for(char c : map.get(1).toCharArray()) {
+					if(in.indexOf(c) == -1) {
+						has1 = false;
+						deletedChar = c;
+						break;
+					}
+				}
+			}
+			else {
+				has1 = false;
+			}
+			
+			if(has1 && map.containsKey(1)) { // its a 3
+				return 3;
+			}
+			else if(deletedChar != '1'){
+				boolean has4 = true;
+				if(map.containsKey(4)) {
+					for(char c : map.get(4).toCharArray()) {
+						if(c != deletedChar && tmp.toString().indexOf(c) == -1) {
+							has4 = false;
+							break;
+						}
+					}
+				}
+				else {
+					has4 = false;
+				}
+				
+				if(has4 && map.containsKey(4)) { // its a 5
+					return 5;
+				}
+				else if(!has4 && map.containsKey(4)) { // its a 2
+					return 2;
+				}
+			}
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Using the same information from part1, and through a little deduction, you should now be able to determine the remaining digits.
+	 * For each entry, determine all of the wire/segment connections and decode the four-digit output values. What do you get if you add up all of the output values?
+	 */
+	public void day8SevenSegmentSearchSumOfOutputs() {
+		int sum = 0;
+		
+		for(String line : input) {
+			HashMap<Integer, String> map = new HashMap<Integer, String>();
+			String[] inOutParts = line.split(" \\| ");
+			
+			StringBuilder outStr = new StringBuilder("aaaa");
+			while(outStr.indexOf("a") > -1) {
+				int cur;
+				for(String in : inOutParts[0].split(" ")) {
+					if((cur = getNumFromString(map, in)) != -1) {
+						map.put(cur, in);
+					}
+				}
+				
+				int i = 0;
+				for(String out : inOutParts[1].split(" ")) {
+					if((cur = getNumFromString(map, out)) != -1) {
+						map.put(cur, out);
+						outStr.replace(i, i+1, String.valueOf(cur));
+					}
+					i++;
+				}
+			}
+			sum += Integer.valueOf(outStr.toString());
+		}
+		
+		System.out.println(CUR_YEAR + " Day 8 Part 2: " + sum);
 	}
 	
 	/**
