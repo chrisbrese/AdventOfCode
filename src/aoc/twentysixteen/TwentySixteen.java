@@ -294,7 +294,6 @@ public class TwentySixteen extends Year {
 	 * What is the sum of the sector IDs of the real rooms?
 	 */
 	public void day4SecurityObscurityPart1() {
-		String alphabet = "abcdefghijklmnopqrstuvwxyz";
 		int sum = 0;
 		
 		for(String line : input) {
@@ -330,7 +329,7 @@ public class TwentySixteen extends Year {
 						break;
 					}
 					else if(map.get(s) == map.get(chk)) {
-						if(alphabet.indexOf(s) < alphabet.indexOf(chk)) {
+						if(alphabetStr.indexOf(s) < alphabetStr.indexOf(chk)) {
 							checksumTmp.add(checksumTmp.indexOf(chk), s);
 							break;
 						}

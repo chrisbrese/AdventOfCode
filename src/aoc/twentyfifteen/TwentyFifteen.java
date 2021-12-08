@@ -1080,11 +1080,124 @@ public class TwentyFifteen extends Year {
 		
 		switch(part) {
 			case "1":
+				day11CorporatePolicy(input.get(0), 1);
 				break;
 			case "2":
+				day11CorporatePolicy(input.get(0), 2);
 				break;
 			default:
+				day11CorporatePolicy(input.get(0), 1);
+				day11CorporatePolicy(input.get(0), 2);
 				break;
+		}
+	}
+	
+	public boolean isGoodPassword(String pw) {
+		boolean contains3InARow = false;
+		int doubleCharCount = 0;
+		
+		if(pw.contains("i") || pw.contains("l") || pw.contains("o")) {
+			return false;
+		}
+		
+		for(int i = 0; i <= pw.length()-3; i++) {
+			int i1 = alphabetStr.indexOf(pw.substring(i,i+1));
+			int i2 = alphabetStr.indexOf(pw.substring(i+1,i+2));
+			int i3 = alphabetStr.indexOf(pw.substring(i+2,i+3));
+			
+			if(i3 - i2 == 1 && i2 - i1 == 1) {
+				contains3InARow = true;
+				break;
+			}
+		}
+		
+		for(int i = 0; i <= pw.length() - 2; i++) {
+			if(pw.substring(i, i+1).equals(pw.substring(i+1, i+2))) {
+				doubleCharCount++;
+				i++; // since they can't overlap, skip an index
+			}
+		}
+		
+		return contains3InARow && (doubleCharCount >= 2);
+	}
+	
+	/**
+	 * Santa's previous password expired, and he needs help choosing a new one. 
+	 * To help him remember his new password after the old one expires, Santa has devised a method of coming up with a password based on the previous one.
+	 * Corporate policy dictates that passwords must be exactly eight lowercase letters (for security reasons),
+	 *   so he finds his new password by incrementing his old password string repeatedly until it is valid.
+	 * Unfortunately for Santa, a new Security-Elf recently started, and he has imposed some additional password requirements:
+	 *   - Passwords must include one increasing straight of at least three letters. They cannot skip letters.
+	 *   - Passwords may not contain the letters i, o, or l, as these letters can be mistaken for other characters and are therefore confusing.
+	 *   - Passwords must contain at least two different, non-overlapping pairs of letters.
+	 * Given Santa's current password (your puzzle input), what should his next password be?
+	 * 
+	 * @param pw the password to check against
+	 * @param numTimes the number of different valid passwords, in order, to get
+	 */
+	public void day11CorporatePolicy(String pw, int numTimes) {
+		int count = 0;
+		String lastPw = pw;
+		while(count < numTimes) {
+			StringBuilder tempPw = new StringBuilder(lastPw);
+			boolean success = false;
+			
+			int curPwIndex = tempPw.length()-1;
+			int lastPwIndex = curPwIndex;
+			
+			while(lastPwIndex >= 0) {
+				String curAlphaChar = tempPw.substring(lastPw.length()-1);
+				int curAlphaIndex = alphabetStr.indexOf(curAlphaChar);
+				while(curAlphaIndex < alphabetArr.length) {
+					if(curAlphaIndex == alphabetArr.length-1) { // if its at 'z'
+						for(int x = curPwIndex; x >= lastPwIndex; x--) {
+							if(alphabetStr.indexOf(tempPw.substring(x, x+1))+1 == alphabetArr.length) { // check the previous index to see if its also at 'z'
+								tempPw.replace(x, x+1, "a");
+								
+								if(x == lastPwIndex) {
+									lastPwIndex--; // check the next index to the left
+								}
+							}
+							else {
+								if(alphabetArr[alphabetStr.indexOf(tempPw.substring(x, x+1))+1].equals("i") || 
+										alphabetArr[alphabetStr.indexOf(tempPw.substring(x, x+1))+1].equals("l") || 
+										alphabetArr[alphabetStr.indexOf(tempPw.substring(x, x+1))+1].equals("o")) {
+									tempPw.replace(x, x+1, alphabetArr[alphabetStr.indexOf(tempPw.substring(x, x+1))+2]);
+								}
+								else {
+									tempPw.replace(x, x+1, alphabetArr[alphabetStr.indexOf(tempPw.substring(x, x+1))+1]);
+								}
+								lastPwIndex++; // time to start the counter over now that the previous index has been resolved
+							}	
+						}
+						
+					}
+					else { // still working in the current index
+						if(alphabetArr[curAlphaIndex+1].equals("i") || alphabetArr[curAlphaIndex+1].equals("l") || alphabetArr[curAlphaIndex+1].equals("o")) {
+							tempPw.replace(curPwIndex, curPwIndex+1, alphabetArr[curAlphaIndex+2]);
+							curAlphaIndex++; // skip the next letter
+						}
+						else {
+							tempPw.replace(curPwIndex, curPwIndex+1, alphabetArr[curAlphaIndex+1]);
+						}
+					}
+					
+					if(success = isGoodPassword(tempPw.toString())){
+						break;
+					}
+					
+					curAlphaIndex++;
+				}
+				if(success) {
+					break;
+				}
+			}
+			
+			if(success) {
+				count ++;
+				lastPw = tempPw.toString();
+				System.out.println(CUR_YEAR + " Day 11 valid pw after (" + count + ") times: " + lastPw);
+			}
 		}
 	}
 	

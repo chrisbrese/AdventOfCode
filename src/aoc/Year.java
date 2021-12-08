@@ -6,6 +6,8 @@ public abstract class Year {
 	
 	public static List<String> input;    
 	public static int CUR_YEAR;
+	public String alphabetStr = "abcdefghijklmnopqrstuvwxyz";
+	public String[] alphabetArr = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
 	
 	/**
 	 * Run all Day 1 reports.
