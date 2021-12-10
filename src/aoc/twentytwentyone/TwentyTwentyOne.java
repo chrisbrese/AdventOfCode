@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import aoc.Year;
 import aoc.twentytwentyone.day4.BingoBoard;
 import aoc.utilities.ReadInputFile;
 import aoc.utilities.grid.Grid;
+import aoc.utilities.grid.GridPosition;
 
 public class TwentyTwentyOne extends Year {
 	
@@ -933,90 +935,225 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
-				day9SmokeBasin();
+				day9SmokeBasin(day9SetupGrid());
 				break;
 			case "2":
+				day9SmokeBasinFlow();
 				break;
 			default:
-				day9SmokeBasin();
+				day9SmokeBasin(day9SetupGrid());
+				day9SmokeBasinFlow();
 				break;
 		}
 	}
 	
-	public void day9SmokeBasin() {
+	/**
+	 * Common method for day 9 to build the grid and fill it with depths
+	 * @return the Grid object
+	 */
+	public Grid day9SetupGrid() {
 		Grid grid = new Grid(input.size(), input.get(0).length());
-		int sum = 0;
 		
 		int rowCount = 0;
 		for(String line : input) {
 			int colCount = 0;
 			while(colCount < grid.getNumCols()) {
 				int cur = Integer.valueOf(line.substring(colCount, colCount+1));
-				grid.getGrid()[rowCount][colCount++] = cur;
+				grid.addGridPosition(String.valueOf(rowCount) + String.valueOf(colCount), new GridPosition(rowCount, colCount, cur));
+				grid.getGrid()[rowCount][colCount++] = cur;				
 			}
 			rowCount++;
 		}
+		
+		return grid;
+	}
+	
+	/**
+	 * Common method for day 9 to find all the basins in a grid, returning a queue of positions in the grid that are basins.
+	 * Also prints out the sum of the risk levels at the end.
+	 * 
+	 * These caves seem to be lava tubes. Parts are even still volcanically active; small hydrothermal vents release smoke into the caves that slowly settles like rain.
+	 * If you can model how the smoke flows through the caves, you might be able to avoid it and be that much safer.
+	 * The submarine generates a heightmap of the floor of the nearby caves for you (your puzzle input).
+	 * Smoke flows to the lowest point of the area it's in.
+	 * Each number corresponds to the height of a particular location, where 9 is the highest and 0 is the lowest a location can be.
+	 * Your first goal is to find the low points - the locations that are lower than any of its adjacent locations.
+	 * Most locations have four adjacent locations (up, down, left, and right);
+	 *   locations on the edge or corner of the map have three or two adjacent locations, respectively.
+	 *   (Diagonal locations do not count as adjacent.)
+	 * The risk level of a low point is 1 plus its height.
+	 * Find all of the low points on your heightmap. What is the sum of the risk levels of all low points on your heightmap?
+	 * 
+	 * @param grid The grid to find basins for
+	 * @return a queue of basins as GridPositions
+	 */
+	public LinkedBlockingQueue<GridPosition> day9SmokeBasin(Grid grid) {
+		LinkedBlockingQueue<GridPosition> basinQueue = new LinkedBlockingQueue<GridPosition>(); // holds the positions of the basins in row,col format
+		int sum = 0;
 		
 		int[][] g = grid.getGrid();
 		
 		for(int row = 0; row < grid.getNumRows(); row++) {
 			for(int col = 0; col < grid.getNumCols(); col++) {
+				boolean foundBasin = false;
 				int cur = g[row][col];
-				if(row == 0) {
-					if(col == 0) {
-						if(cur < g[row+1][col] && cur < g[row][col+1]) {
-							sum += (cur+1);
+				if(cur != 9) {
+					if(row == 0) {
+						if(col == 0) {
+							if(cur < g[row+1][col] && cur < g[row][col+1]) {
+								foundBasin = true;
+							}
+						}
+						else if(col == grid.getNumCols()-1) {
+							if(cur < g[row+1][col] && cur < g[row][col-1]) {
+								foundBasin = true;
+							}
+						}
+						else {
+							if(cur < g[row+1][col] && cur < g[row][col-1] && cur < g[row][col+1]) {
+								foundBasin = true;
+							}
 						}
 					}
-					else if(col == grid.getNumCols()-1) {
-						if(cur < g[row+1][col] && cur < g[row][col-1]) {
-							sum += (cur+1);
+					else if(row == grid.getNumRows()-1) {
+						if(col == 0) {
+							if(cur < g[row-1][col] && cur < g[row][col+1]) {
+								foundBasin = true;
+							}
 						}
-					}
-					else {
-						if(cur < g[row+1][col] && cur < g[row][col-1] && cur < g[row][col+1]) {
-							sum += (cur+1);
+						else if(col == grid.getNumCols()-1) {
+							if(cur < g[row-1][col] && cur < g[row][col-1]) {
+								foundBasin = true;
+							}
 						}
-					}
-				}
-				else if(row == grid.getNumRows()-1) {
-					if(col == 0) {
-						if(cur < g[row-1][col] && cur < g[row][col+1]) {
-							sum += (cur+1);
-						}
-					}
-					else if(col == grid.getNumCols()-1) {
-						if(cur < g[row-1][col] && cur < g[row][col-1]) {
-							sum += (cur+1);
-						}
-					}
-					else {
-						if(cur < g[row-1][col] && cur < g[row][col-1] && cur < g[row][col+1]) {
-							sum += (cur+1);
-						}
-					}
-				}
-				else {
-					if(col == 0) {
-						if(cur < g[row-1][col] && cur < g[row][col+1] && cur < g[row+1][col]) {
-							sum += (cur+1);
-						}
-					}
-					else if(col == grid.getNumCols()-1) {
-						if(cur < g[row-1][col] && cur < g[row][col-1] && cur < g[row+1][col]) {
-							sum += (cur+1);
+						else {
+							if(cur < g[row-1][col] && cur < g[row][col-1] && cur < g[row][col+1]) {
+								foundBasin = true;
+							}
 						}
 					}
 					else {
-						if(cur < g[row-1][col] && cur < g[row][col-1] && cur < g[row][col+1] && cur < g[row+1][col]) {
-							sum += (cur+1);
+						if(col == 0) {
+							if(cur < g[row-1][col] && cur < g[row][col+1] && cur < g[row+1][col]) {
+								foundBasin = true;
+							}
 						}
+						else if(col == grid.getNumCols()-1) {
+							if(cur < g[row-1][col] && cur < g[row][col-1] && cur < g[row+1][col]) {
+								foundBasin = true;
+							}
+						}
+						else {
+							if(cur < g[row-1][col] && cur < g[row][col-1] && cur < g[row][col+1] && cur < g[row+1][col]) {
+								foundBasin = true;
+							}
+						}
+					}
+					if(foundBasin) {
+						sum += (cur+1);
+						basinQueue.add(grid.getGridPosition(row, col));
 					}
 				}
 			}
 		}
 		
 		System.out.println(CUR_YEAR + " Day 9 Part 1: " + sum);
+		return basinQueue;
+	}
+	
+	/**
+	 * Recursive method to find the count of grid points that flow into a basin.
+	 * @param grid The grid to search
+	 * @param curPos the current position to check the next position from
+	 * @param lastPos the last position we checked to make sure we don't end up in an infinite loop
+	 * @return a sum of the number of positions that flow into a basin
+	 */
+	public int getFlowToBasinCount(Grid grid, GridPosition curPos, GridPosition lastPos) {
+		int count = 0;
+		GridPosition nextPos;
+		
+		int[][] g = grid.getGrid();
+		int curRow = curPos.getRow();
+		int curCol = curPos.getCol();
+		int curVal = curPos.getVal();
+		System.out.println("starting from " + curRow + "," + curCol + " with val " + curVal);
+		if(curVal != 9 && !curPos.isChecked()) {
+			grid.getGridPosition(curRow, curCol).markAsChecked();
+			
+			nextPos = grid.getGridPosition(curRow+1, curCol);
+			if(nextPos != null && !nextPos.equals(lastPos) && (nextPos.getVal() == curVal+1 || nextPos.getVal() == curVal-1 || nextPos.getVal() == curVal)) {
+				count++;
+				count += getFlowToBasinCount(grid, nextPos, curPos);
+			}
+			
+			nextPos = grid.getGridPosition(curRow, curCol+1);
+			if(nextPos != null && !nextPos.equals(lastPos) && (nextPos.getVal() == curVal+1 || nextPos.getVal() == curVal-1 || nextPos.getVal() == curVal)) {
+				count++;
+				count += getFlowToBasinCount(grid, nextPos, curPos);
+			}
+			
+			nextPos = grid.getGridPosition(curRow, curCol-1);
+			if(nextPos != null && !nextPos.equals(lastPos) && (nextPos.getVal() == curVal+1 || nextPos.getVal() == curVal-1 || nextPos.getVal() == curVal)) {
+				count++;
+				count += getFlowToBasinCount(grid, nextPos, curPos);
+			}
+			
+			nextPos = grid.getGridPosition(curRow-1, curCol);
+			if(nextPos != null && !nextPos.equals(lastPos) && (nextPos.getVal() == curVal+1 || nextPos.getVal() == curVal-1 || nextPos.getVal() == curVal)) {
+				count++;
+				count += getFlowToBasinCount(grid, nextPos, curPos);
+			}
+		}
+		else if(curVal == 9) {
+			System.out.println("found an unchecked 9");
+			count--;
+		}
+		
+		System.out.println("returning from " + curRow + "," + curCol + ": " + count);
+		return count;
+	}
+	
+	/**
+	 * You need to find the largest basins so you know what areas are most important to avoid.
+	 * A basin is all locations that eventually flow downward to a single low point.
+	 * Therefore, every low point has a basin, although some basins are very small.
+	 * Locations of height 9 do not count as being in any basin, and all other locations will always be part of exactly one basin.
+	 * The size of a basin is the number of locations within the basin, including the low point.
+	 * What do you get if you multiply together the sizes of the three largest basins?
+	 */
+	public void day9SmokeBasinFlow() {
+		Grid grid = day9SetupGrid();
+		HashMap<GridPosition, Integer> flowToBasinCountMap = new HashMap<GridPosition, Integer>();
+		LinkedBlockingQueue<GridPosition> basinQueue = day9SmokeBasin(grid);
+		
+		while(!basinQueue.isEmpty()) {
+			GridPosition curBasin = basinQueue.poll();
+			flowToBasinCountMap.put(curBasin, getFlowToBasinCount(grid, curBasin, curBasin) + 1); // the +1 is to count the basin itself
+			System.out.println("basin " + curBasin.getRow() + "," + curBasin.getCol() + " size: " + flowToBasinCountMap.get(grid.getGridPosition(curBasin.getRow(), curBasin.getCol())));
+		}
+		
+		// find the 3 largest basins
+		int largestBasinSize = 0;
+		int secondLargestBasinSize = 0;
+		int thirdLargestBasinSize = 0;
+		
+		for(Integer val : flowToBasinCountMap.values()) {
+			if(val > largestBasinSize) {
+				thirdLargestBasinSize = secondLargestBasinSize;
+				secondLargestBasinSize = largestBasinSize;
+				largestBasinSize = val;
+			}
+			else if(val > secondLargestBasinSize) {
+				thirdLargestBasinSize = secondLargestBasinSize;
+				secondLargestBasinSize = val;
+			}
+			else if(val > thirdLargestBasinSize) {
+				thirdLargestBasinSize = val;
+			}
+		}
+		
+		System.out.println(largestBasinSize + " " + secondLargestBasinSize + " " + thirdLargestBasinSize);
+		System.out.println(CUR_YEAR + " Day 9 Part 2: " + largestBasinSize * secondLargestBasinSize * thirdLargestBasinSize);
 	}
 	
 	/**

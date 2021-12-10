@@ -1,7 +1,10 @@
 package aoc.utilities.grid;
 
+import java.util.HashMap;
+
 public class Grid {
 	int[][] grid;
+	HashMap<String, GridPosition> gridPositions; //used in 2021 day 9
 	
 	int numRows;
 	int numCols;
@@ -23,6 +26,7 @@ public class Grid {
 	
 	public Grid(int numRows, int numCols) {
 		this(numRows, numCols, null, false, false);
+		gridPositions = new HashMap<String, GridPosition>();
 	}
 	
 	public Grid(int gridSize, String initialPointer, boolean useWaypoint, boolean startInMiddle) {
@@ -72,6 +76,29 @@ public class Grid {
 		}
 		
 		curAim = 0;
+	}
+	
+	/**
+	 * Get the GridPosition object for the current row/col
+	 * @param row the row
+	 * @param col the col
+	 * @return the GridPosition
+	 */
+	public GridPosition getGridPosition(int row, int col) {		
+		return gridPositions.get(String.valueOf(row) + String.valueOf(col));
+	}
+	
+	/**
+	 * Add a GridPosition to the grid
+	 * @param pos is a string of row + col, example row 12 col 22 would be "1222"
+	 * @param gp the grid position to add
+	 */
+	public void addGridPosition(String pos, GridPosition gp) {
+		gridPositions.put(pos, gp);
+	}
+	
+	public HashMap<String, GridPosition> getGridPositions(){
+		return gridPositions;
 	}
 	
 	/**
