@@ -933,12 +933,90 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
+				day9SmokeBasin();
 				break;
 			case "2":
 				break;
 			default:
+				day9SmokeBasin();
 				break;
 		}
+	}
+	
+	public void day9SmokeBasin() {
+		Grid grid = new Grid(input.size(), input.get(0).length());
+		int sum = 0;
+		
+		int rowCount = 0;
+		for(String line : input) {
+			int colCount = 0;
+			while(colCount < grid.getNumCols()) {
+				int cur = Integer.valueOf(line.substring(colCount, colCount+1));
+				grid.getGrid()[rowCount][colCount++] = cur;
+			}
+			rowCount++;
+		}
+		
+		int[][] g = grid.getGrid();
+		
+		for(int row = 0; row < grid.getNumRows(); row++) {
+			for(int col = 0; col < grid.getNumCols(); col++) {
+				int cur = g[row][col];
+				if(row == 0) {
+					if(col == 0) {
+						if(cur < g[row+1][col] && cur < g[row][col+1]) {
+							sum += (cur+1);
+						}
+					}
+					else if(col == grid.getNumCols()-1) {
+						if(cur < g[row+1][col] && cur < g[row][col-1]) {
+							sum += (cur+1);
+						}
+					}
+					else {
+						if(cur < g[row+1][col] && cur < g[row][col-1] && cur < g[row][col+1]) {
+							sum += (cur+1);
+						}
+					}
+				}
+				else if(row == grid.getNumRows()-1) {
+					if(col == 0) {
+						if(cur < g[row-1][col] && cur < g[row][col+1]) {
+							sum += (cur+1);
+						}
+					}
+					else if(col == grid.getNumCols()-1) {
+						if(cur < g[row-1][col] && cur < g[row][col-1]) {
+							sum += (cur+1);
+						}
+					}
+					else {
+						if(cur < g[row-1][col] && cur < g[row][col-1] && cur < g[row][col+1]) {
+							sum += (cur+1);
+						}
+					}
+				}
+				else {
+					if(col == 0) {
+						if(cur < g[row-1][col] && cur < g[row][col+1] && cur < g[row+1][col]) {
+							sum += (cur+1);
+						}
+					}
+					else if(col == grid.getNumCols()-1) {
+						if(cur < g[row-1][col] && cur < g[row][col-1] && cur < g[row+1][col]) {
+							sum += (cur+1);
+						}
+					}
+					else {
+						if(cur < g[row-1][col] && cur < g[row][col-1] && cur < g[row][col+1] && cur < g[row+1][col]) {
+							sum += (cur+1);
+						}
+					}
+				}
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 9 Part 1: " + sum);
 	}
 	
 	/**

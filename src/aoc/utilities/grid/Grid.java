@@ -1,9 +1,10 @@
 package aoc.utilities.grid;
 
 public class Grid {
-	private int GRID_SIZE;
-	
 	int[][] grid;
+	
+	int numRows;
+	int numCols;
 	
 	private int curRow;
 	private int curCol;
@@ -20,6 +21,14 @@ public class Grid {
 	
 	private int curAim;
 	
+	public Grid(int numRows, int numCols) {
+		this(numRows, numCols, null, false, false);
+	}
+	
+	public Grid(int gridSize, String initialPointer, boolean useWaypoint, boolean startInMiddle) {
+		this(gridSize, gridSize, initialPointer, useWaypoint, startInMiddle);
+	}
+	
 	/**
 	 * Instantiates a new Grid object.
 	 * @param gridSize The Max Rows/Cols of the grid.
@@ -27,17 +36,15 @@ public class Grid {
 	 * @param useWaypoint true if moving towards a waypoint
 	 * @param startInMiddle true if starting in the middle, false if starting at [0][0]
 	 */
-	public Grid(int gridSize, String initialPointer, boolean useWaypoint, boolean startInMiddle) {
-		GRID_SIZE = gridSize;
+	private Grid(int numRows, int numCols, String initialPointer, boolean useWaypoint, boolean startInMiddle) {
+		grid = new int[numRows][numCols];
 		
-		grid = new int[GRID_SIZE][GRID_SIZE];
-		
-		curRow = GRID_SIZE/2;
-		curCol = GRID_SIZE/2;
+		this.numRows = numRows;
+		this.numCols = numCols;
 		
 		if(startInMiddle) {
-			curRow = GRID_SIZE/2;
-			curCol = GRID_SIZE/2;
+			curRow = numRows/2;
+			curCol = numCols/2;
 		}
 		else {
 			curRow = 0;
@@ -49,8 +56,14 @@ public class Grid {
 		
 		grid[curRow][curCol] = 1;
 		
-		pointerStr = initialPointer;
-		pointerNum = GridUtilities.getPointerNum(initialPointer);
+		if(initialPointer != null && !initialPointer.isEmpty()) {
+			pointerStr = initialPointer;
+			pointerNum = GridUtilities.getPointerNum(pointerStr);
+		}
+		else {
+			pointerStr = "E";
+			pointerNum = GridUtilities.getPointerNum(pointerStr);
+		}
 		
 		if(useWaypoint) {
 			waypointPosition = new int[2];
@@ -374,7 +387,11 @@ public class Grid {
 		return endCol;
 	}
 	
-	public int getGridSize() {
-		return GRID_SIZE;
+	public int getNumRows() {
+		return numRows;
+	}
+	
+	public int getNumCols() {
+		return numCols;
 	}
 }
