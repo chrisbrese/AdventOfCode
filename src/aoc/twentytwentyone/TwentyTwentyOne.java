@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import aoc.Year;
@@ -957,10 +958,12 @@ public class TwentyTwentyOne extends Year {
 		int rowCount = 0;
 		for(String line : input) {
 			int colCount = 0;
-			while(colCount < grid.getNumCols()) {
+			while(colCount < line.length()) {
 				int cur = Integer.valueOf(line.substring(colCount, colCount+1));
-				grid.addGridPosition(String.valueOf(rowCount) + String.valueOf(colCount), new GridPosition(rowCount, colCount, cur));
-				grid.getGrid()[rowCount][colCount++] = cur;				
+				String row = (rowCount < 10 ? "0" + String.valueOf(rowCount) : String.valueOf(rowCount));
+				String col = (colCount < 10 ? "0" + String.valueOf(colCount) : String.valueOf(colCount));
+				grid.addGridPosition(row + col, new GridPosition(rowCount, colCount, cur));
+				grid.getGrid()[rowCount][colCount++] = cur;
 			}
 			rowCount++;
 		}
@@ -1062,54 +1065,50 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
+	 * Helper method for checking if next position value is valid for checking inside of getFlowToBasinCount
+	 * @param grid The grid to search
+	 * @param nextPos the current position to check the next position from
+	 * @param prevPos the previous position to check the curPos against
+	 * @return a sum of the number of positions that flow into a basin
+	 */
+	public int nextPositionHelper(Grid grid, GridPosition nextPos, GridPosition prevPos) {
+		int count = 0;
+		if(nextPos != null && !nextPos.equals(prevPos) && nextPos.getVal() != 9 && !nextPos.isChecked()) {
+			count++;
+			count += getFlowToBasinCount(grid, nextPos);
+		}
+		
+		return count;
+	}
+	
+	/**
 	 * Recursive method to find the count of grid points that flow into a basin.
 	 * @param grid The grid to search
 	 * @param curPos the current position to check the next position from
-	 * @param lastPos the last position we checked to make sure we don't end up in an infinite loop
 	 * @return a sum of the number of positions that flow into a basin
 	 */
-	public int getFlowToBasinCount(Grid grid, GridPosition curPos, GridPosition lastPos) {
+	public int getFlowToBasinCount(Grid grid, GridPosition curPos) {
 		int count = 0;
-		GridPosition nextPos;
 		
-		int[][] g = grid.getGrid();
 		int curRow = curPos.getRow();
 		int curCol = curPos.getCol();
-		int curVal = curPos.getVal();
-		System.out.println("starting from " + curRow + "," + curCol + " with val " + curVal);
-		if(curVal != 9 && !curPos.isChecked()) {
-			grid.getGridPosition(curRow, curCol).markAsChecked();
-			
-			nextPos = grid.getGridPosition(curRow+1, curCol);
-			if(nextPos != null && !nextPos.equals(lastPos) && (nextPos.getVal() == curVal+1 || nextPos.getVal() == curVal-1 || nextPos.getVal() == curVal)) {
-				count++;
-				count += getFlowToBasinCount(grid, nextPos, curPos);
-			}
-			
-			nextPos = grid.getGridPosition(curRow, curCol+1);
-			if(nextPos != null && !nextPos.equals(lastPos) && (nextPos.getVal() == curVal+1 || nextPos.getVal() == curVal-1 || nextPos.getVal() == curVal)) {
-				count++;
-				count += getFlowToBasinCount(grid, nextPos, curPos);
-			}
-			
-			nextPos = grid.getGridPosition(curRow, curCol-1);
-			if(nextPos != null && !nextPos.equals(lastPos) && (nextPos.getVal() == curVal+1 || nextPos.getVal() == curVal-1 || nextPos.getVal() == curVal)) {
-				count++;
-				count += getFlowToBasinCount(grid, nextPos, curPos);
-			}
-			
-			nextPos = grid.getGridPosition(curRow-1, curCol);
-			if(nextPos != null && !nextPos.equals(lastPos) && (nextPos.getVal() == curVal+1 || nextPos.getVal() == curVal-1 || nextPos.getVal() == curVal)) {
-				count++;
-				count += getFlowToBasinCount(grid, nextPos, curPos);
-			}
-		}
-		else if(curVal == 9) {
-			System.out.println("found an unchecked 9");
-			count--;
-		}
 		
-		System.out.println("returning from " + curRow + "," + curCol + ": " + count);
+		curPos.markAsChecked();
+		
+		GridPosition nextPos;
+		
+		nextPos = grid.getGridPosition(curRow+1, curCol);
+		count += nextPositionHelper(grid, nextPos, curPos);
+		
+		nextPos = grid.getGridPosition(curRow, curCol+1);
+		count += nextPositionHelper(grid, nextPos, curPos);
+		
+		nextPos = grid.getGridPosition(curRow, curCol-1);
+		count += nextPositionHelper(grid, nextPos, curPos);
+		
+		nextPos = grid.getGridPosition(curRow-1, curCol);
+		count += nextPositionHelper(grid, nextPos, curPos);
+		
 		return count;
 	}
 	
@@ -1128,10 +1127,9 @@ public class TwentyTwentyOne extends Year {
 		
 		while(!basinQueue.isEmpty()) {
 			GridPosition curBasin = basinQueue.poll();
-			flowToBasinCountMap.put(curBasin, getFlowToBasinCount(grid, curBasin, curBasin) + 1); // the +1 is to count the basin itself
-			System.out.println("basin " + curBasin.getRow() + "," + curBasin.getCol() + " size: " + flowToBasinCountMap.get(grid.getGridPosition(curBasin.getRow(), curBasin.getCol())));
+			flowToBasinCountMap.put(curBasin, getFlowToBasinCount(grid, curBasin) + 1); // the +1 is to count the basin itself
 		}
-		
+
 		// find the 3 largest basins
 		int largestBasinSize = 0;
 		int secondLargestBasinSize = 0;
@@ -1152,8 +1150,9 @@ public class TwentyTwentyOne extends Year {
 			}
 		}
 		
-		System.out.println(largestBasinSize + " " + secondLargestBasinSize + " " + thirdLargestBasinSize);
-		System.out.println(CUR_YEAR + " Day 9 Part 2: " + largestBasinSize * secondLargestBasinSize * thirdLargestBasinSize);
+		System.out.println(CUR_YEAR + " Day 9 Part 2: " + 
+				largestBasinSize + " * " + secondLargestBasinSize + " * " + thirdLargestBasinSize + " = " + 
+				largestBasinSize * secondLargestBasinSize * thirdLargestBasinSize);
 	}
 	
 	/**

@@ -78,14 +78,30 @@ public class Grid {
 		curAim = 0;
 	}
 	
+	public String printGridPositions() {
+		int count = 1;
+		String ret = "";
+		for(GridPosition gp : gridPositions.values()) {
+			if(count % 100 == 0){
+				ret += "\n";
+			}
+			ret += gp.toString();
+			count++;
+		}
+		
+		return ret;
+	}
+	
 	/**
 	 * Get the GridPosition object for the current row/col
 	 * @param row the row
 	 * @param col the col
 	 * @return the GridPosition
 	 */
-	public GridPosition getGridPosition(int row, int col) {		
-		return gridPositions.get(String.valueOf(row) + String.valueOf(col));
+	public GridPosition getGridPosition(int row, int col) {
+		String rowStr = (row < 10 ? "0" + String.valueOf(row) : String.valueOf(row));
+		String colStr = (col < 10 ? "0" + String.valueOf(col) : String.valueOf(col));
+		return gridPositions.get(rowStr + colStr);
 	}
 	
 	/**
