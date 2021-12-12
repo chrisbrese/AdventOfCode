@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import aoc.Year;
@@ -1163,12 +1162,127 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
+				day10SyntaxScoring();
 				break;
 			case "2":
 				break;
 			default:
+				day10SyntaxScoring();
 				break;
 		}
+	}
+	
+	/**
+	 * You ask the submarine to determine the best route out of the deep-sea cave, but it only replies:
+	 *   'Syntax error in navigation subsystem on line: all of them'
+	 * All of them?! The damage is worse than you thought. You bring up a copy of the navigation subsystem (your puzzle input).
+	 * The navigation subsystem syntax is made of several lines containing chunks.
+	 * There are one or more chunks on each line, and chunks contain zero or more other chunks.
+	 * Adjacent chunks are not separated by any delimiter; if one chunk stops, the next chunk (if any) can immediately start.
+	 * Every chunk must open and close with one of four legal pairs of matching characters:
+	 *     - If a chunk opens with (, it must close with ).
+	 *     - If a chunk opens with [, it must close with ].
+	 *     - If a chunk opens with {, it must close with }.
+	 *     - If a chunk opens with <, it must close with >.
+	 * Some lines are incomplete, but others are corrupted. Find and discard the corrupted lines first.
+	 * A corrupted line is one where a chunk closes with the wrong character - 
+	 *   that is, where the characters it opens and closes with do not form one of the four legal pairs listed above.
+	 * Such a chunk can appear anywhere within a line, and its presence causes the whole line to be considered corrupted.
+	 * Some of the lines aren't corrupted, just incomplete; you can ignore these lines for now.
+	 * Stop at the first incorrect closing character on each corrupted line.
+	 * Did you know that syntax checkers actually have contests to see who can get the high score for syntax errors in a file?
+	 * It's true! To calculate the syntax error score for a line, take the first illegal character on the line
+	 *   and look it up in the following table:
+	 *       ): 3 points.
+	 *       ]: 57 points.
+	 *       }: 1197 points.
+	 *       >: 25137 points.
+	 * Find the first illegal character in each corrupted line of the navigation subsystem.
+	 * What is the total syntax error score for those errors?
+	 */
+	// 212367 too low
+	// 405942 too high
+	public void day10SyntaxScoring() {
+		List<String> badChars = new ArrayList<String>();
+		int lineCount = 0;
+		for(String line : input) {
+			// skip lines that are incomplete
+			if(line.length() % 2 == 0 && // odd num characters would indicate incomplete line
+				(!line.substring(line.length()-1).equals("(") ||
+				!line.substring(line.length()-1).equals("[") ||
+				!line.substring(line.length()-1).equals("{") ||
+				!line.substring(line.length()-1).equals("<"))) {
+				
+				List<String> chars = new ArrayList<String>();
+				for(int i = 0; i < line.length(); i++) {
+					String nextChar = line.substring(i, i+1);
+					boolean found = false;
+					
+					if(nextChar.equals(")") || nextChar.equals("]") || nextChar.equals("}") || nextChar.equals(">")) {
+						for(int j = chars.size()-1; j > 0; j--) {
+							String curChar = chars.get(j);
+							if(curChar.equals("(") || curChar.equals("[") || curChar.equals("{") || curChar.equals("<")) {
+								if(nextChar.equals(")") && curChar.equals("(")) {
+									found = true;
+									chars.remove(j);
+								}
+								else if(nextChar.equals("]") && curChar.equals("[")) {
+									found = true;
+									chars.remove(j);
+								}
+								else if(nextChar.equals("}") && curChar.equals("{")) {
+									found = true;
+									chars.remove(j);
+								}
+								else if(nextChar.equals(">") && curChar.equals("<")) {
+									found = true;
+									chars.remove(j);
+								}
+								break;
+							}
+						}
+						if(!found) {
+							System.out.println("bad char: " + nextChar + " found on line " + lineCount + " at index " + i);
+							badChars.add(nextChar);
+							break;
+						}
+					}
+					else {
+						chars.add(nextChar);
+					}
+				}
+			}
+			else if(line.length() % 2 != 0 || // odd num characters would indicate incomplete line
+					(line.substring(line.length()-1).equals("(") ||
+							line.substring(line.length()-1).equals("[") ||
+							line.substring(line.length()-1).equals("{") ||
+							line.substring(line.length()-1).equals("<"))) {
+				System.out.println("line " + lineCount + " is incomplete");
+			}
+			else {
+				System.out.println("line " + lineCount + " is valid");
+			}
+			
+			lineCount++;
+		}
+		
+		int sum = 0;
+		for(String s : badChars) {
+			if(s.equals(")")) {
+				sum += 3;
+			}
+			else if(s.equals("]")) {
+				sum += 57;
+			}
+			else if(s.equals("}")) {
+				sum += 1197;
+			}
+			else if(s.equals(">")) {
+				sum += 25137;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 10 Part 1: " + sum);
 	}
 	
 	/**
