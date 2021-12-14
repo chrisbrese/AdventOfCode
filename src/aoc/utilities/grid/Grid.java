@@ -79,14 +79,13 @@ public class Grid {
 	}
 	
 	public String printGridPositions() {
-		int count = 1;
 		String ret = "";
-		for(GridPosition gp : gridPositions.values()) {
-			if(count % 100 == 0){
-				ret += "\n";
+		for(int row = 0; row < numRows; row++) {
+			for(int col = 0; col < numCols; col++) {
+				GridPosition gp = getGridPosition(row, col);
+				ret += gp.getVal();
 			}
-			ret += gp.toString();
-			count++;
+			ret += "\n";
 		}
 		
 		return ret;

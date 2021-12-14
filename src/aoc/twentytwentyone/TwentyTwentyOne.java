@@ -8,6 +8,7 @@ import java.util.Stack;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import aoc.Year;
+import aoc.twentytwentyone.day11.TwentyTwentyOneDayEleven;
 import aoc.twentytwentyone.day4.BingoBoard;
 import aoc.utilities.ReadInputFile;
 import aoc.utilities.grid.Grid;
@@ -17,6 +18,29 @@ public class TwentyTwentyOne extends Year {
 	
 	public TwentyTwentyOne() {
 		CUR_YEAR = 2021;
+	}
+	
+	/**
+	 * Common method for year 2021 to build the grid and fill it with values
+	 * @return the Grid object
+	 */
+	public Grid year2021SetupGrid() {
+		Grid grid = new Grid(input.size(), input.get(0).length());
+		
+		int rowCount = 0;
+		for(String line : input) {
+			int colCount = 0;
+			while(colCount < line.length()) {
+				int cur = Integer.valueOf(line.substring(colCount, colCount+1));
+				String row = (rowCount < 10 ? "0" + String.valueOf(rowCount) : String.valueOf(rowCount));
+				String col = (colCount < 10 ? "0" + String.valueOf(colCount) : String.valueOf(colCount));
+				grid.addGridPosition(row + col, new GridPosition(rowCount, colCount, cur));
+				grid.getGrid()[rowCount][colCount++] = cur;
+			}
+			rowCount++;
+		}
+		
+		return grid;
 	}
     
 	/**
@@ -936,39 +960,16 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
-				day9SmokeBasin(day9SetupGrid());
+				day9SmokeBasin(year2021SetupGrid());
 				break;
 			case "2":
 				day9SmokeBasinFlow();
 				break;
 			default:
-				day9SmokeBasin(day9SetupGrid());
+				day9SmokeBasin(year2021SetupGrid());
 				day9SmokeBasinFlow();
 				break;
 		}
-	}
-	
-	/**
-	 * Common method for day 9 to build the grid and fill it with depths
-	 * @return the Grid object
-	 */
-	public Grid day9SetupGrid() {
-		Grid grid = new Grid(input.size(), input.get(0).length());
-		
-		int rowCount = 0;
-		for(String line : input) {
-			int colCount = 0;
-			while(colCount < line.length()) {
-				int cur = Integer.valueOf(line.substring(colCount, colCount+1));
-				String row = (rowCount < 10 ? "0" + String.valueOf(rowCount) : String.valueOf(rowCount));
-				String col = (colCount < 10 ? "0" + String.valueOf(colCount) : String.valueOf(colCount));
-				grid.addGridPosition(row + col, new GridPosition(rowCount, colCount, cur));
-				grid.getGrid()[rowCount][colCount++] = cur;
-			}
-			rowCount++;
-		}
-		
-		return grid;
 	}
 	
 	/**
@@ -1121,7 +1122,7 @@ public class TwentyTwentyOne extends Year {
 	 * What do you get if you multiply together the sizes of the three largest basins?
 	 */
 	public void day9SmokeBasinFlow() {
-		Grid grid = day9SetupGrid();
+		Grid grid = year2021SetupGrid();
 		HashMap<GridPosition, Integer> flowToBasinCountMap = new HashMap<GridPosition, Integer>();
 		LinkedBlockingQueue<GridPosition> basinQueue = day9SmokeBasin(grid);
 		
@@ -1315,12 +1316,43 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
+				day11DumboOctopus(100);
 				break;
 			case "2":
+				day11DumboOctopus(500);
 				break;
 			default:
+				day11DumboOctopus(100);
+				day11DumboOctopus(500);
 				break;
 		}
+	}
+	
+	/**
+	 * You enter a large cavern full of rare bioluminescent dumbo octopuses! They seem to not like the Christmas lights on your submarine, so you turn them off for now.
+	 * There are 100 octopuses arranged neatly in a 10 by 10 grid. Each octopus slowly gains energy over time and flashes brightly for a moment when its energy is full.
+	 * Although your lights are off, maybe you could navigate through the cave without disturbing the octopuses if you could predict when the flashes of light will happen.
+	 * Each octopus has an energy level - your submarine can remotely measure the energy level of each octopus (your puzzle input).
+	 * The energy level of each octopus is a value between 0 and 9.
+	 * You can model the energy levels and flashes of light in steps. During a single step, the following occurs:
+	 *   - First, the energy level of each octopus increases by 1.
+	 *   - Then, any octopus with an energy level greater than 9 flashes. This increases the energy level of all adjacent octopuses by 1, including octopuses that are diagonally adjacent.
+	 *     If this causes an octopus to have an energy level greater than 9, it also flashes. This process continues as long as new octopuses keep having their energy level increased beyond 9.
+	 *     (An octopus can only flash at most once per step.)
+	 *   - Finally, any octopus that flashed during this step has its energy level set to 0, as it used all of its energy to flash.
+	 * Part 1:
+	 * Given the starting energy levels of the dumbo octopuses in your cavern, simulate 100 steps. How many total flashes are there after 100 steps?
+	 * 
+	 * Part 2:
+	 * It seems like the individual flashes aren't bright enough to navigate. However, you might have a better option: the flashes seem to be synchronizing!
+	 * If you can calculate the exact moments when the octopuses will all flash simultaneously, you should be able to navigate through the cavern.
+	 * What is the first step during which all octopuses flash?
+	 * 
+	 * @param numSteps the number of steps to loop through the octopus flashing
+	 */
+	public void day11DumboOctopus(int numSteps) {
+		TwentyTwentyOneDayEleven day11 = new TwentyTwentyOneDayEleven(year2021SetupGrid());
+		day11.day11DumboOctopus(numSteps);
 	}
 	
 	/**

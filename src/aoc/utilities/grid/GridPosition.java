@@ -25,12 +25,20 @@ public class GridPosition {
 		return val;
 	}
 	
+	public void setVal(int val) {
+		this.val = val;
+	}
+	
 	public boolean isChecked() {
 		return checked;
 	}
 	
 	public void markAsChecked() {
 		checked = true;
+	}
+	
+	public void uncheck() {
+		checked = false;
 	}
 	
 	public boolean equals(GridPosition gp) {
