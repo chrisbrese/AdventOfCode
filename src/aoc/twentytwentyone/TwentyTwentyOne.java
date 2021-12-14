@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import aoc.Year;
@@ -1162,12 +1163,14 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
-				day10SyntaxScoring();
+				day10SyntaxScoring(false);
 				break;
 			case "2":
+				day10SyntaxScoring(true);
 				break;
 			default:
-				day10SyntaxScoring();
+				day10SyntaxScoring(false);
+				day10SyntaxScoring(true);
 				break;
 		}
 	}
@@ -1188,6 +1191,8 @@ public class TwentyTwentyOne extends Year {
 	 * A corrupted line is one where a chunk closes with the wrong character - 
 	 *   that is, where the characters it opens and closes with do not form one of the four legal pairs listed above.
 	 * Such a chunk can appear anywhere within a line, and its presence causes the whole line to be considered corrupted.
+	 * 
+	 * Part 1:
 	 * Some of the lines aren't corrupted, just incomplete; you can ignore these lines for now.
 	 * Stop at the first incorrect closing character on each corrupted line.
 	 * Did you know that syntax checkers actually have contests to see who can get the high score for syntax errors in a file?
@@ -1199,90 +1204,107 @@ public class TwentyTwentyOne extends Year {
 	 *       >: 25137 points.
 	 * Find the first illegal character in each corrupted line of the navigation subsystem.
 	 * What is the total syntax error score for those errors?
+	 * 
+	 * Part 2:
+	 * Now, discard the corrupted lines. The remaining lines are incomplete.
+	 * Incomplete lines don't have any incorrect characters - instead, they're missing some closing characters at the end of the line.
+	 * To repair the navigation subsystem, you just need to figure out the sequence of closing characters that complete all open chunks in the line.
+	 * Did you know that autocomplete tools also have contests? It's true!
+	 * The score is determined by considering the completion string character-by-character.
+	 * Start with a total score of 0.
+	 * Then, for each character, multiply the total score by 5 and then increase the total score by
+	 *   the point value given for the character in the following table:
+	 *       ): 1 point.
+	 *       ]: 2 points.
+	 *       }: 3 points.
+	 *       >: 4 points.
+	 * Autocomplete tools are an odd bunch: the winner is found by sorting all of the scores and then taking the middle score.
+	 * (There will always be an odd number of scores to consider.)
+	 * Find the completion string for each incomplete line, score the completion strings, and sort the scores. What is the middle score?
+	 * 
+	 * @param partTwo true if running part2 only, false if part1 only
 	 */
-	// 212367 too low
-	// 405942 too high
-	public void day10SyntaxScoring() {
-		List<String> badChars = new ArrayList<String>();
-		int lineCount = 0;
+	public void day10SyntaxScoring(boolean partTwo) {
+		int badCharSum = 0;
+		List<Long> incompleteSums = new ArrayList<Long>();
 		for(String line : input) {
-			// skip lines that are incomplete
-			if(line.length() % 2 == 0 && // odd num characters would indicate incomplete line
-				(!line.substring(line.length()-1).equals("(") ||
-				!line.substring(line.length()-1).equals("[") ||
-				!line.substring(line.length()-1).equals("{") ||
-				!line.substring(line.length()-1).equals("<"))) {
+			Stack<String> lastOpenChars = new Stack<>();
+			for(int i = 0; i < line.length(); i++) {
+				String nextChar = line.substring(i, i+1);
+				boolean found = false;
 				
-				List<String> chars = new ArrayList<String>();
-				for(int i = 0; i < line.length(); i++) {
-					String nextChar = line.substring(i, i+1);
-					boolean found = false;
-					
-					if(nextChar.equals(")") || nextChar.equals("]") || nextChar.equals("}") || nextChar.equals(">")) {
-						for(int j = chars.size()-1; j > 0; j--) {
-							String curChar = chars.get(j);
-							if(curChar.equals("(") || curChar.equals("[") || curChar.equals("{") || curChar.equals("<")) {
-								if(nextChar.equals(")") && curChar.equals("(")) {
-									found = true;
-									chars.remove(j);
-								}
-								else if(nextChar.equals("]") && curChar.equals("[")) {
-									found = true;
-									chars.remove(j);
-								}
-								else if(nextChar.equals("}") && curChar.equals("{")) {
-									found = true;
-									chars.remove(j);
-								}
-								else if(nextChar.equals(">") && curChar.equals("<")) {
-									found = true;
-									chars.remove(j);
-								}
-								break;
-							}
-						}
-						if(!found) {
-							System.out.println("bad char: " + nextChar + " found on line " + lineCount + " at index " + i);
-							badChars.add(nextChar);
-							break;
-						}
+				if(nextChar.equals(")") || nextChar.equals("]") || nextChar.equals("}") || nextChar.equals(">")) {
+					String curChar = lastOpenChars.pop();
+					if(nextChar.equals(")") && curChar.equals("(")) {
+						found = true;
 					}
-					else {
-						chars.add(nextChar);
+					else if(nextChar.equals("]") && curChar.equals("[")) {
+						found = true;
+					}
+					else if(nextChar.equals("}") && curChar.equals("{")) {
+						found = true;
+					}
+					else if(nextChar.equals(">") && curChar.equals("<")) {
+						found = true;
+					}
+					
+					if(!found) {
+						if(nextChar.equals(")")) {
+							badCharSum += 3;
+						}
+						else if(nextChar.equals("]")) {
+							badCharSum += 57;
+						}
+						else if(nextChar.equals("}")) {
+							badCharSum += 1197;
+						}
+						else if(nextChar.equals(">")) {
+							badCharSum += 25137;
+						}
+						break;
 					}
 				}
-			}
-			else if(line.length() % 2 != 0 || // odd num characters would indicate incomplete line
-					(line.substring(line.length()-1).equals("(") ||
-							line.substring(line.length()-1).equals("[") ||
-							line.substring(line.length()-1).equals("{") ||
-							line.substring(line.length()-1).equals("<"))) {
-				System.out.println("line " + lineCount + " is incomplete");
-			}
-			else {
-				System.out.println("line " + lineCount + " is valid");
-			}
-			
-			lineCount++;
-		}
-		
-		int sum = 0;
-		for(String s : badChars) {
-			if(s.equals(")")) {
-				sum += 3;
-			}
-			else if(s.equals("]")) {
-				sum += 57;
-			}
-			else if(s.equals("}")) {
-				sum += 1197;
-			}
-			else if(s.equals(">")) {
-				sum += 25137;
+				else {
+					lastOpenChars.push(nextChar);
+				}
+				
+				if(i == line.length()-1) {
+					long incompleteSum = 0;
+					while(lastOpenChars.size() > 0) {
+						String cur = lastOpenChars.pop();
+						incompleteSum *= 5;
+						if(cur.equals("(")) {
+							incompleteSum += 1;
+						}
+						else if(cur.equals("[")) {
+							incompleteSum += 2;
+						}
+						else if(cur.equals("{")) {
+							incompleteSum += 3;
+						}
+						else if(cur.equals("<")) {
+							incompleteSum += 4;
+						}
+					}
+					incompleteSums.add(incompleteSum);
+				}
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 10 Part 1: " + sum);
+		long[] sums = new long[incompleteSums.size()];
+		for(int i = 0; i < incompleteSums.size(); i++) {
+			sums[i] = incompleteSums.get(i);
+		}
+		
+		Arrays.sort(sums);
+		long median = sums[Math.round(sums.length/2)];
+		
+		if(!partTwo) {
+			System.out.println(CUR_YEAR + " Day 10 Part 1: " + badCharSum);
+		}
+		else {
+			System.out.println(CUR_YEAR + " Day 10 Part 2: " + median);
+		}
 	}
 	
 	/**
