@@ -1,4 +1,4 @@
-package aoc.circuits;
+package aoc.utilities.circuits;
 
 public class Gate {
 	private String outputWireNameOrValue;

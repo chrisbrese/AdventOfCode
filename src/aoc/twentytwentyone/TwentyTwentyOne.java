@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -1363,12 +1364,93 @@ public class TwentyTwentyOne extends Year {
 		
 		switch(part) {
 			case "1":
+				day12PassagePathing();
 				break;
 			case "2":
 				break;
 			default:
+				day12PassagePathing();
 				break;
 		}
+	}
+	
+	public List<List<String>> day12TraversePath(String curCave, Stack<String> caveStack, List<String> curRoute, List<List<String>> allRoutes, HashMap<String, Stack<String>> caveToPathsMap) {
+		if(curRoute == null) {
+			curRoute = new ArrayList<String>();
+		}
+		if(allRoutes == null) {
+			allRoutes = new ArrayList<List<String>>();
+		}
+		
+		if(curCave.equals("end")) {
+			curRoute.add(curCave);
+			allRoutes.add(curRoute);
+			System.out.println("found an end");
+			for(int i = 0; i < curRoute.size(); i++) {
+				System.out.print(curRoute.get(i));
+			}
+		}
+		
+		while(caveStack != null && !caveStack.isEmpty()) {
+			if(Character.isLowerCase(curCave.charAt(0)) && !curRoute.contains(curCave) 
+				|| Character.isUpperCase(curCave.charAt(0))) {
+				curRoute.add(curCave);
+				Stack<String> curStack = caveToPathsMap.get(curCave);
+				allRoutes.addAll(day12TraversePath(caveStack.pop(), curStack, curRoute, allRoutes, caveToPathsMap));
+			}
+			else {
+				Stack<String> curStack = caveToPathsMap.get(curCave);
+				allRoutes.addAll(day12TraversePath(caveStack.pop(), curStack, curRoute, allRoutes, caveToPathsMap));
+			}
+		}
+		
+		return allRoutes;
+	}
+	
+	public void day12PassagePathing() {
+		HashMap<String, Stack<String>> caveToPathsMap = new HashMap<String, Stack<String>>();
+		
+		// build the cave map
+		for(String line : input) {
+			String[] parts = line.split("-");
+			
+			if(caveToPathsMap.containsKey(parts[0])) {
+				Stack<String> list = caveToPathsMap.get(parts[0]);
+				list.add(parts[1]);
+			}
+			else if(!parts[0].equals("end")){
+				Stack<String> list = new Stack<String>();
+				list.add(parts[1]);
+				caveToPathsMap.put(parts[0], list);
+			}
+			
+			// add from both sides of the path
+			if(caveToPathsMap.containsKey(parts[1])) {
+				Stack<String> list = caveToPathsMap.get(parts[1]);
+				list.add(parts[0]);
+			}
+			else if(!parts[1].equals("end")){
+				Stack<String> list = new Stack<String>();
+				list.add(parts[0]);
+				caveToPathsMap.put(parts[1], list);
+			}
+		}
+		
+		// print the map
+		for(Entry<String, Stack<String>> entry : caveToPathsMap.entrySet()) {
+			System.out.print(entry.getKey());
+			for(String s : entry.getValue()) {
+				System.out.print("->" + s);
+			}
+			System.out.println();
+		}
+		
+		// start traversing the cave
+		Stack<String> startStack = caveToPathsMap.get("start");
+		
+		List<List<String>> allRoutes = day12TraversePath("start", startStack, null, null, caveToPathsMap);
+		
+		System.out.println(CUR_YEAR + " Day 12 Part 1: " + allRoutes.size());
 	}
 	
 	/**

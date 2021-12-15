@@ -1,9 +1,9 @@
-package aoc.circuits.gates;
+package aoc.utilities.circuits.gates;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import aoc.circuits.Gate;
+import aoc.utilities.circuits.Gate;
 
 /*
      	  |

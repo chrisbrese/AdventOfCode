@@ -1,14 +1,14 @@
-package aoc.circuits;
+package aoc.utilities.circuits;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import aoc.circuits.gates.AndGate;
-import aoc.circuits.gates.LShiftGate;
-import aoc.circuits.gates.MultiOutputGate;
-import aoc.circuits.gates.NotGate;
-import aoc.circuits.gates.OrGate;
-import aoc.circuits.gates.RShiftGate;
+import aoc.utilities.circuits.gates.AndGate;
+import aoc.utilities.circuits.gates.LShiftGate;
+import aoc.utilities.circuits.gates.MultiOutputGate;
+import aoc.utilities.circuits.gates.NotGate;
+import aoc.utilities.circuits.gates.OrGate;
+import aoc.utilities.circuits.gates.RShiftGate;
 
 public class Circuit {
 	private List<Wire> knownWires = new ArrayList<Wire>();

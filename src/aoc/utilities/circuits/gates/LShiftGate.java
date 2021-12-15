@@ -1,6 +1,6 @@
-package aoc.circuits.gates;
+package aoc.utilities.circuits.gates;
 
-import aoc.circuits.Gate;
+import aoc.utilities.circuits.Gate;
 
 /*
     |			|
@@ -12,7 +12,7 @@ import aoc.circuits.Gate;
      \		   /
    ----------------
    |			  |
-   |	RSHIFT	  |
+   |	LSHIFT	  |
    |			  |
    ----------------
 		  |
@@ -22,15 +22,15 @@ import aoc.circuits.Gate;
 	 	  |
 */
 
-public class RShiftGate extends Gate{
+public class LShiftGate extends Gate{
 	private String leftInputWireNameOrValue;
 	private String rightInputWireNameOrValue;
 	
-	public RShiftGate(String outputNameOrValue) {
+	public LShiftGate(String outputNameOrValue) {
 		super(outputNameOrValue);
 	}
 	
-	public RShiftGate(String leftInput, String rightInput, String outputNameOrValue) {
+	public LShiftGate(String leftInput, String rightInput, String outputNameOrValue) {
 		super(outputNameOrValue);
 		
 		setLeftInputWireNameOrValue(leftInput);
@@ -54,6 +54,6 @@ public class RShiftGate extends Gate{
 	}
 	
 	public Integer run(int leftValue, int rightValue) {
-		return leftValue >> rightValue;
+		return leftValue << rightValue;
 	}
 }

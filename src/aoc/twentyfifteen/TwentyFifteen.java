@@ -6,17 +6,17 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 
 import aoc.Year;
-import aoc.circuits.Circuit;
-import aoc.circuits.Wire;
-import aoc.circuits.gates.AndGate;
-import aoc.circuits.gates.LShiftGate;
-import aoc.circuits.gates.NotGate;
-import aoc.circuits.gates.OrGate;
-import aoc.circuits.gates.RShiftGate;
 import aoc.twentyfifteen.daynine.City;
 import aoc.twentyfifteen.daynine.Country;
 import aoc.utilities.MD5;
 import aoc.utilities.ReadInputFile;
+import aoc.utilities.circuits.Circuit;
+import aoc.utilities.circuits.Wire;
+import aoc.utilities.circuits.gates.AndGate;
+import aoc.utilities.circuits.gates.LShiftGate;
+import aoc.utilities.circuits.gates.NotGate;
+import aoc.utilities.circuits.gates.OrGate;
+import aoc.utilities.circuits.gates.RShiftGate;
 
 public class TwentyFifteen extends Year {
 	

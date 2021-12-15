@@ -1,4 +1,4 @@
-package aoc.circuits;
+package aoc.utilities.circuits;
 
 public class Wire {
 	private String name;

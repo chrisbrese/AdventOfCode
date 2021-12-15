@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import aoc.Year;
-import aoc.circuits.Circuit;
-import aoc.circuits.Gate;
-import aoc.circuits.Wire;
-import aoc.circuits.gates.MultiOutputGate;
 import aoc.utilities.ReadInputFile;
+import aoc.utilities.circuits.Circuit;
+import aoc.utilities.circuits.Gate;
+import aoc.utilities.circuits.Wire;
+import aoc.utilities.circuits.gates.MultiOutputGate;
 
 public class TwentySeventeen extends Year {
 	
