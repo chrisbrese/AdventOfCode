@@ -1,5 +1,9 @@
 package aoc.twentytwentytwo;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import aoc.Year;
 import aoc.utilities.ReadInputFile;
 
@@ -17,12 +21,68 @@ public class TwentyTwentyTwo extends Year {
 		
 		switch(part) {
 			case "1":
+				day1CalorieCounting();
 				break;
 			case "2":
 				break;
 			default:
+				day1CalorieCounting();
 				break;
 		}		
+	}
+	
+	/**
+	 * Santa's reindeer typically eat regular reindeer food, but they need a lot of magical energy to deliver presents on Christmas.
+	 * For that, their favorite snack is a special type of star fruit that only grows deep in the jungle.
+	 * The Elves have brought you on their annual expedition to the grove where the fruit grows.
+	 * 
+	 * The jungle must be too overgrown and difficult to navigate in vehicles or access from the air;
+	 * the Elves' expedition traditionally goes on foot.
+	 * As your boats approach land, the Elves begin taking inventory of their supplies.
+	 * One important consideration is food - in particular, the number of Calories each Elf is carrying (your puzzle input).
+	 * 
+	 * The Elves take turns writing down the number of Calories contained by the various meals, snacks, rations, etc. that they've
+	 * brought with them, one item per line.
+	 * Each Elf separates their own inventory from the previous Elf's inventory (if any) by a blank line.
+	 * 
+	 * Find the Elf carrying the most Calories. How many total Calories is that Elf carrying?
+	 */
+	private void day1CalorieCounting() {
+		int max = 0;
+		int combinedMax;
+		int count = 0;
+		int lineCount = 0;
+		List<Integer> elfCalorieCount = new ArrayList<Integer>();
+		
+		while(lineCount < input.size()) {
+			String line = input.get(lineCount);
+			
+			if(!line.isEmpty()) {
+				count += Integer.parseInt(line);
+			}
+			else if(lineCount == input.size() - 1) {
+				if(count > max) {
+					max = count;
+				}
+				
+				elfCalorieCount.add(count);
+			}
+			else {
+				if(count > max) {
+					max = count;
+				}
+				elfCalorieCount.add(count);
+				count = 0;
+			}
+			
+			lineCount++;
+		}
+		
+		Collections.sort(elfCalorieCount, Collections.reverseOrder());
+		combinedMax = elfCalorieCount.get(0) + elfCalorieCount.get(1) + elfCalorieCount.get(2);
+		
+		System.out.println(CUR_YEAR + " Day 1 Part 1: " + max);
+		System.out.println(CUR_YEAR + " Day 1 Part 2: " + combinedMax);
 	}
 	
 	/**
