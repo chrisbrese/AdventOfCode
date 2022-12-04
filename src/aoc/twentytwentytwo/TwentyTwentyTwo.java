@@ -329,12 +329,101 @@ public class TwentyTwentyTwo extends Year {
 		
 		switch(part) {
 			case "1":
+				day4CampCleanupWhole();
 				break;
 			case "2":
+				day4CampCleanupAny();
 				break;
 			default:
+				day4CampCleanupWhole();
+				day4CampCleanupAny();
 				break;
 		}
+	}
+	
+	/**
+	 * Space needs to be cleared before the last supplies can be unloaded from the ships, 
+	 * and so several Elves have been assigned the job of cleaning up sections of the camp.
+	 * Every section has a unique ID number, and each Elf is assigned a range of section IDs.
+	 * 
+	 * However, as some of the Elves compare their section assignments with each other, 
+	 * they've noticed that many of the assignments overlap.
+	 * To try to quickly find overlaps and reduce duplicated effort, the Elves pair up 
+	 * and make a big list of the section assignments for each pair (your puzzle input).
+	 * 
+	 * Some of the pairs have noticed that one of their assignments fully contains the other.
+	 * In pairs where one assignment fully contains the other, 
+	 * one Elf in the pair would be exclusively cleaning sections their partner will already be cleaning, 
+	 * so these seem like the most in need of reconsideration.
+	 * 
+	 * In how many assignment pairs does one range fully contain the other?
+	 */
+	private void day4CampCleanupWhole() {
+		int count = 0;
+		for(String s : input) {
+			String[] parts = s.split(",");
+			String[] part1 = parts[0].split("-");
+			String[] part2 = parts[1].split("-");
+			
+			int part1Low = Integer.parseInt(part1[0]);
+			int part1High = Integer.parseInt(part1[1]);
+			int part2Low = Integer.parseInt(part2[0]);
+			int part2High = Integer.parseInt(part2[1]);
+			
+			// part2 is included in part1
+			if(part1Low <= part2Low && 
+			   part1High >= part2High) {
+				count++;
+			}
+			// part1 is included in part2
+			else if(part2Low <= part1Low && 
+			   part2High >= part1High) {
+				count++;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 4 Part 1: " + count);
+	}
+	
+	/**
+	 * It seems like there is still quite a bit of duplicate work planned.
+	 * Instead, the Elves would like to know the number of pairs that overlap at all.
+	 * 
+	 * In how many assignment pairs do the ranges overlap?
+	 */
+	private void day4CampCleanupAny() {
+		int count = 0;
+		for(String s : input) {
+			String[] parts = s.split(",");
+			String[] part1 = parts[0].split("-");
+			String[] part2 = parts[1].split("-");
+			
+			int part1Low = Integer.parseInt(part1[0]);
+			int part1High = Integer.parseInt(part1[1]);
+			int part2Low = Integer.parseInt(part2[0]);
+			int part2High = Integer.parseInt(part2[1]);
+			
+			// part2 overlaps
+			if(part2Low >= part1Low && 
+			   part2Low <= part1High) {
+				count++;
+			}
+			else if(part2High >= part1Low && 
+			   part2High <= part1High) {
+				count++;
+			}
+			// part1 is included in part2
+			else if(part1Low >= part2Low && 
+			   part1Low <= part2High) {
+				count++;
+			}
+			else if(part1High >= part2Low && 
+			   part1High <= part2High) {
+				count++;
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 4 Part 1: " + count);
 	}
 	
 	/**

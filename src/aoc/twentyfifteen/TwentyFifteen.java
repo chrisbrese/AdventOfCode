@@ -3,7 +3,7 @@ package aoc.twentyfifteen;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
+//import org.apache.commons.collections4.CollectionUtils;
 
 import aoc.Year;
 import aoc.circuits.Circuit;
@@ -966,7 +966,7 @@ public class TwentyFifteen extends Year {
 		
 		List<List<City>> combinations = new ArrayList<List<City>>();
 		
-		combinations.addAll(CollectionUtils.permutations(country.getCities()));
+//		combinations.addAll(CollectionUtils.permutations(country.getCities()));
 		
 		int shortestRoute = 0;
 		int longestRoute = 0;
