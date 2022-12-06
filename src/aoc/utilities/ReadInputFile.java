@@ -25,7 +25,7 @@ public class ReadInputFile {
 			
 			String line;
 			while((line = br.readLine()) != null) {
-				input.add(line.trim());
+				input.add(line);
 			}
 			
 			br.close();

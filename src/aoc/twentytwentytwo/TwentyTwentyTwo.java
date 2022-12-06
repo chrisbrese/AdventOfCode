@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 
 import aoc.Year;
 import aoc.utilities.ReadInputFile;
@@ -423,7 +424,7 @@ public class TwentyTwentyTwo extends Year {
 			}
 		}
 		
-		System.out.println(CUR_YEAR + " Day 4 Part 1: " + count);
+		System.out.println(CUR_YEAR + " Day 4 Part 2: " + count);
 	}
 	
 	/**
@@ -434,12 +435,130 @@ public class TwentyTwentyTwo extends Year {
 		
 		switch(part) {
 			case "1":
+				day5SupplyStacks(false);
 				break;
 			case "2":
+				day5SupplyStacks(true);
 				break;
 			default:
+				day5SupplyStacks(false);
+				day5SupplyStacks(true);
 				break;
 		}
+	}
+	
+	/**
+	 * The expedition can depart as soon as the final supplies have been unloaded from the ships.
+	 * Supplies are stored in stacks of marked crates, but because the needed supplies are buried 
+	 * under many other crates, the crates need to be rearranged.
+	 * 
+	 * The ship has a giant cargo crane capable of moving crates between stacks.
+	 * To ensure none of the crates get crushed or fall over, the crane operator will rearrange them 
+	 * in a series of carefully-planned steps. After the crates are rearranged, the desired crates 
+	 * will be at the top of each stack.
+	 * 
+	 * The Elves don't want to interrupt the crane operator during this delicate procedure, 
+	 * but they forgot to ask her which crate will end up where, 
+	 * and they want to be ready to unload them as soon as possible so they can embark.
+	 * 
+	 * They do, however, have a drawing of the starting stacks of crates and the rearrangement procedure (your puzzle input).
+	 * 
+	 * There are a number of stacks, each with a different number of crates.
+	 * Then, the rearrangement procedure is given.
+	 * In each step of the procedure, a quantity of crates is moved from one stack to a different stack.
+	 * 
+	 * Crates are moved one at a time, so the first crate to be moved ends up below the second, third, etc. crates.
+	 * 
+	 * The Elves just need to know which crate will end up on top of each stack.
+	 * 
+	 * After the rearrangement procedure completes, what crate ends up on top of each stack?
+	 * 
+	 * Part 2:
+	 * As you watch the crane operator expertly rearrange the crates, you notice the process isn't following your prediction.
+	 * Some mud was covering the writing on the side of the crane, and you quickly wipe it away.
+	 * The crane isn't a CrateMover 9000 - it's a CrateMover 9001.
+	 * The CrateMover 9001 is notable for many new and exciting features: air conditioning, leather seats, an extra cup holder, 
+	 * and the ability to pick up and move multiple crates at once.
+	 * 
+	 * The action of moving multiple crates from one stack to another means that those crates stay in the same order.
+	 * 
+	 * Before the rearrangement process finishes, 
+	 * update your simulation so that the Elves know where they should stand to be ready to unload the final supplies.
+	 * After the rearrangement procedure completes, what crate ends up on top of each stack?
+	 * 
+	 * @param part2 true if running part 2
+	 */
+	private void day5SupplyStacks(boolean part2) {
+		HashMap<Integer, Stack<String>> backwardsStackMap = new HashMap<Integer, Stack<String>>();
+		HashMap<Integer, Stack<String>> stackMap = new HashMap<Integer, Stack<String>>();
+
+		boolean end = false;
+		for(String line : input) {
+			int curStack = 1;
+
+			if(!end) {
+				try {
+					// if its a number, we have the backwards stacks - end loop
+					Integer.parseInt(line.substring(1, 2));
+					end = true;
+
+					// reverse the stacks
+					for (int i = 1; i <= backwardsStackMap.size(); i++){
+						Stack<String> stack = new Stack<String>();
+						while(!backwardsStackMap.get(i).isEmpty()){
+							stack.push(backwardsStackMap.get(i).pop());
+						}
+						stackMap.put(i, stack);
+					}
+				}
+				catch(NumberFormatException nfe){
+					for(int i = 0; i < line.length(); i+=4){
+						if(line.substring(i, i+1).equals("[")) {
+							if(backwardsStackMap.get(curStack) == null) {
+								backwardsStackMap.put(curStack, new Stack<String>());
+							}
+							
+							// add to stack
+							backwardsStackMap.get(curStack).push(line.substring(i+1, i+2));
+						}
+						curStack++;
+					}
+				}
+			}
+			else {
+				// start reading the instructions
+				if(!line.isEmpty()){
+					String[] parts = line.split(" ");
+					int num = Integer.parseInt(parts[1]);
+					int from = Integer.parseInt(parts[3]);
+					int to = Integer.parseInt(parts[5]);
+					
+					Stack<String> temp = new Stack<String>();
+					
+					for(int i = 0; i < num; i++){
+						if(part2) {
+							temp.push(stackMap.get(from).pop());
+						}
+						else {
+							stackMap.get(to).push(stackMap.get(from).pop());
+						}
+					}
+					
+					if(part2) {
+						for(int i = 0; i < num; i++){
+							stackMap.get(to).push(temp.pop());
+						}
+					}
+				}
+			}
+		}
+
+		String result = "";
+		for(int i = 1; i <= stackMap.size(); i++){
+			result += stackMap.get(i).peek();
+		}
+
+		System.out.println(CUR_YEAR + " Day 5 Part " + (part2 ? "2" : "1") + ": " + result);
 	}
 	
 	/**
