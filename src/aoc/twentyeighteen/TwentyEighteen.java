@@ -1,5 +1,7 @@
 package aoc.twentyeighteen;
 
+import java.util.HashMap;
+
 import aoc.Year;
 import aoc.utilities.ReadInputFile;
 
@@ -17,12 +19,60 @@ public class TwentyEighteen extends Year {
 		
 		switch(part) {
 			case "1":
+				day1ChronalCalibration(false);
 				break;
 			case "2":
+				day1ChronalCalibration(true);
 				break;
 			default:
+				day1ChronalCalibration(false);
+				day1ChronalCalibration(true);
 				break;
 		}		
+	}
+	
+	/**
+	 * After feeling like you've been falling for a few minutes, you look at the device's tiny screen.
+	 * "Error: Device must be calibrated before first use. Frequency drift detected. Cannot maintain destination lock."
+	 * Below the message, the device shows a sequence of changes in frequency (your puzzle input).
+	 * 
+	 * Starting with a frequency of zero, what is the resulting frequency after all of the changes in frequency have been applied?
+	 * 
+	 * Part 2:
+	 * 
+	 * You notice that the device repeats the same frequency change list over and over. To calibrate the device, 
+	 * you need to find the first frequency it reaches twice.
+	 * 
+	 * Note that your device might need to repeat its list of frequency changes many times before a duplicate 
+	 * frequency is found, and that duplicates might be found while in the middle of processing the list.
+	 * 
+	 * What is the first frequency your device reaches twice?
+	 * 
+	 * @param part2 - true if running part2
+	 */
+	private void day1ChronalCalibration(boolean part2) {
+		HashMap<Integer, String> map = new HashMap<Integer, String>();
+		
+		int start = 0;
+		map.put(start, "0");
+		boolean found = false;
+		
+		while(!found) {
+			for(String line : input) {
+				start += Integer.parseInt(line);
+				if(part2 && !found && map.get(start) != null) {
+					System.out.println(CUR_YEAR + " Day 1 Part 2: " + start);
+					found = true;
+				}
+				
+				map.put(start, line);
+			}
+			
+			if(!part2) {
+				found = true;
+				System.out.println(CUR_YEAR + " Day 1 Part 1: " + start);
+			}
+		}
 	}
 	
 	/**
