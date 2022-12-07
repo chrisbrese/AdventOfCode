@@ -569,11 +569,70 @@ public class TwentyTwentyTwo extends Year {
 		
 		switch(part) {
 			case "1":
+				day6TuningTrouble(4);
 				break;
 			case "2":
+				day6TuningTrouble(14);
 				break;
 			default:
+				day6TuningTrouble(4);
+				day6TuningTrouble(14);
 				break;
+		}
+	}
+	
+	/**
+	 * Part 1:
+	 * 
+	 * As you move through the dense undergrowth, one of the Elves gives you a handheld device.
+	 * He says that it has many fancy features, but the most important one to set up right now is the communication system.
+	 * 
+	 * To be able to communicate with the Elves, the device needs to lock on to their signal.
+	 * The signal is a series of seemingly-random characters that the device receives one at a time.
+	 * 
+	 * To fix the communication system, you need to add a subroutine to the device that detects a 
+	 * start-of-packet marker in the datastream. In the protocol being used by the Elves, 
+	 * the start of a packet is indicated by a sequence of four characters that are all different.
+	 * 
+	 * The device will send your subroutine a datastream buffer (your puzzle input); 
+	 * your subroutine needs to identify the first position where the four most recently received 
+	 * characters were all different. Specifically, it needs to report the number of characters 
+	 * from the beginning of the buffer to the end of the first such four-character marker.
+	 * 
+	 * How many characters need to be processed before the first start-of-packet marker is detected?
+	 * 
+	 * Part 2:
+	 * 
+	 * Your device's communication system is correctly detecting packets, but still isn't working.
+	 * It looks like it also needs to look for messages.
+	 * 
+	 * A start-of-message marker is just like a start-of-packet marker, except it consists of 
+	 * 14 distinct characters rather than 4.
+	 * 
+	 * How many characters need to be processed before the first start-of-message marker is detected?
+	 * 
+	 * @param prefix the number of chars to check for before the message
+	 */
+	private void day6TuningTrouble(int prefix) {
+		for(String line : input) {
+			for(int i = 0; i < line.length(); i++) {
+				String temp = line.substring(i, i+prefix);
+				HashMap<String, Integer> map = new HashMap<String, Integer>();
+				for (int j = 0; j < temp.length(); j++) {
+					String c = temp.substring(j, j+1);
+	
+					if(map.get(c) == null) {
+						map.put(c, 0);
+					}
+	
+					map.put(c, map.get(c)+1);
+				}
+	
+				if(map.size() == prefix){
+					System.out.println(CUR_YEAR + " Day 6 Prefix " + prefix + ": " + (i+prefix));
+					break;
+				}
+			}
 		}
 	}
 	
