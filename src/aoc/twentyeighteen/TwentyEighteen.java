@@ -83,12 +83,98 @@ public class TwentyEighteen extends Year {
 		
 		switch(part) {
 			case "1":
+				day2InventoryManagementSystemChecksum();
 				break;
 			case "2":
+				day2InventoryMangementSystemCommonLetters();
 				break;
 			default:
+				day2InventoryManagementSystemChecksum();
+				day2InventoryMangementSystemCommonLetters();
 				break;
 		}
+	}
+	
+	/**
+	 * Late at night, you sneak to the warehouse - who knows what kinds of paradoxes you could cause if you were discovered - 
+	 * and use your fancy wrist device to quickly scan every box and produce a list of the likely candidates (your puzzle input).
+	 * 
+	 * To make sure you didn't miss any, you scan the likely candidate boxes again, counting the number that have an ID containing 
+	 * exactly two of any letter and then separately counting those with exactly three of any letter.
+	 * You can multiply those two counts together to get a rudimentary checksum and compare it to what your device predicts.
+	 * 
+	 * What is the checksum for your list of box IDs?
+	 */
+	private void day2InventoryManagementSystemChecksum() {
+		int twoCount = 0;
+		int threeCount = 0;
+		for(String line : input) {
+			HashMap<String, Integer> map = new HashMap<String, Integer>();
+			for(int i = 0; i < line.length(); i++) {
+				String temp = "";
+				if(i == line.length() - 1) {
+					temp = line.substring(i);
+				}
+				else {
+					temp = line.substring(i, i+1);
+				}
+
+				if(map.get(temp) == null) {
+					map.put(temp, 0);
+				}
+
+				map.put(temp, map.get(temp) + 1);
+			}
+
+			boolean foundTwo = false;
+			boolean foundThree = false;
+			for (Integer i : map.values()) {
+				if(!foundTwo || !foundThree){
+					if (!foundTwo && i == 2) {
+						foundTwo = true;
+						twoCount++;
+					}
+					else if (!foundThree && i == 3) {
+						foundThree = true;
+						threeCount++;
+					}
+				}
+			}
+		}
+
+		System.out.println(CUR_YEAR + " Day 2 Part 1: " + (twoCount * threeCount));
+	}
+	
+	/**
+	 * Confident that your list of box IDs is complete, you're ready to find the boxes full of prototype fabric.
+	 * The boxes will have IDs which differ by exactly one character at the same position in both strings.
+	 * 
+	 * What letters are common between the two correct box IDs?
+	 */
+	private void day2InventoryMangementSystemCommonLetters() {
+		boolean found = false;
+		String str = "";
+
+		// compare each line with all other lines
+		for(int i = 0; (!found && i < input.size()); i++) {
+			for(int j = i+1; (!found && j < input.size()); j++) {
+				// one by one, remove a character from each line to compare with
+				for(int x = 0; (!found && x < input.get(i).length()); x++) {
+					String xTemp = input.get(i).substring(0, x) + input.get(i).substring(x+1);
+					for(int y = 0; (!found && y < input.get(j).length()); y++){
+						String yTemp = input.get(j).substring(0, y) + input.get(j).substring(y+1);
+
+						if(xTemp.equals(yTemp)){
+							found = true;
+							str = xTemp;
+							break;
+						}
+					}
+				}
+			}	
+		}
+
+		System.out.println(CUR_YEAR + " Day 2 Part 2: " + str);
 	}
 	
 	/**
