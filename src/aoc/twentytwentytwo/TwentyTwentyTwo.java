@@ -11,6 +11,8 @@ import aoc.twentytwentytwo.day7.Directory;
 import aoc.twentytwentytwo.day7.File;
 import aoc.twentytwentytwo.day7.FileSystem;
 import aoc.utilities.ReadInputFile;
+import aoc.utilities.grid.Grid;
+import aoc.utilities.grid.GridPosition;
 
 public class TwentyTwentyTwo extends Year {
 	
@@ -650,6 +652,7 @@ public class TwentyTwentyTwo extends Year {
 				day7NoSpaceLeftOnDevice();
 				break;
 			case "2":
+				day7NoSpaceLeftOnDevice();
 				break;
 			default:
 				day7NoSpaceLeftOnDevice();
@@ -763,12 +766,181 @@ public class TwentyTwentyTwo extends Year {
 		
 		switch(part) {
 			case "1":
+				day8TreeTopTreeHouse();
 				break;
 			case "2":
+				day8TreeTopTreeHouseScenicScore();
 				break;
 			default:
+				day8TreeTopTreeHouse();
+				day8TreeTopTreeHouseScenicScore();
 				break;
 		}
+	}
+	
+	/**
+	 * The expedition comes across a peculiar patch of tall trees all planted carefully in a grid.
+	 * The Elves explain that a previous expedition planted these trees as a reforestation effort.
+	 * Now, they're curious if this would be a good location for a tree house.
+	 * 
+	 * First, determine whether there is enough tree cover here to keep a tree house hidden.
+	 * To do this, you need to count the number of trees that are visible from outside the grid when 
+	 * looking directly along a row or column.
+	 * 
+	 * The Elves have already launched a quadcopter to generate a map with the height of each tree (your puzzle input).
+	 * 
+	 * Each tree is represented as a single digit whose value is its height, where 0 is the shortest and 9 is the tallest.
+	 * 
+	 * A tree is visible if all of the other trees between it and an edge of the grid are shorter than it.
+	 * Only consider trees in the same row or column; that is, only look up, down, left, or right from any given tree.
+	 * 
+	 * All of the trees around the edge of the grid are visible - since they are already on the edge, there are no trees 
+	 * to block the view.
+	 * 
+	 * Consider your map; how many trees are visible from outside the grid?
+	 */
+	private void day8TreeTopTreeHouse() {
+		Grid g = new Grid(input.size(), input.get(0).length());
+		
+		// setup the grid
+		int rowCount = 0;
+		for(String line : input) {
+			int colCount = 0;
+			while(colCount < line.length()) {
+				int cur = Integer.valueOf(line.substring(colCount, colCount+1));
+				g.getGrid()[rowCount][colCount] = cur;
+				colCount++;
+			}
+			rowCount++;
+		}
+		
+		int visCount = 0;
+		for(int row = 0; row < g.getNumRows(); row++) {
+			for(int col = 0; col < g.getNumCols(); col++) {
+				if(row == 0 || col == 0) {
+					visCount++;
+				}
+				else {
+					int curVal = g.getGrid()[row][col];
+					
+					boolean isVisible = true;
+					for(int tRow = 0; tRow < row; tRow++) {
+						if(g.getGrid()[tRow][col] >= curVal) {
+							isVisible = false;
+							break;
+						}
+					}
+					
+					if(!isVisible) {
+						isVisible = true;
+						for(int tRow = row+1; tRow < g.getNumRows(); tRow++) {
+							if(g.getGrid()[tRow][col] >= curVal) {
+								isVisible = false;
+								break;
+							}
+						}
+						
+						if(!isVisible) {
+							isVisible = true;
+							for(int tCol = 0; tCol < col; tCol++) {
+								if(g.getGrid()[row][tCol] >= curVal) {
+									isVisible = false;
+									break;
+								}
+							}
+							
+							if(!isVisible) {
+								isVisible = true;
+								for(int tCol = col+1; tCol < g.getNumCols(); tCol++) {
+									if(g.getGrid()[row][tCol] >= curVal) {
+										isVisible = false;
+										break;
+									}
+								}
+							}
+						}
+					}
+					
+					if(isVisible) {
+						visCount++;
+					}
+				}
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 8 Part 1: " + visCount);
+	}
+	
+	/**
+	 * Content with the amount of tree cover available, the Elves just need to know 
+	 * the best spot to build their tree house: they would like to be able to see a lot of trees.
+	 * 
+	 * To measure the viewing distance from a given tree, look up, down, left, and right from that tree; 
+	 * stop if you reach an edge or at the first tree that is the same height or taller than the tree under consideration. 
+	 * (If a tree is right on the edge, at least one of its viewing distances will be zero.)
+	 * 
+	 * The Elves don't care about distant trees taller than those found by the rules above; 
+	 * the proposed tree house has large eaves to keep it dry, so they wouldn't be able to see higher than the tree house anyway.
+	 * 
+	 * A tree's scenic score is found by multiplying together its viewing distance in each of the four directions.
+	 * 
+	 * Consider each tree on your map. What is the highest scenic score possible for any tree?
+	 */
+	private void day8TreeTopTreeHouseScenicScore() {
+		Grid g = new Grid(input.size(), input.get(0).length());
+		
+		// setup the grid
+		int rowCount = 0;
+		for(String line : input) {
+			int colCount = 0;
+			while(colCount < line.length()) {
+				int cur = Integer.valueOf(line.substring(colCount, colCount+1));
+				g.getGrid()[rowCount][colCount] = cur;
+				colCount++;
+			}
+			rowCount++;
+		}
+		
+		int scenicScore = 1;
+		for(int row = 0; row < g.getNumRows(); row++) {
+			for(int col = 0; col < g.getNumCols(); col++) {
+				int curVal = g.getGrid()[row][col];
+				int tempScenicScore = 1;
+				for(int tRow = row-1; tRow >= 0; tRow--) {
+					if(tRow == 0 || g.getGrid()[tRow][col] >= curVal) {
+						tempScenicScore *= (row-tRow);
+						break;
+					}
+				}
+				
+				for(int tRow = row+1; tRow < g.getNumRows(); tRow++) {
+					if(tRow == (g.getNumRows()-1) || g.getGrid()[tRow][col] >= curVal) {
+						tempScenicScore *= (tRow-row);
+						break;
+					}
+				}
+				
+				for(int tCol = col-1; tCol >= 0; tCol--) {
+					if(tCol == 0 || g.getGrid()[row][tCol] >= curVal) {
+						tempScenicScore *= (col-tCol);
+						break;
+					}
+				}
+				
+				for(int tCol = col+1; tCol < g.getNumCols(); tCol++) {
+					if(tCol == (g.getNumCols()-1) || g.getGrid()[row][tCol] >= curVal) {
+						tempScenicScore *= (tCol-col);
+						break;
+					}
+				}
+				
+				if(tempScenicScore > scenicScore) {
+					scenicScore = tempScenicScore;
+				}
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 8 Part 2: " + scenicScore);
 	}
 	
 	/**
