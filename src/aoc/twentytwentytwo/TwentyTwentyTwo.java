@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Stack;
 
 import aoc.Year;
+import aoc.twentytwentytwo.day7.Directory;
+import aoc.twentytwentytwo.day7.File;
+import aoc.twentytwentytwo.day7.FileSystem;
 import aoc.utilities.ReadInputFile;
 
 public class TwentyTwentyTwo extends Year {
@@ -644,12 +647,112 @@ public class TwentyTwentyTwo extends Year {
 		
 		switch(part) {
 			case "1":
+				day7NoSpaceLeftOnDevice();
 				break;
 			case "2":
 				break;
 			default:
+				day7NoSpaceLeftOnDevice();
 				break;
 		}
+	}
+	
+	/**
+	 * The device the Elves gave you has problems with more than just its communication system.
+	 * You try to run a system update.
+	 * 
+	 * Perhaps you can delete some files to make space for the update?
+	 * 
+	 * You browse around the filesystem to assess the situation and save the resulting terminal output (your puzzle input).
+	 * 
+	 * The filesystem consists of a tree of files (plain data) and directories (which can contain other directories or files).
+	 * The outermost directory is called /. You can navigate around the filesystem, 
+	 * moving into or out of directories and listing the contents of the directory you're currently in.
+	 * 
+	 * Within the terminal output, lines that begin with $ are commands you executed.
+	 * 
+	 * Since the disk is full, your first step should probably be to find directories that are good candidates for deletion.
+	 * To do this, you need to determine the total size of each directory.
+	 * The total size of a directory is the sum of the sizes of the files it contains, directly or indirectly. 
+	 * (Directories themselves do not count as having any intrinsic size.)
+	 * 
+	 * To begin, find all of the directories with a total size of at most 100000, then calculate the sum of their total sizes.
+	 * 
+	 * Find all of the directories with a total size of at most 100000. What is the sum of the total sizes of those directories?
+	 * 
+	 * Part 2:
+	 * 
+	 * Now, you're ready to choose a directory to delete.
+	 * The total disk space available to the filesystem is 70000000.
+	 * To run the update, you need unused space of at least 30000000.
+	 * You need to find a directory you can delete that will free up enough space to run the update.
+	 * 
+	 * Find the smallest directory that, if deleted, would free up enough space on the filesystem to run the update.
+	 * What is the total size of that directory?
+	 */
+	private void day7NoSpaceLeftOnDevice() {
+		FileSystem fs = new FileSystem();
+		fs.setBase(new Directory("/", null));
+		
+		Directory curDir = fs.getBase();
+		for(String line : input) {
+			String[] parts = line.split(" ");
+			
+			if(line.startsWith("$")) {
+				if(parts[1].equals("cd")) {
+					if(parts[2].equals("/")) {
+						//skip
+					}
+					
+					else if(parts[2].equals("..")) {
+						curDir = fs.setCurDir(curDir.getParentDir());
+					}
+					else {
+						Directory d;
+						if((d = curDir.findDirectory(parts[2])) == null) {
+							d = curDir.addDirectory(new Directory(parts[2], curDir));
+							fs.addKnownDir(d);
+						}
+						
+						curDir = fs.setCurDir(d);
+					}
+				}
+			}
+			else if(line.startsWith("dir")) {
+				if(curDir.findDirectory(parts[1]) == null) {
+					Directory d = curDir.addDirectory(new Directory(parts[1], curDir));
+					fs.addKnownDir(d);
+				}
+			}
+			else {
+				curDir.addFile(new File(parts[1], Integer.parseInt(parts[0])));
+			}
+		}
+		
+		int totalSize = 0;
+		for(Directory d : fs.getKnownDirs()) {
+			int size = d.getSize();
+			
+			if(size <= 100000) {
+				totalSize += size;
+			}
+		}
+		
+		int fsSize = fs.getBase().getSize();
+		// total avail space - current space - space required. absolute value because result is negative
+		int spaceToDelete = Math.abs(70000000 - fsSize - 30000000);
+		int dirSizeToDelete = 0;
+		for(Directory d : fs.getKnownDirs()) {
+			int curSize = 0;
+			if((curSize = d.getSize()) >= spaceToDelete) {
+				if(dirSizeToDelete == 0 || curSize < dirSizeToDelete) {
+					dirSizeToDelete = curSize;
+				}
+			}
+		}
+		
+		System.out.println(CUR_YEAR + " Day 7 Part 1: " + totalSize);
+		System.out.println(CUR_YEAR + " Day 7 Part 2: " + dirSizeToDelete);
 	}
 	
 	/**
