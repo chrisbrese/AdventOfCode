@@ -17,6 +17,7 @@ public class TwentySixteen extends Year {
 	}
     
 	/**
+	 * {@link https://adventofcode.com/2016/day/1}
 	 * Run all Day 1 reports.
 	 */
 	public void day1(String part) {
@@ -36,13 +37,6 @@ public class TwentySixteen extends Year {
 		}		
 	}
 	
-	/**
-	 * The Document indicates that you should start at the given coordinates and face North.
-	 * Then, follow the provided sequence: either turn left (L) or right (R) 90 degrees, then walk forward the given number of blocks, 
-	 *    ending at a new intersection.
-	 * Given that you can only walk on the street grid of the city, how far is the shortest path to the destination?
-	 * How many blocks away is Easter Bunny HQ?
-	 */
 	public void day1NoTimeTaxicabPart1() {
 		List<String> directions = Arrays.asList(input.get(0).split(", "));
 		
@@ -51,11 +45,6 @@ public class TwentySixteen extends Year {
 		System.out.println(CUR_YEAR + " Day 1 Part 1: " + blocks);
 	}
 	
-	/**
-	 * Then, you notice the instructions continue on the back of the Recruiting Document.
-	 * Easter Bunny HQ is actually at the first location you visit twice.
-	 * How many blocks away is the first location you visit twice?
-	 */
 	public void day1day1NoTimeTaxicabPart2() {
 		List<String> directions = Arrays.asList(input.get(0).split(", "));
 		
@@ -65,6 +54,7 @@ public class TwentySixteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2016/day/2}
 	 * Run all Day 2 reports.
 	 */
 	public void day2(String part) {
@@ -131,13 +121,6 @@ public class TwentySixteen extends Year {
 		return key;
 	}
 	
-	/**
-	 * You left in such a rush that you forgot to use the bathroom!
-	 * The document explains that each button to be pressed can be found by starting on the previous button and moving to adjacent buttons on the keypad: 
-	 *    U moves up, D moves down, L moves left, and R moves right. 
-	 * Each line of instructions corresponds to one button, starting at the previous button (or, for the first line, the "5" button).
-	 * Press whatever button you're on at the end of each line. If a move doesn't lead to a button, ignore it.
-	 */
 	public void day2BathroomSecurityPart1() {
 		String[][] numPad = {{"1","4","7"},{"2","5","8"},{"3","6","9"}};
 		
@@ -146,16 +129,6 @@ public class TwentySixteen extends Year {
 		System.out.println(CUR_YEAR + " Day 2 Part 1: " + key);
 	}
 	
-	/**
-	 * You finally arrive at the bathroom, the keypad is not at all like you imagined it.
-	 * Instead, you are confronted with the result of hundreds of man-hours of bathroom-keypad-design meetings:
-			    1
-			  2 3 4
-			5 6 7 8 9
-			  A B C
-			    D
-     * You still start at "5" and stop when you're at an edge
-	 */
 	public void day2BathroomSecurityPart2() {
 		String[][] numPad = {{"X","X","5","X","X"},{"X","2","6","A","X"},{"1","3","7","B","D"},{"X","4","8","C","X"},{"X","X","9","X","X"}};
 		
@@ -165,6 +138,7 @@ public class TwentySixteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2016/day/3}
 	 * Run all Day 3 reports.
 	 */
 	public void day3(String part) {
@@ -220,10 +194,6 @@ public class TwentySixteen extends Year {
 		return triangleInput;
 	}
 	
-	/**
-	 * In a valid triangle, the sum of any two sides must be larger than the remaining side.
-	 * In your puzzle input, how many of the listed triangles are possible?
-	 */
 	public void day3Squares3SidesPart1(int[][] triangleSides) {
 		int valid = 0;
 		
@@ -242,10 +212,6 @@ public class TwentySixteen extends Year {
 		System.out.println(CUR_YEAR + " Day 3 Part 1: " + valid);
 	}
 	
-	/**
-	 * it occurs to you that triangles are specified in groups of three vertically. Each set of three numbers in a column specifies a triangle. Rows are unrelated.
-	 * In your puzzle input, and instead reading by columns, how many of the listed triangles are possible?
-	 */
 	public void day3Squares3SidesPart2(int[][] triangleSides) {
 		int valid = 0;
 		
@@ -267,6 +233,7 @@ public class TwentySixteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2016/day/4}
 	 * Run all Day 4 reports.
 	 */
 	public void day4(String part) {
@@ -286,13 +253,6 @@ public class TwentySixteen extends Year {
 		}
 	}
 	
-	/**
-	 * You come across an information kiosk with a list of rooms.
-	 * Of course, the list is encrypted and full of decoy data, but the instructions to decode the list are barely hidden nearby.
-	 * Each room consists of an encrypted name (lowercase letters separated by dashes) followed by a dash, a sector ID, and a checksum in square brackets.
-	 * A room is real (not a decoy) if the checksum is the five most common letters in the encrypted name, in order, with ties broken by alphabetization.
-	 * What is the sum of the sector IDs of the real rooms?
-	 */
 	public void day4SecurityObscurityPart1() {
 		int sum = 0;
 		
@@ -354,13 +314,6 @@ public class TwentySixteen extends Year {
 		System.out.println(CUR_YEAR + " Day 4 Part 1: " + sum);
 	}
 	
-	/**
-	 * You come across an information kiosk with a list of rooms.
-	 * Of course, the list is encrypted and full of decoy data, but the instructions to decode the list are barely hidden nearby.
-	 * Each room consists of an encrypted name (lowercase letters separated by dashes) followed by a dash, a sector ID, and a checksum in square brackets.
-	 * A room is real (not a decoy) if the checksum is the five most common letters in the encrypted name, in order, with ties broken by alphabetization.
-	 * What is the sum of the sector IDs of the real rooms?
-	 */
 	public void day4SecurityObscurityPart2() {
 		String alphabet = "abcdefghijklmnopqrstuvwxyz";
 		String result = "";
@@ -400,6 +353,7 @@ public class TwentySixteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2016/day/5}
 	 * Run all Day 5 reports.
 	 */
 	public void day5(String part) {
@@ -419,12 +373,6 @@ public class TwentySixteen extends Year {
 		}
 	}
 	
-	/**
-	 * The eight-character password for the door is generated one character at a time by finding the MD5 hash of some Door ID and an increasing integer index (starting with 0).
-	 * A hash indicates the next character in the password if its hexadecimal representation starts with five zeroes.
-	 * If it does, the sixth character in the hash is the next character of the password.
-	 * Given the actual Door ID, what is the password?
-	 */
 	public void day5NiceGameOfChessMD5Part1() {
 		String line = input.get(0);
 		
@@ -438,11 +386,6 @@ public class TwentySixteen extends Year {
 		System.out.println(CUR_YEAR + " Day 5 Part 1: " + pass);
 	}
 	
-	/**
-	 * Instead of simply filling in the password from left to right, the hash now also indicates the position within the password to fill.
-	 * You still look for hashes that begin with five zeroes; however, now, the sixth character represents the position (0-7), and the seventh character is the character to put in that position.
-	 * Given the actual Door ID and this new method, what is the password?
-	 */
 	public void day5NiceGameOfChessMD5Part2() {
 		String line = input.get(0);
 		
@@ -457,6 +400,7 @@ public class TwentySixteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2016/day/6}
 	 * Run all Day 6 reports.
 	 */
 	public void day6(String part) {
@@ -541,21 +485,12 @@ public class TwentySixteen extends Year {
 		return pw;
 	}
 	
-	/**
-	 * In this model, the same message is sent repeatedly. You've recorded the repeating message signal (your puzzle input), but the data seems quite corrupted - almost too badly to recover. Almost.
-	 * All you need to do is figure out which character is most frequent for each position (vertically).
-	 * Given the recording in your puzzle input, what is the error-corrected version of the message being sent?
-	 */
 	public void day6day6SignalsNoisePart1() {
 		String pw = day6SignalsNoiseVerticalPassword(true);
 		
 		System.out.println(CUR_YEAR + " Day 6 Part 1: " + pw);
 	}
 	
-	/**
-	 * You can look at the letter distributions in each column and choose the least common letter to reconstruct the original message.
-	 * Given the recording in your puzzle input and this new decoding methodology, what is the original message that Santa is trying to send?
-	 */
 	public void day6day6SignalsNoisePart2() {
 		String pw = day6SignalsNoiseVerticalPassword(false);
 		
@@ -563,6 +498,7 @@ public class TwentySixteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2016/day/7}
 	 * Run all Day 7 reports.
 	 */
 	public void day7(String part) {
@@ -582,12 +518,6 @@ public class TwentySixteen extends Year {
 		}
 	}
 	
-	/**
-	 * An IP supports TLS if it has an Autonomous Bridge Bypass Annotation, or ABBA. 
-	 * An ABBA is any four-character sequence which consists of a pair of two different characters followed by the reverse of that pair, such as xyyx or abba.
-	 * However, the IP also must not have an ABBA within any hypernet sequences, which are contained by square brackets.
-	 * How many IPs in your puzzle input support TLS?
-	 */
 	public void day7IPv7Part1() {
 		int abbaCount = 0;
 		for(String line : input) {
@@ -639,14 +569,6 @@ public class TwentySixteen extends Year {
 		System.out.println(CUR_YEAR + " Day 7 Part 1: " + abbaCount);
 	}
 	
-	/**
-	 * An IP supports SSL if it has an ABA, anywhere in the supernet sequences (outside any square bracketed sections), 
-	 * and a corresponding BAB, anywhere in the hypernet sequences.
-	 * An ABA is any three-character sequence which consists of the same character twice with a different character between them.
-	 * A corresponding BAB is the same characters but in reversed positions.
-	 * The interior character must be different.
-	 * How many IPs in your puzzle input support SSL?
-	 */
 	public void day7IPv7Part2() {
 		int abaBabCount = 0;
 		for(String line : input) {
@@ -722,6 +644,7 @@ public class TwentySixteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2016/day/8}
 	 * Run all Day 8 reports.
 	 */
 	public void day8(String part) {
@@ -752,13 +675,6 @@ public class TwentySixteen extends Year {
 		System.out.println();
 	}
 	
-	/**
-	 * The screen is 50 pixels wide and 6 pixels tall, all of which start off, and is capable of three somewhat peculiar operations:
-	 *    - rect AxB turns on all of the pixels in a rectangle at the top-left of the screen which is A wide and B tall.
-	 *    - rotate row y=A by B shifts all of the pixels in row A (0 is the top row) right by B pixels. Pixels that would fall off the right end appear at the left end of the row.
-	 *    - rotate column x=A by B shifts all of the pixels in column A (0 is the left column) down by B pixels. Pixels that would fall off the bottom appear at the top of the column.
-	 * How many pixels should be lit?
-	 */
 	public void day82FARotatingGrid() {
 		int NUM_COLUMNS = 50;
 		int NUM_ROWS = 6;
@@ -833,6 +749,7 @@ public class TwentySixteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2016/day/9}
 	 * Run all Day 9 reports.
 	 */
 	public void day9(String part) {
@@ -891,15 +808,6 @@ public class TwentySixteen extends Year {
 		return -1;
 	}
 	
-	/**
-	 * The format compresses a sequence of characters.
-	 * Whitespace is ignored. To indicate that some sequence should be repeated, a marker is added to the file, like (10x2).
-	 * To decompress this marker, take the subsequent 10 characters and repeat them 2 times.
-	 * Then, continue reading the file after the repeated data. The marker itself is not included in the decompressed output.
-	 * If parentheses or other characters appear within the data referenced by a marker, that's okay - 
-	 *    treat it like normal data, not a marker, and then resume looking for markers after the decompressed section.
-	 * What is the decompressed length of the file (your puzzle input)? Don't count whitespace.
-	 */
 	public void day9ExplosivesCyperspace() {
 		int totalLength = 0;
 		

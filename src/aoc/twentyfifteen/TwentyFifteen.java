@@ -25,6 +25,8 @@ public class TwentyFifteen extends Year {
 	}
     
 	/**
+	 * 
+	 * {@link https://adventofcode.com/2015/day/1}
 	 * Run all Day 1 reports.
 	 */
 	public void day1(String part) {
@@ -44,11 +46,6 @@ public class TwentyFifteen extends Year {
 		}		
 	}
 	
-	/**
-	 * Start on the ground floor (floor 0) and then follows the instructions one character at a time.
-	 * A '(' means go up one floor, and ')', means go down one floor.
-	 * To what floor do the instructions take Santa?
-	*/
 	public void day1NotQuiteLispPart1() {
 		int count = 0;
 		String line = input.get(0);
@@ -65,10 +62,6 @@ public class TwentyFifteen extends Year {
 		System.out.println(CUR_YEAR + " Day 1 Part 1: " + count);
 	}
 	
-	/**
-	 * Given the same instructions, find the position of the first character that causes him to enter the basement (floor -1).
-	 * The first character in the instructions has position 1, the second character has position 2, and so on.
-	 */
 	public void day1NotQuiteLispPart2() {
 		int count = 0;
 		String line = input.get(0);
@@ -92,6 +85,7 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2015/day/2}
 	 * Run all Day 2 reports.
 	 */
 	public void day2(String part) {
@@ -111,10 +105,6 @@ public class TwentyFifteen extends Year {
 		}
 	}
 	
-	/**
-	 * Find the surface area of the box, which is 2*l*w + 2*w*h + 2*h*l.
-	 * The elves also need a little extra paper for each present: the area of the smallest side.
-	 */
 	public void day2NoMathPart1() {
 		int total = 0;
 		for(String s : input) {
@@ -153,10 +143,6 @@ public class TwentyFifteen extends Year {
 		System.out.println(CUR_YEAR + " Day 2 Part 1: " + total);
 	}
 	
-	/**
-	 * The ribbon required to wrap a present is the shortest distance around its sides, or the smallest perimeter of any one face.
-	 * Each present also requires a bow made out of ribbon as well; the feet of ribbon required for the perfect bow is equal to the cubic feet of volume of the present.
-	 */
 	public void day2NoMathPart2() {
 		int total = 0;
 		for(String s : input) {
@@ -196,6 +182,7 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2015/day/3}
 	 * Run all Day 3 reports.
 	 */
 	public void day3(String part) {
@@ -215,13 +202,6 @@ public class TwentyFifteen extends Year {
 		}
 	}
 	
-	/**
-	 * Santa is delivering presents to an infinite two-dimensional grid of houses.
-	 * He begins by delivering a present to the house at his starting location.
-	 * Moves are always exactly one house to the north (^), south (v), east (>), or west (<).
-	 * After each move, he delivers another present to the house at his new location.
-	 * How many houses receive at least one present?
-	 */
 	public void day3HousesInAVacuumPart1() {
 		int total = 1;
 		String line = input.get(0);
@@ -259,11 +239,6 @@ public class TwentyFifteen extends Year {
 		System.out.println(CUR_YEAR + " Day 3 Part 1: " + total);
 	}
 	
-	/**
-	 * Santa creates a robot version of himself, Robo-Santa, to deliver presents with him.
-	 * Santa and Robo-Santa start at the same location (delivering two presents to the same starting house), then take turns moving based on instructions.
-	 * This year, how many houses receive at least one present?
-	 */
 	public void day3HousesInAVacuumPart2() {
 		int total = 1;
 		String line = input.get(0);
@@ -327,6 +302,7 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2015/day/4}
 	 * Run all Day 4 reports.
 	 */
 	public void day4(String part) {
@@ -346,11 +322,6 @@ public class TwentyFifteen extends Year {
 		}
 	}
 	
-	/**
-	 * Find the MD5 hash which, in hexadecimal, start with at [numZeros].
-	 * The input to the MD5 hash is your secret key followed by a number in decimal.
-	 * To mine AdventCoins, you must find Santa the lowest positive number (no leading zeroes: 1, 2, 3, ...) that produces such a hash.
-	 */
 	public void day4IdealStockingStufferAdventCoins(int numZeros) {
 		String line = input.get(0);
 		
@@ -360,6 +331,7 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2015/day/5}
 	 * Run all Day 5 reports.
 	 */
 	public void day5(String part) {
@@ -379,14 +351,6 @@ public class TwentyFifteen extends Year {
 		}
 	}
 	
-	/**
-	 * Santa needs help figuring out which strings in his text file are naughty or nice.
-	 * A nice string is one with all of the following properties:
-	 *     It contains at least three vowels.
-	 *     It contains at least one letter that appears twice in a row.
-	 *     It does not contain the strings ab, cd, pq, or xy, even if they are part of one of the other requirements.
-	 * How many strings are nice?
-	 */
 	public void day5InternElvesNaughtyNicePart1() {
 		int count = 0;
 		
@@ -426,13 +390,6 @@ public class TwentyFifteen extends Year {
 		System.out.println(CUR_YEAR + " Day 5 Part 1: " + count);
 	}
 	
-	/**
-	 * Santa needs help figuring out which strings in his text file are naughty or nice.
-	 * A nice string is one with all of the following properties:
-	 *    It contains a pair of any two letters that appears at least twice in the string without overlapping, like xyxy or aabcdefgaa (aa), but not like aaa.
-	 *    It contains at least one letter which repeats with exactly one letter between them, like xyx, abcdefeghi (efe), or even aaa.
-	 * How many strings are nice?
-	 */
 	public void day5InternElvesNaughtyNicePart2() {
 		int count = 0;
 		
@@ -476,6 +433,7 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2015/day/6}
 	 * Run all Day 6 reports.
 	 */
 	public void day6(String part) {
@@ -495,17 +453,6 @@ public class TwentyFifteen extends Year {
 		}
 	}
 	
-	/**
-	 * Lights in your grid are numbered from 0 to 999 in each direction.
-	 * The instructions include whether to turn on, turn off, or toggle various inclusive ranges given as coordinate pairs.
-	 * Each coordinate pair represents opposite corners of a rectangle, inclusive. The lights all start turned off.
-	 * To defeat your neighbors this year, all you have to do is set up your lights by doing the instructions Santa sent you in order.
-	 * For example:
-	 *    turn on 0,0 through 999,999 would turn on (or leave on) every light.
-	 *    toggle 0,0 through 999,0 would toggle the first line of 1000 lights, turning off the ones that were on, and turning on the ones that were off.
-	 *    turn off 499,499 through 500,500 would turn off (or leave off) the middle four lights.
-	 * How many lights are lit?
-	 */
 	public void day6FireHazardPart1() {
 		int GRID_SIZE = 1000;
 		boolean[][] lights = new boolean[GRID_SIZE][GRID_SIZE];
@@ -564,13 +511,6 @@ public class TwentyFifteen extends Year {
 		System.out.println(CUR_YEAR + " Day 6 Part 1: " + count);
 	}
 	
-	/**
-	 * The light grid you bought actually has individual brightness controls; each light can have a brightness of zero or more. The lights all start at zero.
-	 * The phrase turn on actually means that you should increase the brightness of those lights by 1.
-	 * The phrase turn off actually means that you should decrease the brightness of those lights by 1, to a minimum of zero.
-	 * The phrase toggle actually means that you should increase the brightness of those lights by 2.
-	 * What is the total brightness of all lights combined?
-	 */
 	public void day6FireHazardPart2() {
 		int GRID_SIZE = 1000;
 		int[][] lights = new int[GRID_SIZE][GRID_SIZE];
@@ -626,6 +566,7 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2015/day/7}
 	 * Run all Day 7 reports.
 	 */
 	public void day7(String part) {
@@ -800,20 +741,6 @@ public class TwentyFifteen extends Year {
 		return circuit;
 	}
 	
-	/**
-	 * Each wire has an identifier (lowercase letters) and can carry a 16-bit signal.
-	 * A signal is provided to each wire by a gate, another wire, or some specific value.
-	 * Each wire can only get a signal from one source, but can provide its signal to multiple destinations. A gate provides no signal until all of its inputs have a signal.
-	 * The included instructions booklet describes how to connect the parts together: 
-	 *    x AND y -> z means to connect wires x and y to an AND gate, and then connect its output to wire z.
-	 * For example:
-	 *    123 -> x means that the signal 123 is provided to wire x.
-	 *    x AND y -> z means that the bitwise AND of wire x and wire y is provided to wire z.
-	 *    p LSHIFT 2 -> q means that the value from wire p is left-shifted by 2 and then provided to wire q.
-	 *    NOT e -> f means that the bitwise complement of the value from wire e is provided to wire f.
-	 *    Other possible gates include OR (bitwise OR) and RSHIFT (right-shift).
-	 * What signal is ultimately provided to wire a?
-	 */
 	public void day7AssemblyRequiredPart1() {
 		Circuit circuit = day7BuildCircuit();
 		
@@ -822,10 +749,6 @@ public class TwentyFifteen extends Year {
 		System.out.println(CUR_YEAR + " Day 7 Part 1: " + circuit.getWireValue("a"));
 	}
 	
-	/**
-	 * Now, take the signal you got on wire a, override wire b to that signal, and reset the other wires (including wire a). 
-	 * What new signal is ultimately provided to wire a?
-	 */
 	public void day7AssemblyRequiredPart2() {
 		Circuit circuit = day7BuildCircuit();
 		
@@ -839,6 +762,7 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2015/day/8}
 	 * Run all Day 8 reports.
 	 */
 	public void day8(String part) {
@@ -858,18 +782,6 @@ public class TwentyFifteen extends Year {
 		}
 	}
 	
-	/**
-	 * It is common in many programming languages to provide a way to escape special characters in strings.
-	 * However, it is important to realize the difference between the number of characters in the 
-	 * code representation of the string literal and the number of characters in the in-memory string itself.
-	 * Santa's list is a file that contains many double-quoted string literals, one on each line.
-	 * The only escape sequences used are:
-	 *    \\ (which represents a single backslash),
-	 *    \" (which represents a lone double-quote character), and 
-	 *    \x plus two hexadecimal characters (which represents a single character with that ASCII code).
-	 * Disregarding the whitespace in the file, what is the number of characters of code for string literals, 
-	 * minus the number of characters in memory for the values of the strings in total for the entire file?
-	 */
 	public void day8MatchsticksPart1() {
 		int actualChars = 0;
 		int inMemoryChars = 0;
@@ -923,6 +835,7 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2015/day/9}
 	 * Run all Day 9 reports.
 	 */
 	public void day9(String part) {
@@ -943,9 +856,6 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
-	 * Santa has some new locations to visit; his elves have provided him the distances between every pair of locations.
-	 * He can start and end at any two (different) locations he wants, but he must visit each location exactly once.
-	 * What is the shortest distance he can travel to achieve this?
 	 * @param getShortest true if return shortest distance, false if return longest distance
 	 */
 	public void day9SingleNightRoute(boolean getShortest) {
@@ -997,6 +907,7 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2015/day/10}
 	 * Run all Day 10 reports.
 	 */
 	public void day10(String part) {
@@ -1017,11 +928,6 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
-	 * Today, the Elves are playing a game called look-and-say.
-	 * They take turns making sequences by reading aloud the previous sequence and using that reading as the next sequence. For example, 211 is read as "one two, two ones", which becomes 1221 (1 2, 2 1s).
-	 * Look-and-say sequences are generated iteratively, using the previous value as input for the next step.
-	 * For each step, take the previous value, and replace each run of digits with the number of digits followed by the digit itself.
-	 * Starting with the digits in your puzzle input, apply this process x times. What is the length of the result?
 	 * @param numTimes the number of times to apply the look and say process
 	 */
 	// This takes hours!!
@@ -1073,6 +979,7 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2015/day/11}
 	 * Run all Day 11 reports.
 	 */
 	public void day11(String part) {
@@ -1122,16 +1029,6 @@ public class TwentyFifteen extends Year {
 	}
 	
 	/**
-	 * Santa's previous password expired, and he needs help choosing a new one. 
-	 * To help him remember his new password after the old one expires, Santa has devised a method of coming up with a password based on the previous one.
-	 * Corporate policy dictates that passwords must be exactly eight lowercase letters (for security reasons),
-	 *   so he finds his new password by incrementing his old password string repeatedly until it is valid.
-	 * Unfortunately for Santa, a new Security-Elf recently started, and he has imposed some additional password requirements:
-	 *   - Passwords must include one increasing straight of at least three letters. They cannot skip letters.
-	 *   - Passwords may not contain the letters i, o, or l, as these letters can be mistaken for other characters and are therefore confusing.
-	 *   - Passwords must contain at least two different, non-overlapping pairs of letters.
-	 * Given Santa's current password (your puzzle input), what should his next password be?
-	 * 
 	 * @param pw the password to check against
 	 * @param numTimes the number of different valid passwords, in order, to get
 	 */

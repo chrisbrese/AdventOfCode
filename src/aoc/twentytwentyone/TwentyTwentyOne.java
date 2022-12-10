@@ -44,6 +44,7 @@ public class TwentyTwentyOne extends Year {
 	}
     
 	/**
+	 * {@link https://adventofcode.com/2021/day/1}
 	 * Run all Day 1 reports.
 	 */
 	public void day1(String part) {
@@ -63,11 +64,6 @@ public class TwentyTwentyOne extends Year {
 		}		
 	}
 	
-	/**
-	 * Figure out how quickly the depth increases.
-	 * To do this, count the number of times a depth measurement increases from the previous measurement. (There is no measurement before the first measurement.)
-	 * How many measurements are larger than the previous measurement?
-	 */
 	public void day1CountNumberOfTimesNumberIncreased() {
 		int count = 0;
 		for(int i = 0; i < input.size(); i++){
@@ -81,13 +77,6 @@ public class TwentyTwentyOne extends Year {
 		System.out.println(CUR_YEAR + " Day 1 Part 1: " + count);
 	}
 	
-	/**
-	 * Consider sums of a three-measurement sliding window.
-	 * Start by comparing the first and second three-measurement windows.
-	 * Your goal now is to count the number of times the sum of measurements in this sliding window increases from the previous sum.
-	 * Stop when there aren't enough measurements left to create a new three-measurement sum.
-	 * How many sums are larger than the previous sum?
-	 */
 	public void day1CountIncreaseOf3BlockWindow() {
 		int count = 0;
 		for(int i = 0; i < input.size(); i++){
@@ -105,6 +94,7 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2021/day/2}
 	 * Run all Day 2 reports.
 	 */
 	public void day2(String part) {
@@ -124,13 +114,6 @@ public class TwentyTwentyOne extends Year {
 		}
 	}
 	
-	/**
-	 * It seems like the submarine can take a series of commands like forward 1, down 2, or up 3.
-	 * Note that since you're on a submarine, down and up affect your depth, and so they have the opposite result of what you might expect.
-	 * The submarine seems to already have a planned course (your puzzle input).
-	 * Your horizontal position and depth both start at 0.
-	 * Calculate the horizontal position and depth you would have after following the planned course. What do you get if you multiply your final horizontal position by your final depth?
-	 */
 	public void day2MultiplyFinalGridPositionIndexes() {
 		Grid grid = new Grid(2000, "E", false, false);
 		int[] curPos = new int[2];
@@ -146,19 +129,6 @@ public class TwentyTwentyOne extends Year {
 		System.out.println(CUR_YEAR + " Day 2 Part 1: " + (curPos[0] * curPos[1]));
 	}
 	
-	/**
-	 * Based on your calculations, the planned course doesn't seem to make any sense.
-	 * You find the submarine manual and discover that the process is actually slightly more complicated.
-	 * In addition to horizontal position and depth, you'll also need to track a third value, aim, which also starts at 0.
-	 * The commands also mean something entirely different than you first thought:
-	 *     - down X increases your aim by X units.
-	 *     - up X decreases your aim by X units.
-	 *     - forward X does two things:
-	 *         a. It increases your horizontal position by X units.
-	 *         b. It increases your depth by your aim multiplied by X.
-	 * Using this new interpretation of the commands, calculate the horizontal position and depth you would have after following the planned course.
-	 * What do you get if you multiply your final horizontal position by your final depth?
-	 */
 	public void day2MulitplyFinalGridPositionIndexesWithAim() {
 		Grid grid = new Grid(10000, "E", false, false);
 		int[] curPos = new int[2];
@@ -175,6 +145,7 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2021/day/3}
 	 * Run all Day 3 reports.
 	 */
 	public void day3(String part) {
@@ -194,16 +165,6 @@ public class TwentyTwentyOne extends Year {
 		}
 	}
 	
-	/**
-	 * The diagnostic report (your puzzle input) consists of a list of binary numbers which, when decoded properly, can tell you many useful things about the conditions of the submarine.
-	 * The first parameter to check is the power consumption.
-	 * You need to use the binary numbers in the diagnostic report to generate two new binary numbers (called the gamma rate and the epsilon rate).
-	 * The power consumption can then be found by multiplying the gamma rate by the epsilon rate.
-	 * Each bit in the gamma rate can be determined by finding the most common bit in the corresponding position of all numbers in the diagnostic report.
-	 * The epsilon rate is calculated in a similar way; rather than use the most common bit, the least common bit from each position is used.
-	 * Use the binary numbers in your diagnostic report to calculate the gamma rate and epsilon rate, then multiply them together.
-	 * What is the power consumption of the submarine? (Be sure to represent your answer in decimal, not binary.)
-	 */
 	public void day3CalculatePowerConsumption() {
 		HashMap<Integer, int[]> posToBitCount = new HashMap<Integer, int[]>();
 		String binaryStrGamma = "";
@@ -242,22 +203,6 @@ public class TwentyTwentyOne extends Year {
 		System.out.println(CUR_YEAR + " Day 3 Part 1: " + (Integer.parseInt(binaryStrGamma,2) * Integer.parseInt(binaryStrEpsilon,2)));
 	}
 	
-	/**
-	 * Next, you should verify the life support rating, which can be determined by multiplying the oxygen generator rating by the CO2 scrubber rating.
-	 * Before searching for either rating value, start with the full list of binary numbers from your diagnostic report.
-	 * Then:
-	 *    - Keep only numbers selected by the bit criteria for the type of rating value for which you are searching. Discard numbers which do not match the bit criteria.
-	 *    - If you only have one number left, stop; this is the rating value for which you are searching.
-	 *    - Otherwise, repeat the process, considering the next bit to the right.
-	 * 
-	 * The bit criteria depends on which type of rating value you want to find:
-	 *    - To find oxygen generator rating, determine the most common value (0 or 1) in the current bit position, and keep only numbers with that bit in that position.
-	 *      If 0 and 1 are equally common, keep values with a 1 in the position being considered.
-	 *    - To find CO2 scrubber rating, determine the least common value (0 or 1) in the current bit position, and keep only numbers with that bit in that position.
-	 *      If 0 and 1 are equally common, keep values with a 0 in the position being considered.
-	 * Use the binary numbers in your diagnostic report to calculate the oxygen generator rating and CO2 scrubber rating, then multiply them together.
-	 * What is the life support rating of the submarine? (Be sure to represent your answer in decimal, not binary.)
-	 */
 	public void day3CalculateLifeSupportRating() {
 		List<String> oxyRatingOptions = new ArrayList<String>();
 		List<String> co2ScrubbingOptions = new ArrayList<String>();
@@ -347,6 +292,7 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2021/day/4}
 	 * Run all Day 4 reports.
 	 */
 	public void day4(String part) {
@@ -366,16 +312,6 @@ public class TwentyTwentyOne extends Year {
 		}
 	}
 	
-	/**
-	 * What you can see, is a giant squid that has attached itself to the outside of your submarine.
-	 * Maybe it wants to play bingo?
-	 * Bingo is played on a set of boards each consisting of a 5x5 grid of numbers.
-	 * Numbers are chosen at random, and the chosen number is marked on all boards on which it appears.
-	 * (Numbers may not appear on all boards.) If all numbers in any row or any column of a board are marked, that board wins.
-	 * (Diagonals don't count.)
-	 * The score of the winning board is the sum of all unmarked numbers on that board, multiplied by the number that was just called when the board won.
-	 * @param getFirstWinner true if looking for first board to win; false if looking for last board to win
-	 */
 	public void day4FindWinningBingoCard(boolean getFirstWinner) {
 		String[] numberCalls = input.get(0).split(",");
 		List<BingoBoard> boards = new ArrayList<BingoBoard>();
@@ -429,6 +365,7 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2021/day/5}
 	 * Run all Day 5 reports.
 	 */
 	public void day5(String part) {
@@ -448,15 +385,6 @@ public class TwentyTwentyOne extends Year {
 		}
 	}
 	
-	/**
-	 * You come across a field of hydrothermal vents on the ocean floor!
-	 * These vents constantly produce large, opaque clouds, so it would be best to avoid them if possible.
-	 * They tend to form in lines; the submarine helpfully produces a list of nearby lines of vents (your puzzle input).
-	 * For now, only consider horizontal and vertical lines.
-	 * To avoid the most dangerous areas, you need to determine the number of points where at least two lines overlap.
-	 * Consider only horizontal and vertical lines. At how many points do at least two lines overlap?
-	 * @param includeDiagonals if true, calculate overlap including diagonals (part 2)
-	 */
 	public void day5CalculateVentLineOverlap(boolean includeDiagonals) {
 		int[][] grid = new int[1000][1000];
 		int total = 0;
@@ -569,6 +497,7 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2021/day/6}
 	 * Run all Day 6 reports.
 	 */
 	public void day6(String part) {
@@ -588,17 +517,6 @@ public class TwentyTwentyOne extends Year {
 		}
 	}
 	
-	/**
-	 * A massive school of glowing lanternfish swims past. They must spawn quickly to reach such large numbers - maybe exponentially quickly?
-	 * You should model their growth rate to be sure. Although you know nothing about this specific species of lanternfish, you make some guesses about their attributes.
-	 * Surely, each lanternfish creates a new lanternfish once every 7 days. 
-	 * However, this process isn't necessarily synchronized between every lanternfish - one lanternfish might have 2 days left until it creates another lanternfish, while another might have 4.
-	 * So, you can model each fish as a single number that represents the number of days until it creates a new lanternfish. 
-	 * Furthermore, you reason, a new lanternfish would surely need slightly longer before it's capable of producing more lanternfish: two more days for its first cycle.
-	 * Find a way to simulate lanternfish. How many lanternfish would there be after 80 days?
-	 * @param numDays the number of days to calculate
-	 * @return the number of fish in the school after numDays
-	 */
 	public Long day6CalculateSpawningFish(int numDays) {
 		HashMap<Integer, Long> school = new HashMap<Integer, Long>(); //current time left to number of fish with that amount of time left
 		
@@ -645,6 +563,7 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2021/day/7}
 	 * Run all Day 7 reports.
 	 */
 	public void day7(String part) {
@@ -664,17 +583,6 @@ public class TwentyTwentyOne extends Year {
 		}
 	}
 	
-	/**
-	 * A giant whale has decided your submarine is its next meal, and it's much faster than you are. There's nowhere to run!
-	 * Suddenly, a swarm of crabs (each in its own tiny submarine - it's too deep for them otherwise) zooms in to rescue you
-	 * They seem to be preparing to blast a hole in the ocean floor; sensors indicate a massive underground cave system just beyond where they're aiming
-	 * The crab submarines all need to be aligned before they'll have enough power to blast a large enough hole for your submarine to get through.
-	 * There's one major catch - crab submarines can only move horizontally.
-	 * You quickly make a list of the horizontal position of each crab (your puzzle input).
-	 * Crab submarines have limited fuel, so you need to find a way to make all of their horizontal positions match while requiring them to spend as little fuel as possible.
-	 * Each change of 1 step in horizontal position of a single crab costs 1 fuel.
-	 * Determine the horizontal position that the crabs can align to using the least fuel possible. How much fuel must they spend to align to that position?h.
-	 */
 	public void day7MinimumHorizontalMovement() {
 		String[] numStr = input.get(0).split(",");
 		int[] nums = new int[numStr.length];
@@ -701,13 +609,6 @@ public class TwentyTwentyOne extends Year {
 		System.out.println(CUR_YEAR + " Day 7 Part 1: " + count);
 	}
 	
-	/**
-	 * The crabs don't seem interested in your proposed solution. Perhaps you misunderstand crab engineering?
-	 * As it turns out, crab submarine engines don't burn fuel at a constant rate.
-	 * Instead, each change of 1 step in horizontal position costs 1 more unit of fuel than the last: the first step costs 1, the second step costs 2, the third step costs 3, and so on.
-	 * As each crab moves, moving further becomes more expensive. This changes the best horizontal position to align them all on.
-	 * Determine the horizontal position that the crabs can align to using the least fuel possible so they can make you an escape route! How much fuel must they spend to align to that position?
-	 */
 	public void day7MinimumHorizontalMovementWithFuelDegradation() {
 		String[] numStr = input.get(0).split(",");
 		int[] nums = new int[numStr.length];
@@ -742,6 +643,7 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2021/day/8}
 	 * Run all Day 8 reports.
 	 */
 	public void day8(String part) {
@@ -761,40 +663,6 @@ public class TwentyTwentyOne extends Year {
 		}
 	}
 	
-	/**
-	 * You notice that the four-digit seven-segment displays in your submarine are malfunctioning; they must have been damaged during the escape.
-	 * Each digit of a seven-segment display is rendered by turning on or off any of seven segments named a through g.
-	 *   0:      1:      2:      3:      4:
-     * aaaa    ....    aaaa    aaaa    ....
-     * b    c  .    c  .    c  .    c  b    c
-     * b    c  .    c  .    c  .    c  b    c
-     * ....    ....    dddd    dddd    dddd
-     * e    f  .    f  e    .  .    f  .    f
-     * e    f  .    f  e    .  .    f  .    f
-      * gggg    ....    gggg    gggg    ....
-      * 
-      * 5:      6:      7:      8:      9:
-      * aaaa    aaaa    aaaa    aaaa    aaaa
-      * b    .  b    .  .    c  b    c  b    c
-      * b    .  b    .  .    c  b    c  b    c
-      * dddd    dddd    ....    dddd    dddd
-      * .    f  e    f  .    f  e    f  .    f
-      * .    f  e    f  .    f  e    f  .    f
-      * gggg    gggg    ....    gggg    gggg
-      * 
-      * So, to render a 1, only segments c and f would be turned on; the rest would be off. To render a 7, only segments a, c, and f would be turned on.
-      * The problem is that the signals which control the segments have been mixed up on each display.
-      * The submarine is still trying to display numbers by producing output on signal wires a through g, but those wires are connected to segments randomly.
-      * Worse, the wire/segment connections are mixed up separately for each four-digit display! (All of the digits within a display use the same connections, though.)
-      * So, you might know that only signal wires b and g are turned on, but that doesn't mean segments b and g are turned on: 
-      *   the only digit that uses two segments is 1, so it must mean segments c and f are meant to be on.
-      * With just that information, you still can't tell which wire (b/g) goes to which segment (c/f). For that, you'll need to collect more information.
-      * For each display, you watch the changing signals for a while, make a note of all ten unique signal patterns you see, 
-      *   and then write down a single four digit output value (your puzzle input). Using the signal patterns, you should be able to work out which pattern corresponds to which digit.
-      * Because the digits 1, 4, 7, and 8 each use a unique number of segments, you should be able to tell which combinations of signals correspond to those digits.
-      * Counting only digits in the output values (the part after | on each line), in the above example, there are 26 instances of digits that use a unique number of segments (highlighted above).
-      * In the output values, how many times do digits 1, 4, 7, or 8 appear?
-	 */
 	public void day8SevenSegmentSearchUniqueNumberCount() {
 		int count = 0;
 		for(String line : input) {
@@ -811,13 +679,6 @@ public class TwentyTwentyOne extends Year {
 		System.out.println(CUR_YEAR + " Day 8 Part 1: " + count);
 	}
 	
-	/**
-	 * Given a map of known (solved) numbers to an example string of characters for that number, determine if
-	 * the given string can be solved.
-	 * @param map map of known (solved) numbers to an example string of characters for that number
-	 * @param in current string to determine the number of from the map
-	 * @return -1 if the answer can not yet be determined, otherwise the answer
-	 */
 	public int getNumFromString(HashMap<Integer, String> map, String in) {
 		if(in.length() == 2) {        // 1
 			return 1;
@@ -917,10 +778,6 @@ public class TwentyTwentyOne extends Year {
 		return -1;
 	}
 	
-	/**
-	 * Using the same information from part1, and through a little deduction, you should now be able to determine the remaining digits.
-	 * For each entry, determine all of the wire/segment connections and decode the four-digit output values. What do you get if you add up all of the output values?
-	 */
 	public void day8SevenSegmentSearchSumOfOutputs() {
 		int sum = 0;
 		
@@ -953,6 +810,7 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2021/day/9}
 	 * Run all Day 9 reports.
 	 */
 	public void day9(String part) {
@@ -972,25 +830,6 @@ public class TwentyTwentyOne extends Year {
 		}
 	}
 	
-	/**
-	 * Common method for day 9 to find all the basins in a grid, returning a queue of positions in the grid that are basins.
-	 * Also prints out the sum of the risk levels at the end.
-	 * 
-	 * These caves seem to be lava tubes. Parts are even still volcanically active; small hydrothermal vents release smoke into the caves that slowly settles like rain.
-	 * If you can model how the smoke flows through the caves, you might be able to avoid it and be that much safer.
-	 * The submarine generates a heightmap of the floor of the nearby caves for you (your puzzle input).
-	 * Smoke flows to the lowest point of the area it's in.
-	 * Each number corresponds to the height of a particular location, where 9 is the highest and 0 is the lowest a location can be.
-	 * Your first goal is to find the low points - the locations that are lower than any of its adjacent locations.
-	 * Most locations have four adjacent locations (up, down, left, and right);
-	 *   locations on the edge or corner of the map have three or two adjacent locations, respectively.
-	 *   (Diagonal locations do not count as adjacent.)
-	 * The risk level of a low point is 1 plus its height.
-	 * Find all of the low points on your heightmap. What is the sum of the risk levels of all low points on your heightmap?
-	 * 
-	 * @param grid The grid to find basins for
-	 * @return a queue of basins as GridPositions
-	 */
 	public LinkedBlockingQueue<GridPosition> day9SmokeBasin(Grid grid) {
 		LinkedBlockingQueue<GridPosition> basinQueue = new LinkedBlockingQueue<GridPosition>(); // holds the positions of the basins in row,col format
 		int sum = 0;
@@ -1065,13 +904,6 @@ public class TwentyTwentyOne extends Year {
 		return basinQueue;
 	}
 	
-	/**
-	 * Helper method for checking if next position value is valid for checking inside of getFlowToBasinCount
-	 * @param grid The grid to search
-	 * @param nextPos the current position to check the next position from
-	 * @param prevPos the previous position to check the curPos against
-	 * @return a sum of the number of positions that flow into a basin
-	 */
 	public int nextPositionHelper(Grid grid, GridPosition nextPos, GridPosition prevPos) {
 		int count = 0;
 		if(nextPos != null && !nextPos.equals(prevPos) && nextPos.getVal() != 9 && !nextPos.isChecked()) {
@@ -1082,12 +914,6 @@ public class TwentyTwentyOne extends Year {
 		return count;
 	}
 	
-	/**
-	 * Recursive method to find the count of grid points that flow into a basin.
-	 * @param grid The grid to search
-	 * @param curPos the current position to check the next position from
-	 * @return a sum of the number of positions that flow into a basin
-	 */
 	public int getFlowToBasinCount(Grid grid, GridPosition curPos) {
 		int count = 0;
 		
@@ -1113,14 +939,6 @@ public class TwentyTwentyOne extends Year {
 		return count;
 	}
 	
-	/**
-	 * You need to find the largest basins so you know what areas are most important to avoid.
-	 * A basin is all locations that eventually flow downward to a single low point.
-	 * Therefore, every low point has a basin, although some basins are very small.
-	 * Locations of height 9 do not count as being in any basin, and all other locations will always be part of exactly one basin.
-	 * The size of a basin is the number of locations within the basin, including the low point.
-	 * What do you get if you multiply together the sizes of the three largest basins?
-	 */
 	public void day9SmokeBasinFlow() {
 		Grid grid = year2021SetupGrid();
 		HashMap<GridPosition, Integer> flowToBasinCountMap = new HashMap<GridPosition, Integer>();
@@ -1157,6 +975,7 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2021/day/10}
 	 * Run all Day 10 reports.
 	 */
 	public void day10(String part) {
@@ -1177,52 +996,6 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
-	 * You ask the submarine to determine the best route out of the deep-sea cave, but it only replies:
-	 *   'Syntax error in navigation subsystem on line: all of them'
-	 * All of them?! The damage is worse than you thought. You bring up a copy of the navigation subsystem (your puzzle input).
-	 * The navigation subsystem syntax is made of several lines containing chunks.
-	 * There are one or more chunks on each line, and chunks contain zero or more other chunks.
-	 * Adjacent chunks are not separated by any delimiter; if one chunk stops, the next chunk (if any) can immediately start.
-	 * Every chunk must open and close with one of four legal pairs of matching characters:
-	 *     - If a chunk opens with (, it must close with ).
-	 *     - If a chunk opens with [, it must close with ].
-	 *     - If a chunk opens with {, it must close with }.
-	 *     - If a chunk opens with <, it must close with >.
-	 * Some lines are incomplete, but others are corrupted. Find and discard the corrupted lines first.
-	 * A corrupted line is one where a chunk closes with the wrong character - 
-	 *   that is, where the characters it opens and closes with do not form one of the four legal pairs listed above.
-	 * Such a chunk can appear anywhere within a line, and its presence causes the whole line to be considered corrupted.
-	 * 
-	 * Part 1:
-	 * Some of the lines aren't corrupted, just incomplete; you can ignore these lines for now.
-	 * Stop at the first incorrect closing character on each corrupted line.
-	 * Did you know that syntax checkers actually have contests to see who can get the high score for syntax errors in a file?
-	 * It's true! To calculate the syntax error score for a line, take the first illegal character on the line
-	 *   and look it up in the following table:
-	 *       ): 3 points.
-	 *       ]: 57 points.
-	 *       }: 1197 points.
-	 *       >: 25137 points.
-	 * Find the first illegal character in each corrupted line of the navigation subsystem.
-	 * What is the total syntax error score for those errors?
-	 * 
-	 * Part 2:
-	 * Now, discard the corrupted lines. The remaining lines are incomplete.
-	 * Incomplete lines don't have any incorrect characters - instead, they're missing some closing characters at the end of the line.
-	 * To repair the navigation subsystem, you just need to figure out the sequence of closing characters that complete all open chunks in the line.
-	 * Did you know that autocomplete tools also have contests? It's true!
-	 * The score is determined by considering the completion string character-by-character.
-	 * Start with a total score of 0.
-	 * Then, for each character, multiply the total score by 5 and then increase the total score by
-	 *   the point value given for the character in the following table:
-	 *       ): 1 point.
-	 *       ]: 2 points.
-	 *       }: 3 points.
-	 *       >: 4 points.
-	 * Autocomplete tools are an odd bunch: the winner is found by sorting all of the scores and then taking the middle score.
-	 * (There will always be an odd number of scores to consider.)
-	 * Find the completion string for each incomplete line, score the completion strings, and sort the scores. What is the middle score?
-	 * 
 	 * @param partTwo true if running part2 only, false if part1 only
 	 */
 	public void day10SyntaxScoring(boolean partTwo) {
@@ -1309,6 +1082,7 @@ public class TwentyTwentyOne extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2021/day/10}
 	 * Run all Day 11 reports.
 	 */
 	public void day11(String part) {
@@ -1328,28 +1102,6 @@ public class TwentyTwentyOne extends Year {
 		}
 	}
 	
-	/**
-	 * You enter a large cavern full of rare bioluminescent dumbo octopuses! They seem to not like the Christmas lights on your submarine, so you turn them off for now.
-	 * There are 100 octopuses arranged neatly in a 10 by 10 grid. Each octopus slowly gains energy over time and flashes brightly for a moment when its energy is full.
-	 * Although your lights are off, maybe you could navigate through the cave without disturbing the octopuses if you could predict when the flashes of light will happen.
-	 * Each octopus has an energy level - your submarine can remotely measure the energy level of each octopus (your puzzle input).
-	 * The energy level of each octopus is a value between 0 and 9.
-	 * You can model the energy levels and flashes of light in steps. During a single step, the following occurs:
-	 *   - First, the energy level of each octopus increases by 1.
-	 *   - Then, any octopus with an energy level greater than 9 flashes. This increases the energy level of all adjacent octopuses by 1, including octopuses that are diagonally adjacent.
-	 *     If this causes an octopus to have an energy level greater than 9, it also flashes. This process continues as long as new octopuses keep having their energy level increased beyond 9.
-	 *     (An octopus can only flash at most once per step.)
-	 *   - Finally, any octopus that flashed during this step has its energy level set to 0, as it used all of its energy to flash.
-	 * Part 1:
-	 * Given the starting energy levels of the dumbo octopuses in your cavern, simulate 100 steps. How many total flashes are there after 100 steps?
-	 * 
-	 * Part 2:
-	 * It seems like the individual flashes aren't bright enough to navigate. However, you might have a better option: the flashes seem to be synchronizing!
-	 * If you can calculate the exact moments when the octopuses will all flash simultaneously, you should be able to navigate through the cavern.
-	 * What is the first step during which all octopuses flash?
-	 * 
-	 * @param numSteps the number of steps to loop through the octopus flashing
-	 */
 	public void day11DumboOctopus(int numSteps) {
 		TwentyTwentyOneDayEleven day11 = new TwentyTwentyOneDayEleven(year2021SetupGrid());
 		day11.day11DumboOctopus(numSteps);

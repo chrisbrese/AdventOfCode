@@ -26,7 +26,6 @@ public class Grid {
 	
 	public Grid(int numRows, int numCols) {
 		this(numRows, numCols, null, false, false);
-		gridPositions = new HashMap<String, GridPosition>();
 	}
 	
 	public Grid(int gridSize, String initialPointer, boolean useWaypoint, boolean startInMiddle) {
@@ -41,6 +40,7 @@ public class Grid {
 	 * @param startInMiddle true if starting in the middle, false if starting at [0][0]
 	 */
 	private Grid(int numRows, int numCols, String initialPointer, boolean useWaypoint, boolean startInMiddle) {
+		gridPositions = new HashMap<String, GridPosition>();
 		grid = new int[numRows][numCols];
 		
 		this.numRows = numRows;
@@ -407,6 +407,14 @@ public class Grid {
 		}
 		
 		return new int[]{curRow, curCol};
+	}
+	
+	public int getCurRow() {
+		return curRow;
+	}
+	
+	public int getCurCol() {
+		return curCol;
 	}
 
 	public int[][] getGrid() {
