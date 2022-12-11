@@ -827,6 +827,7 @@ public class TwentyTwentyTwo extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2022/day/10}
 	 * Run all Day 10 reports.
 	 */
 	public void day10(String part) {
@@ -834,12 +835,80 @@ public class TwentyTwentyTwo extends Year {
 		
 		switch(part) {
 			case "1":
+				day10CathodeRayTube();
 				break;
 			case "2":
 				break;
 			default:
+				day10CathodeRayTube();
 				break;
 		}
+	}
+	
+	private void day10CathodeRayTube() {
+		int cycle = 1;
+		int register = 1;
+		int spritePos = 1;
+		int cycleRegisterSum = 0;
+		HashMap<Integer, Integer> cycleToRegisterChange = new HashMap<Integer, Integer>();
+		
+		while(cycle < 241) {
+			for(String line : input) {
+				if(cycle == 20 || cycle == 60 || cycle == 100 || 
+				   cycle == 140 || cycle == 180 || cycle == 220) {
+					cycleRegisterSum += (cycle*register);
+				}
+				
+				// start of a cycle - Draw!
+				if(cycle == 41 || cycle == 81 || cycle == 121 || cycle == 161 || cycle == 201) {
+					spritePos += 40;
+					System.out.println();
+				}
+				
+				if(cycle == spritePos || cycle == (spritePos + 1) || cycle == (spritePos + 2)) {
+					System.out.print("#");
+				}
+				else {
+					System.out.print(".");
+				}
+				
+				if(!line.equals("noop")) {
+					String[] parts = line.split(" ");
+					int num = Integer.parseInt(parts[1]);
+					
+					cycleToRegisterChange.put(cycle+1, num);
+					cycle++;
+					
+					// start of another cycle - draw!
+					if(cycle == 20 || cycle == 60 || cycle == 100 || 
+					   cycle == 140 || cycle == 180 || cycle == 220) {
+						cycleRegisterSum += (cycle*register);
+					}
+					
+					if(cycle == 41 || cycle == 81 || cycle == 121 || cycle == 161 || cycle == 201) {
+						spritePos += 40;
+						System.out.println();
+					}
+					
+					if(cycle == spritePos || cycle == (spritePos + 1) || cycle == (spritePos + 2)) {
+						System.out.print("#");
+					}
+					else {
+						System.out.print(".");
+					}
+				}
+				
+				if(cycleToRegisterChange.containsKey(cycle)) {
+					register += cycleToRegisterChange.get(cycle);
+					spritePos += cycleToRegisterChange.get(cycle);
+				}
+				
+				cycle++;
+			}
+		}
+		
+		System.out.println();
+		System.out.println(CUR_YEAR + " Day 10 Part 1: " + cycleRegisterSum);
 	}
 	
 	/**
