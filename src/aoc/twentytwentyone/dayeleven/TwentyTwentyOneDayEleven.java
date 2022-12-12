@@ -1,4 +1,4 @@
-package aoc.twentytwentyone.day11;
+package aoc.twentytwentyone.dayeleven;
 
 import java.util.concurrent.LinkedBlockingQueue;
 

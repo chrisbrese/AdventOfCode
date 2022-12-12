@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Stack;
 
 import aoc.Year;
-import aoc.twentytwentytwo.day7.Directory;
-import aoc.twentytwentytwo.day7.File;
-import aoc.twentytwentytwo.day7.FileSystem;
+import aoc.twentytwentytwo.dayeleven.Jungle;
+import aoc.twentytwentytwo.dayeleven.Monkey;
+import aoc.twentytwentytwo.dayseven.Directory;
+import aoc.twentytwentytwo.dayseven.File;
+import aoc.twentytwentytwo.dayseven.FileSystem;
 import aoc.utilities.ReadInputFile;
 import aoc.utilities.grid.Grid;
 import aoc.utilities.grid.GridPosition;
@@ -912,6 +914,7 @@ public class TwentyTwentyTwo extends Year {
 	}
 	
 	/**
+	 * {@link https://adventofcode.com/2022/day/11}
 	 * Run all Day 11 reports.
 	 */
 	public void day11(String part) {
@@ -919,12 +922,98 @@ public class TwentyTwentyTwo extends Year {
 		
 		switch(part) {
 			case "1":
+				day11MonkeyInTheMiddle(20, false);
 				break;
 			case "2":
+				day11MonkeyInTheMiddle(10000, true);
 				break;
 			default:
+				day11MonkeyInTheMiddle(20, false);
+				day11MonkeyInTheMiddle(10000, true);
 				break;
 		}
+	}
+
+	/**
+	 * 
+	 * @param numCycles The num cycles to process
+	 * @param part2 true if running part 2
+	 */
+	private void day11MonkeyInTheMiddle(int numCycles, boolean part2) {
+		Jungle jungle = new Jungle();
+		
+		Monkey m;
+		int curMonkey = 0;
+		for(String line : input) {
+			line = line.trim(); // get rid of those pesky spaces
+			String parts[] = line.split(" ");
+			if(line.startsWith("Monkey")) {
+				curMonkey = Integer.parseInt(parts[1].substring(0, 1));
+				m = jungle.addMonkey(new Monkey(curMonkey));
+			}
+			else {
+				m = jungle.getMonkey(curMonkey);
+			}
+			
+			if(line.startsWith("Starting items:")){
+				for(int i = 2; i < parts.length; i++) {
+					int item;
+					
+					if(parts[i].contains(",")) {
+						item = Integer.parseInt(parts[i].substring(0, parts[i].indexOf(",")));
+					}
+					else {
+						item = Integer.parseInt(parts[i]);
+					}
+					
+					m.addItem(item);
+				}
+			}
+			else if(line.startsWith("Operation:")){
+				m.setOperation(parts[4] + " " + parts[5]);
+			}
+			else if(line.startsWith("Test:")) {
+				m.setDivisibleBy(Integer.parseInt(parts[3]));
+			}
+			else if(line.startsWith("If")) {
+				m.addMonkey(parts[1].substring(0, parts[1].indexOf(":")), Integer.parseInt(parts[5]));
+			}
+		}
+		
+		for(int i = 0; i < numCycles; i++) {
+			for(int j = 0; j < jungle.getMonkeys().size(); j++) {
+				Monkey monkey = jungle.getMonkey(j);
+				for(int k = 0; k < monkey.getItems().size(); k++) {
+					Integer newVal = monkey.operate(monkey.getItems().get(k));
+					
+					if(!part2) {
+						newVal = Math.floorDiv(newVal, 3);
+					}
+					
+					int newMonkey = monkey.testItem(newVal);
+					jungle.getMonkey(newMonkey).addItem(newVal);
+				}
+				monkey.getItems().clear();
+			}
+		}
+		
+		int highest = 0;
+		int second = 0;
+		for(Monkey monkey : jungle.getMonkeys()) {
+			int num = monkey.getItemsInspected();
+System.out.println(num);
+			if(num > highest) {
+				second = highest;
+				highest = num;
+			}
+			else if(num > second) {
+				second = num;
+			}
+		}
+		
+		//752449677 is too low
+		//26522253453 is too high
+		System.out.println(CUR_YEAR + " Day 11 Part " + (part2 ? "2" : "1") + ": " + (highest * second));
 	}
 	
 	/**

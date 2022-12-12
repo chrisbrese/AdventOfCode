@@ -8,8 +8,8 @@ import java.util.Stack;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import aoc.Year;
-import aoc.twentytwentyone.day11.TwentyTwentyOneDayEleven;
-import aoc.twentytwentyone.day4.BingoBoard;
+import aoc.twentytwentyone.dayeleven.TwentyTwentyOneDayEleven;
+import aoc.twentytwentyone.dayfour.BingoBoard;
 import aoc.utilities.ReadInputFile;
 import aoc.utilities.grid.Grid;
 import aoc.utilities.grid.GridPosition;

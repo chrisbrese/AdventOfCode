@@ -1,4 +1,4 @@
-package aoc.twentytwentyone.day4;
+package aoc.twentytwentyone.dayfour;
 
 public class Cell {
 	private int value;
